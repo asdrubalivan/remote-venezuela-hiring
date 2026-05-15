@@ -43,7 +43,9 @@ jobs:
           corepack prepare pnpm@11.1.2 --activate
 
       - name: Install Node dependencies
-        run: pnpm install --frozen-lockfile
+        # See validate.yml for rationale; esbuild's postinstall is
+        # optional under pnpm 11 — the binary ships in @esbuild/<arch>.
+        run: pnpm install --frozen-lockfile --config.strict-dep-builds=false
 
       - name: Build frontend bundle (TypeScript → static/*.js)
         run: pnpm run build:js

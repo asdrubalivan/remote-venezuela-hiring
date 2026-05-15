@@ -38,7 +38,11 @@ jobs:
           corepack prepare pnpm@11.1.2 --activate
 
       - name: Install Node dependencies
-        run: pnpm install --frozen-lockfile
+        # `--config.strict-dep-builds=false`: pnpm 11 exits 1 in CI when
+        # a build script is "ignored" (esbuild's postinstall). The
+        # esbuild binary actually ships in @esbuild/<arch>, so we don't
+        # need the postinstall — silence the warning and continue.
+        run: pnpm install --frozen-lockfile --config.strict-dep-builds=false
 
       - name: TypeScript type-check (strict)
         run: pnpm run typecheck
