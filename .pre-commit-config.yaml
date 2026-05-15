@@ -1,0 +1,48 @@
+# Pre-commit hooks for remote-venezuela-hiring.
+# Install once with:  pre-commit install
+# Run manually with:  pre-commit run --all-files
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--allow-multiple-documents"]
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.1
+    hooks:
+      - id: mypy
+        files: ^(src|tests)/
+        additional_dependencies:
+          - "pydantic>=2.5"
+          - "types-PyYAML>=6.0"
+
+  - repo: local
+    hooks:
+      - id: rvh-validate
+        name: validate company YAML data
+        entry: python -m remote_venezuela_hiring.validate_data
+        language: system
+        pass_filenames: false
+        files: ^data/companies/.*\.yaml$
+
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        pass_filenames: false
+        files: ^(src|tests)/
+        stages: [pre-push]

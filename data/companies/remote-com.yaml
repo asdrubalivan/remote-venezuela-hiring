@@ -1,0 +1,14 @@
+id: remote-com
+name: Remote.com
+website: https://remote.com
+status: accepts
+last_checked: 2026-05-15
+verification_method: public_job_post
+hiring_platform: company_site
+tags:
+  - hr
+  - remote
+  - worldwide
+notes: >
+  Lists Venezuela among supported countries in their public coverage page.
+archived: false

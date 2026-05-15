@@ -1,0 +1,110 @@
+# Convert an approved submission issue into a pull request.
+#
+# Trigger: a maintainer adds the `submission-approved` label to an issue that
+# already carries either `add-company` or `update-status`. The workflow then
+# parses the issue body, writes the YAML, and opens a PR.
+#
+# We require a manual approval label so random submissions do not auto-create
+# PRs against main.
+name: issue-to-pr
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  build-pr:
+    if: github.event.label.name == 'submission-approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide template
+        id: which
+        run: |
+          labels='${{ toJSON(github.event.issue.labels) }}'
+          if echo "$labels" | grep -q '"add-company"'; then
+            echo "kind=add" >> "$GITHUB_OUTPUT"
+            echo "template=.github/ISSUE_TEMPLATE/add-company.yml" >> "$GITHUB_OUTPUT"
+          elif echo "$labels" | grep -q '"update-status"'; then
+            echo "kind=update" >> "$GITHUB_OUTPUT"
+            echo "template=.github/ISSUE_TEMPLATE/update-status.yml" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::issue is missing one of: add-company, update-status"
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+
+      - name: Parse the issue body
+        id: parse
+        uses: stefanbuck/github-issue-parser@v3
+        with:
+          template-path: ${{ steps.which.outputs.template }}
+
+      - name: Write parsed payload to disk
+        run: |
+          mkdir -p .ci
+          cat > .ci/payload.json <<'JSON'
+          ${{ steps.parse.outputs.jsonString }}
+          JSON
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package
+        run: pip install -e ".[dev]"
+
+      - name: Generate YAML entry
+        run: |
+          python -m remote_venezuela_hiring.issue_to_yaml \
+            "${{ steps.which.outputs.kind }}" \
+            --json .ci/payload.json
+
+      - name: Validate every entry
+        run: python -m remote_venezuela_hiring.validate_data
+
+      - name: Open pull request
+        id: cpr
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: |
+            ${{ steps.which.outputs.kind }}: ${{ github.event.issue.title }}
+
+            Generated from issue #${{ github.event.issue.number }}.
+          branch: submission/issue-${{ github.event.issue.number }}
+          delete-branch: true
+          title: "${{ github.event.issue.title }} (from #${{ github.event.issue.number }})"
+          body: |
+            Auto-generated from issue #${{ github.event.issue.number }}.
+
+            - Submitter: @${{ github.event.issue.user.login }}
+            - Approved by: @${{ github.event.sender.login }}
+
+            ## Checklist before merging
+            - [ ] Notes are factual and contain no personal data
+            - [ ] Status and verification_method are consistent
+            - [ ] `last_checked` reflects today
+            - [ ] `rvh-validate` and `pytest` pass in CI
+
+            Closes #${{ github.event.issue.number }}
+          labels: |
+            ${{ steps.which.outputs.kind == 'add' && 'add-company' || 'update-status' }}
+            automated
+
+      - name: Comment back on the source issue
+        if: steps.cpr.outputs.pull-request-number != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = '${{ steps.cpr.outputs.pull-request-number }}';
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `Pull request opened: #${prNumber}`,
+            });

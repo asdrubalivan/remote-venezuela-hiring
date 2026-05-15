@@ -1,0 +1,96 @@
+name: Agregar una empresa
+description: Aporta una nueva empresa a la lista (acepta, rechaza o desconocido).
+title: "[add] <nombre de la empresa>"
+labels: ["add-company", "submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por contribuir. Llena los campos con información **observable y verificable**.
+        No incluyas datos personales (nombres de reclutadores, hilos de correo, capturas).
+
+  - type: input
+    id: name
+    attributes:
+      label: Nombre de la empresa
+      placeholder: "Acme Inc"
+    validations:
+      required: true
+
+  - type: input
+    id: website
+    attributes:
+      label: Sitio web
+      description: URL completa con https://
+      placeholder: "https://acme.com"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Estado actual
+      description: |
+        - **accepts**: la empresa acepta candidatos basados en Venezuela
+        - **rejects**: la empresa no acepta candidatos basados en Venezuela
+        - **unknown**: no hay información confirmada
+      options:
+        - accepts
+        - rejects
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: verification_method
+    attributes:
+      label: ¿Cómo lo verificaste?
+      options:
+        - application_form
+        - recruiter
+        - public_job_post
+        - community_report
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hiring_platform
+    attributes:
+      label: Plataforma de contratación
+      options:
+        - greenhouse
+        - ashby
+        - lever
+        - workable
+        - teamtailor
+        - linkedin
+        - company_site
+        - other
+        - unknown
+    validations:
+      required: true
+
+  - type: input
+    id: tags
+    attributes:
+      label: Etiquetas
+      description: Separadas por coma. Solo minúsculas, kebab-case.
+      placeholder: "backend, remote, saas"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas
+      description: Máximo 500 caracteres. Descriptivo, neutral, factual. Sin datos personales.
+      placeholder: "Aplicación enviada desde Venezuela sin bloqueo visible."
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmación
+      options:
+        - label: La información que aporto es factual y observable.
+          required: true
+        - label: No incluí datos personales (nombres, correos, capturas).
+          required: true

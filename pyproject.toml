@@ -1,0 +1,158 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "remote-venezuela-hiring"
+version = "0.1.0"
+description = "Community-maintained database of companies compatible with remote candidates based in Venezuela"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+    "mypy>=1.10",
+    "types-PyYAML>=6.0",
+    "pre-commit>=3.7",
+]
+
+[project.scripts]
+rvh-validate = "remote_venezuela_hiring.validate_data:main"
+rvh-build-site = "remote_venezuela_hiring.build_site:main"
+rvh-issue-to-yaml = "remote_venezuela_hiring.issue_to_yaml:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# ---------------------------------------------------------------------------
+# Ruff — single linter + formatter for the whole project.
+# We enable a wide rule set and ignore only what genuinely doesn't fit this
+# codebase (e.g. assert in tests, intentional CLI prints, Pydantic field counts).
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "F",      # pyflakes
+    "E", "W", # pycodestyle
+    "I",      # isort
+    "N",      # pep8-naming
+    "B",      # bugbear
+    "C4",     # comprehensions
+    "UP",     # pyupgrade
+    "SIM",    # simplify
+    "PL",     # pylint subset
+    "RUF",    # ruff-specific
+    "S",      # bandit (security)
+    "PT",     # pytest style
+    "PTH",    # use pathlib
+    "PIE",    # misc
+    "RET",    # return statements
+    "ARG",    # unused arguments
+    "TCH",    # type-checking imports
+    "TRY",    # tryceratops
+    "ERA",    # eradicate commented-out code
+    "FBT",    # boolean-trap
+    "DTZ",    # datetime timezones
+    "FA",     # future annotations
+    "ICN",    # import conventions
+    "INP",    # implicit namespace packages
+    "G",      # logging format
+    "T20",    # print / pprint
+    "Q",      # quotes
+    "COM",    # trailing commas
+    "EXE",    # executables
+    "ISC",    # implicit string concat
+    "YTT",    # 2020 compat
+    "ASYNC",  # async checks
+    "BLE",    # blind except
+    "A",      # builtins shadowing
+    "EM",     # exception messages
+    "FLY",    # f-string conversion
+    "PERF",   # perf anti-patterns
+    "FURB",   # refurb
+    "LOG",    # logging
+    "ANN401", # ban `typing.Any` in annotations
+]
+ignore = [
+    # Conflict with ruff-format (per Ruff docs).
+    "COM812",
+    "ISC001",
+    # Pydantic models legitimately have many fields.
+    "PLR0913",
+    # `raise ValueError("msg")` is fine for validators — wrapping every literal
+    # in a variable just to satisfy these rules adds noise without benefit.
+    "TRY003",
+    "EM101",
+    "EM102",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "S101",    # `assert` is the whole point of tests
+    "PLR2004", # magic numbers are fine in test fixtures
+    "INP001",  # tests dir intentionally not a package
+    "ARG001",  # pytest fixtures show up as unused args
+]
+"src/remote_venezuela_hiring/validate_data.py" = [
+    "T201",    # CLI tool — print is correct here
+]
+"src/remote_venezuela_hiring/build_site.py" = [
+    "T201",    # CLI tool — print is correct here
+]
+"src/remote_venezuela_hiring/issue_to_yaml.py" = [
+    "T201",    # CLI tool — print is correct here
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "parents"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+docstring-code-format = true
+
+# ---------------------------------------------------------------------------
+# Mypy — strict typing on top of ruff's static analysis.
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+mypy_path = "src"
+namespace_packages = true
+explicit_package_bases = true
+plugins = ["pydantic.mypy"]
+# Forbid explicit `Any` annotations. `strict = true` already enables
+# `disallow_any_generics`, `disallow_any_unimported`, and
+# `disallow_any_decorated`; this adds the explicit-annotation check.
+disallow_any_explicit = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true

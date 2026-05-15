@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Native git pre-commit hook for remote-venezuela-hiring.
+#
+# Install with:  ./scripts/install-hooks.sh
+#
+# Runs ruff (lint + format check), mypy (strict type-check), the YAML
+# validator (when data files changed), and pytest. Fails the commit on any
+# error.
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+# Activate venv if present so commit works without manually sourcing it.
+if [[ -z "${VIRTUAL_ENV:-}" && -f .venv/bin/activate ]]; then
+    # shellcheck disable=SC1091
+    source .venv/bin/activate
+fi
+
+# Files staged for commit, filtered to what's relevant.
+staged_py=$(git diff --cached --name-only --diff-filter=ACMR -- 'src/*.py' 'tests/*.py' || true)
+staged_yaml=$(git diff --cached --name-only --diff-filter=ACMR -- 'data/companies/*.yaml' || true)
+
+step() { printf "\n\033[1;34m▶ %s\033[0m\n" "$1"; }
+fail() { printf "\n\033[1;31m✘ %s\033[0m\n" "$1"; exit 1; }
+
+if [[ -n "$staged_py" ]]; then
+    step "ruff (lint + format)"
+    ruff check src tests || fail "ruff lint failed"
+    ruff format --check src tests || fail "ruff format check failed (run: ruff format src tests)"
+
+    step "mypy --strict"
+    mypy || fail "mypy failed"
+fi
+
+if [[ -n "$staged_yaml" ]]; then
+    step "validate company YAML data"
+    python -m remote_venezuela_hiring.validate_data || fail "YAML validation failed"
+fi
+
+if [[ -n "$staged_py" || -n "$staged_yaml" ]]; then
+    step "pytest"
+    pytest -q || fail "pytest failed"
+fi
+
+printf "\n\033[1;32m✔ pre-commit OK\033[0m\n"

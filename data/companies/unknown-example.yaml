@@ -1,0 +1,12 @@
+id: unknown-example
+name: Example Company
+website: https://example.com
+status: unknown
+last_checked: 2026-05-15
+verification_method: unknown
+hiring_platform: unknown
+tags:
+  - example
+notes: >
+  Template entry. Replace with a real company. Use unknown when no information is available.
+archived: false

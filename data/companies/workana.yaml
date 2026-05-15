@@ -1,0 +1,14 @@
+id: workana
+name: Workana
+website: https://www.workana.com
+status: accepts
+last_checked: 2026-05-15
+verification_method: application_form
+hiring_platform: company_site
+tags:
+  - freelance
+  - latam
+  - remote
+notes: >
+  Platform accepts registrations from Venezuela. Verified via account creation flow.
+archived: false

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% set status_labels = {
+  "accepts": "acepta",
+  "rejects": "rechaza",
+  "unknown": "desconocido"
+} %}
+
+{% set verification_labels = {
+  "application_form": "formulario de aplicación",
+  "recruiter": "reclutador",
+  "public_job_post": "publicación pública",
+  "community_report": "reporte comunitario",
+  "unknown": "desconocido"
+} %}
+
+{% block content %}
+<section class="summary">
+  <ul class="summary-list">
+    <li class="summary-item summary-total">
+      <span class="summary-count">{{ total }}</span>
+      <span class="summary-label">total</span>
+    </li>
+    <li class="summary-item summary-accepts">
+      <span class="summary-count">{{ summary["accepts"] }}</span>
+      <span class="summary-label">acepta</span>
+    </li>
+    <li class="summary-item summary-rejects">
+      <span class="summary-count">{{ summary["rejects"] }}</span>
+      <span class="summary-label">rechaza</span>
+    </li>
+    <li class="summary-item summary-unknown">
+      <span class="summary-count">{{ summary["unknown"] }}</span>
+      <span class="summary-label">desconocido</span>
+    </li>
+  </ul>
+</section>
+
+<section class="controls">
+  <label class="search-label" for="company-search">
+    Buscar
+    <input
+      type="search"
+      id="company-search"
+      placeholder="Filtra por nombre, etiqueta o plataforma…"
+      autocomplete="off"
+    />
+  </label>
+  <fieldset class="status-filter">
+    <legend>Estado</legend>
+    <label><input type="checkbox" value="accepts" checked /> acepta</label>
+    <label><input type="checkbox" value="rejects" checked /> rechaza</label>
+    <label><input type="checkbox" value="unknown" checked /> desconocido</label>
+  </fieldset>
+</section>
+
+<section class="company-list">
+  <table class="company-table" id="company-table">
+    <thead>
+      <tr>
+        <th scope="col">Empresa</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Verificado por</th>
+        <th scope="col">Plataforma de contratación</th>
+        <th scope="col">Última revisión</th>
+        <th scope="col">Etiquetas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for company in companies %}
+      <tr
+        class="company-row status-{{ company.status.value }}"
+        data-status="{{ company.status.value }}"
+        data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ company.hiring_platform.value if company.hiring_platform else '' }}"
+      >
+        <td>
+          <a href="{{ company.website_str() }}" rel="noopener nofollow" target="_blank">
+            {{ company.name }}
+          </a>
+          {% if company.notes %}
+          <p class="company-notes">{{ company.notes }}</p>
+          {% endif %}
+        </td>
+        <td>
+          <span class="badge badge-{{ company.status.value }}">
+            {{ status_labels[company.status.value] }}
+          </span>
+        </td>
+        <td>{{ verification_labels[company.verification_method.value] }}</td>
+        <td>
+          {% if company.hiring_platform %}
+            {{ company.hiring_platform.value | replace("_", " ") }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+        <td>
+          <time datetime="{{ company.last_checked.isoformat() }}">
+            {{ company.last_checked.isoformat() }}
+          </time>
+        </td>
+        <td>
+          {% for tag in company.tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p class="empty-state" id="empty-state" hidden>
+    Ninguna empresa coincide con los filtros actuales.
+  </p>
+</section>
+{% endblock %}

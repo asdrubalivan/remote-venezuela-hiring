@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}remote-venezuela-hiring{% endblock %}</title>
+  <meta name="description" content="Lista mantenida por la comunidad sobre empresas y su postura de contratación frente a candidatos basados en Venezuela." />
+  <link rel="stylesheet" href="static/main.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="./">remote-venezuela-hiring</a></h1>
+      <p class="tagline">
+        Lista mantenida por la comunidad sobre cómo manejan las empresas
+        las postulaciones de candidatos basados en Venezuela.
+      </p>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        Generado el {{ generated_at }} ·
+        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">
+          Contribuye con una entrada
+        </a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="static/filter.js" defer></script>
+</body>
+</html>
