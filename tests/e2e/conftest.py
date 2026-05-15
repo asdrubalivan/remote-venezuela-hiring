@@ -8,21 +8,25 @@ import http.server
 import socket
 import socketserver
 import threading
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from remote_venezuela_hiring.build_site import build
 
+if TYPE_CHECKING:
+    from pathlib import Path
+
 
 def _free_port() -> int:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind(("127.0.0.1", 0))
-        return s.getsockname()[1]
+        port: int = s.getsockname()[1]
+        return port
 
 
 class _QuietHandler(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, *args, **kwargs):  # noqa: D401 - silence stdout
+    def log_message(self, *args: object, **kwargs: object) -> None:
         pass
 
 

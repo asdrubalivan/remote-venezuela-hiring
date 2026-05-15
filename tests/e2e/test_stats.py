@@ -17,7 +17,8 @@ def test_bar_charts_have_fills(page: Page, base_url: str) -> None:
     assert fills.count() > 0
     # First bar's width style is non-zero.
     style = fills.first.get_attribute("style") or ""
-    assert "width" in style and "0%" not in style
+    assert "width" in style
+    assert "0%" not in style
 
 
 def test_nav_links_round_trip(page: Page, base_url: str) -> None:

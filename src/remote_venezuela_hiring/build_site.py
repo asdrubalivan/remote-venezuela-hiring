@@ -34,17 +34,21 @@ def _compile_frontend() -> None:
         return
     if not JS_BUILD_SCRIPT.exists():
         return
+    node = shutil.which("node")
+    if not node:
+        msg = (
+            "Node.js is required to build the frontend bundle. "
+            "Install Node or set RVH_SKIP_JS_BUILD=1."
+        )
+        raise RuntimeError(msg)
     try:
-        subprocess.run(
-            ["node", str(JS_BUILD_SCRIPT)],
+        subprocess.run(  # noqa: S603 - node path resolved via shutil.which; script path is repo-internal
+            [node, str(JS_BUILD_SCRIPT)],
             cwd=str(REPO_ROOT),
             check=True,
             capture_output=True,
             text=True,
         )
-    except FileNotFoundError as exc:  # node not installed
-        msg = "Node.js is required to build the frontend bundle. Install Node or set RVH_SKIP_JS_BUILD=1."
-        raise RuntimeError(msg) from exc
     except subprocess.CalledProcessError as exc:
         msg = f"Frontend bundle build failed:\n{exc.stderr or exc.stdout}"
         raise RuntimeError(msg) from exc
@@ -84,8 +88,18 @@ PLATFORM_LABELS: dict[str, str] = {
 }
 
 SPANISH_MONTHS: dict[int, str] = {
-    1: "ene", 2: "feb", 3: "mar", 4: "abr", 5: "may", 6: "jun",
-    7: "jul", 8: "ago", 9: "sep", 10: "oct", 11: "nov", 12: "dic",
+    1: "ene",
+    2: "feb",
+    3: "mar",
+    4: "abr",
+    5: "may",
+    6: "jun",
+    7: "jul",
+    8: "ago",
+    9: "sep",
+    10: "oct",
+    11: "nov",
+    12: "dic",
 }
 
 
@@ -127,7 +141,8 @@ def _stats_context(companies: list[Company]) -> dict[str, object]:
     active = [c for c in companies if not c.archived]
     archived = [c for c in companies if c.archived]
     stale_entries = sorted(
-        (c for c in active if c.is_stale()), key=lambda c: c.last_checked,
+        (c for c in active if c.is_stale()),
+        key=lambda c: c.last_checked,
     )
 
     status_counts = {
@@ -174,11 +189,14 @@ def _index_context(companies: list[Company]) -> dict[str, object]:
     )
     tags = sorted({tag for c in companies for tag in c.tags})
 
+    def _tab(value: str, count: int) -> dict[str, object]:
+        return {"value": value, "label": STATUS_TAB_LABELS[value], "count": count}
+
     status_tabs = [
-        {"value": "all", "label": STATUS_TAB_LABELS["all"], "count": len(active)},
-        {"value": "accepts", "label": STATUS_TAB_LABELS["accepts"], "count": status_counts.get("accepts", 0)},
-        {"value": "rejects", "label": STATUS_TAB_LABELS["rejects"], "count": status_counts.get("rejects", 0)},
-        {"value": "unknown", "label": STATUS_TAB_LABELS["unknown"], "count": status_counts.get("unknown", 0)},
+        _tab("all", len(active)),
+        _tab("accepts", status_counts.get("accepts", 0)),
+        _tab("rejects", status_counts.get("rejects", 0)),
+        _tab("unknown", status_counts.get("unknown", 0)),
     ]
 
     return {

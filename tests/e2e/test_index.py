@@ -41,7 +41,9 @@ def test_status_tab_filters_to_accepts(page: Page, base_url: str) -> None:
     assert visible.count() > 0
     for i in range(visible.count()):
         assert visible.nth(i).get_attribute("data-status") == "accepts"
-    expect(page.locator(".status-tab[data-status='accepts']")).to_have_attribute("aria-selected", "true")
+    expect(page.locator(".status-tab[data-status='accepts']")).to_have_attribute(
+        "aria-selected", "true"
+    )
 
 
 def test_method_filter_select(page: Page, base_url: str) -> None:
