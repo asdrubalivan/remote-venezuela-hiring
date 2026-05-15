@@ -18,3 +18,9 @@ static/filter.js
 static/filter.js.map
 static/tweaks.js
 static/tweaks.js.map
+
+# pnpm artifact written by `pnpm approve-builds` (not needed in repo)
+pnpm-workspace.yaml
+
+# Claude Code session artifacts
+.claude/

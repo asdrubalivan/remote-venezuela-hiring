@@ -13,7 +13,8 @@ from playwright.sync_api import Page, expect
 
 
 def visible_row_count(page: Page) -> int:
-    return page.locator(".company-row:visible").count()
+    count: int = page.locator(".company-row:visible").count()
+    return count
 
 
 def test_index_loads_with_expected_companies(page: Page, base_url: str) -> None:

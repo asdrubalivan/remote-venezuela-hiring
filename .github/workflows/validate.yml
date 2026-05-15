@@ -67,7 +67,10 @@ jobs:
       - name: Validate company YAML data
         run: python -m remote_venezuela_hiring.validate_data
 
-      - name: Pytest
+      - name: Install Playwright Chromium
+        run: playwright install --with-deps chromium
+
+      - name: Pytest (unit + E2E)
         run: pytest -q
 
       - name: Build site (smoke test)
