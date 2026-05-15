@@ -44,11 +44,13 @@ jobs:
         # need the postinstall — silence the warning and continue.
         run: pnpm install --frozen-lockfile --config.strict-dep-builds=false
 
+      # Invoke tools directly (not via `pnpm run`) so pnpm's pre-script
+      # deps-status-check doesn't re-trigger ERR_PNPM_IGNORED_BUILDS.
       - name: TypeScript type-check (strict)
-        run: pnpm run typecheck
+        run: ./node_modules/.bin/tsc --noEmit
 
       - name: Build frontend bundle
-        run: pnpm run build:js
+        run: node scripts/build-js.mjs
 
       - name: Install Python package
         run: pip install -e ".[dev]"

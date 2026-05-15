@@ -47,8 +47,10 @@ jobs:
         # optional under pnpm 11 — the binary ships in @esbuild/<arch>.
         run: pnpm install --frozen-lockfile --config.strict-dep-builds=false
 
+      # Invoke node directly (not via `pnpm run`) so pnpm's pre-script
+      # deps-status-check doesn't re-trigger ERR_PNPM_IGNORED_BUILDS.
       - name: Build frontend bundle (TypeScript → static/*.js)
-        run: pnpm run build:js
+        run: node scripts/build-js.mjs
 
       - name: Install Python package
         run: pip install -e .
