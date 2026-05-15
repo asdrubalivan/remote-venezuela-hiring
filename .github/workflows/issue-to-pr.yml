@@ -1,16 +1,15 @@
-# Convert an approved submission issue into a pull request.
+# Convert a submission issue into a pull request automatically.
 #
-# Trigger: a maintainer adds the `submission-approved` label to an issue that
-# already carries either `add-company` or `update-status`. The workflow then
-# parses the issue body, writes the YAML, and opens a PR.
+# Trigger: an issue is opened carrying the `add-company` or `update-status`
+# label (applied automatically by the issue template). The workflow parses
+# the issue body, writes the YAML, and opens a PR.
 #
-# We require a manual approval label so random submissions do not auto-create
-# PRs against main.
+# The sole approval gate is the manual merge of the generated PR.
 name: issue-to-pr
 
 on:
   issues:
-    types: [labeled]
+    types: [opened]
 
 permissions:
   contents: write
@@ -19,7 +18,9 @@ permissions:
 
 jobs:
   build-pr:
-    if: github.event.label.name == 'submission-approved'
+    if: |
+      contains(github.event.issue.labels.*.name, 'add-company') ||
+      contains(github.event.issue.labels.*.name, 'update-status')
     runs-on: ubuntu-latest
     steps:
       - name: Decide template
@@ -83,7 +84,6 @@ jobs:
             Auto-generated from issue #${{ github.event.issue.number }}.
 
             - Submitter: @${{ github.event.issue.user.login }}
-            - Approved by: @${{ github.event.sender.login }}
 
             ## Checklist before merging
             - [ ] Notes are factual and contain no personal data
