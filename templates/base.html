@@ -8,7 +8,9 @@
   <link rel="stylesheet" href="static/main.css" />
 </head>
 <body>
-  <header class="site-header">
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+  <header class="site-header" role="banner">
     <div class="container">
       <h1><a href="./">remote-venezuela-hiring</a></h1>
       <p class="tagline">
@@ -18,11 +20,17 @@
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" id="main-content" role="main">
+    <noscript>
+      <p class="noscript-notice">
+        La búsqueda y los filtros requieren JavaScript. Sin él la tabla se
+        muestra completa.
+      </p>
+    </noscript>
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer" role="contentinfo">
     <div class="container">
       <p>
         Generado el {{ generated_at }} ·

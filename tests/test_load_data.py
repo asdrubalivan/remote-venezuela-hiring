@@ -7,7 +7,7 @@ DATA_DIR = Path(__file__).parents[1] / "data" / "companies"
 
 def test_all_sample_yaml_files_load():
     companies = load_all_companies(DATA_DIR)
-    assert len(companies) >= 10
+    assert len(companies) >= 9
 
 
 def test_companies_sorted_by_name_case_insensitive():

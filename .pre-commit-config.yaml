@@ -30,6 +30,13 @@ repos:
           - "pydantic>=2.5"
           - "types-PyYAML>=6.0"
 
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.1
+    hooks:
+      - id: actionlint
+        # Lints .github/workflows/*.{yml,yaml} for common GitHub Actions mistakes
+        # (shell quoting, deprecated runner images, wrong context keys, etc.)
+
   - repo: local
     hooks:
       - id: rvh-validate

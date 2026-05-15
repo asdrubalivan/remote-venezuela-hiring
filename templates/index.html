@@ -36,7 +36,7 @@
   </ul>
 </section>
 
-<section class="controls">
+<section class="controls" role="search" aria-label="Filtrar empresas">
   <label class="search-label" for="company-search">
     Buscar
     <input
@@ -44,8 +44,12 @@
       id="company-search"
       placeholder="Filtra por nombre, etiqueta o plataforma…"
       autocomplete="off"
+      aria-describedby="search-hint"
     />
   </label>
+  <span id="search-hint" class="visually-hidden">
+    La búsqueda filtra la tabla por nombre de empresa, etiquetas y plataforma de contratación.
+  </span>
   <fieldset class="status-filter">
     <legend>Estado</legend>
     <label><input type="checkbox" value="accepts" checked /> acepta</label>
@@ -108,7 +112,7 @@
       {% endfor %}
     </tbody>
   </table>
-  <p class="empty-state" id="empty-state" hidden>
+  <p class="empty-state" id="empty-state" hidden role="status" aria-live="polite">
     Ninguna empresa coincide con los filtros actuales.
   </p>
 </section>

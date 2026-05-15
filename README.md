@@ -1,6 +1,6 @@
 # Remote Venezuela Hiring
 
-[![Validate](https://github.com/YOUR_USERNAME/remote-venezuela-hiring/actions/workflows/validate.yml/badge.svg)](https://github.com/YOUR_USERNAME/remote-venezuela-hiring/actions/workflows/validate.yml)
+[![Validate](https://github.com/asdrubalivan/remote-venezuela-hiring/actions/workflows/validate.yml/badge.svg)](https://github.com/asdrubalivan/remote-venezuela-hiring/actions/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 
@@ -75,7 +75,7 @@ Visita el sitio en GitHub Pages para navegar y filtrar empresas por estado, plat
 ## Desarrollo local
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/remote-venezuela-hiring.git
+git clone https://github.com/asdrubalivan/remote-venezuela-hiring.git
 cd remote-venezuela-hiring
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
