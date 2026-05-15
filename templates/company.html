@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% set current_page = "company" %}
+{% block title %}{{ company.name }} — Remote Venezuela Hiring{% endblock %}
+
+{% block content %}
+{% set stale = company.is_stale() %}
+<div class="page page-company">
+  <a href="{{ home_url|default('../index.html') }}" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Volver a todas las empresas
+  </a>
+
+  <article class="company-card">
+    <header class="company-card-head">
+      <div class="company-card-titlewrap">
+        <div class="company-card-titlerow">
+          <h1 class="company-card-title">{{ company.name }}</h1>
+          {% if company.archived %}
+          <span class="mini-tag mini-tag-archived">ARCHIVADA</span>
+          {% endif %}
+        </div>
+        <a class="company-card-website" href="{{ company.website_str() }}" target="_blank" rel="noopener noreferrer nofollow">
+          {{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+      <span class="status-badge status-badge-lg status-{{ company.status.value }}">
+        <span class="status-badge-dot"></span>
+        {{ status_labels[company.status.value] }}
+        {% if stale %}<span class="stale-marker">DESACT.</span>{% endif %}
+      </span>
+    </header>
+
+    <div class="company-card-fields">
+      <div class="field">
+        <div class="field-label">Última verificación</div>
+        <div class="field-value{% if stale %} is-stale{% endif %}">
+          {{ format_date(company.last_checked) }}
+          {% if stale %}<span class="field-stale-note">(Desactualizado)</span>{% endif %}
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">Método de verificación</div>
+        <div class="field-value">{{ verification_labels[company.verification_method.value] }}</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Plataforma de empleo</div>
+        <div class="field-value">
+          {% if company.hiring_platform %}{{ platform_labels[company.hiring_platform.value] }}{% else %}{{ platform_labels['unknown'] }}{% endif %}
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">ID del registro</div>
+        <div class="field-value field-mono">{{ company.id }}</div>
+      </div>
+    </div>
+
+    {% if company.tags %}
+    <div class="company-card-tags">
+      <div class="field-label">Etiquetas</div>
+      <div class="tag-list">
+        {% for tag in company.tags %}
+        <span class="tag-badge">{{ tag }}</span>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if company.notes %}
+    <div class="company-card-notes">
+      <div class="field-label">Notas</div>
+      <p class="notes-body">{{ company.notes }}</p>
+    </div>
+    {% endif %}
+  </article>
+
+  <aside class="callout callout-disclaimer" role="note">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>
+      No es asesoramiento legal ni una declaración oficial de la empresa. Esta información es aportada por la comunidad y puede no estar actualizada. Siempre verifica directamente con la empresa.
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/data/companies/{{ company.id }}.yaml" target="_blank" rel="noopener noreferrer" class="callout-link">Actualizar en GitHub ↗</a>
+    </span>
+  </aside>
+</div>
+{% endblock %}

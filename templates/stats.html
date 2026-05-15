@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% set current_page = "stats" %}
+{% block title %}Estadísticas — Remote Venezuela Hiring{% endblock %}
+
+{% block content %}
+<div class="page page-stats">
+  <h1 class="stats-title">Estadísticas</h1>
+  <p class="stats-lede">Datos basados en {{ active_total }} registro{% if active_total != 1 %}s{% endif %} activo{% if active_total != 1 %}s{% endif %} al {{ format_date(today) }}.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-card-label">Total activas</div>
+      <div class="stat-card-value">{{ active_total }}</div>
+      <div class="stat-card-sub">+{{ archived_total }} archivada{% if archived_total != 1 %}s{% endif %}</div>
+    </div>
+    <div class="stat-card stat-card-accepts">
+      <div class="stat-card-label">Probablemente acepta</div>
+      <div class="stat-card-value">{{ status_counts.accepts }}</div>
+      <div class="stat-card-sub">{{ status_pct.accepts }}% del total</div>
+    </div>
+    <div class="stat-card stat-card-rejects">
+      <div class="stat-card-label">No acepta</div>
+      <div class="stat-card-value">{{ status_counts.rejects }}</div>
+      <div class="stat-card-sub">{{ status_pct.rejects }}% del total</div>
+    </div>
+    <div class="stat-card stat-card-unknown">
+      <div class="stat-card-label">Desconocido</div>
+      <div class="stat-card-value">{{ status_counts.unknown }}</div>
+      <div class="stat-card-sub">{{ status_pct.unknown }}% del total</div>
+    </div>
+    <div class="stat-card{% if stale_count > 0 %} stat-card-stale{% endif %}">
+      <div class="stat-card-label">Desactualizadas</div>
+      <div class="stat-card-value">{{ stale_count }}</div>
+      <div class="stat-card-sub">Hace más de 180 días</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <section class="chart-card">
+      <h2 class="chart-title">Por método de verificación</h2>
+      <div class="bar-chart">
+        {% for key, count, pct in method_counts %}
+        <div class="bar-row">
+          <div class="bar-row-head">
+            <span class="bar-row-label">{{ verification_labels[key] }}</span>
+            <span class="bar-row-meta">{{ count }} <span class="bar-row-pct">({{ pct }}%)</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: {{ pct }}%"></div></div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <h2 class="chart-title">Por plataforma de empleo</h2>
+      <div class="bar-chart">
+        {% for key, count, pct in platform_counts %}
+        <div class="bar-row">
+          <div class="bar-row-head">
+            <span class="bar-row-label">{{ platform_labels[key] }}</span>
+            <span class="bar-row-meta">{{ count }} <span class="bar-row-pct">({{ pct }}%)</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width: {{ pct }}%"></div></div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  {% if stale_entries %}
+  <section class="callout callout-stale">
+    <div class="callout-stale-head">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ stale_entries|length }} registro{% if stale_entries|length != 1 %}s{% endif %} necesita{% if stale_entries|length != 1 %}n{% endif %} actualización
+    </div>
+    <div class="callout-stale-list">
+      {% for entry in stale_entries %}
+      <a href="company/{{ entry.id }}.html" class="stale-chip">{{ entry.name }} — última revisión {{ format_date(entry.last_checked) }}</a>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

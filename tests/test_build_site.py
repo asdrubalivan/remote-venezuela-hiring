@@ -24,7 +24,6 @@ def test_build_produces_index_html(output_dir: Path) -> None:
 def test_index_contains_company_names(output_dir: Path) -> None:
     build(output_dir=output_dir)
     html = (output_dir / "index.html").read_text(encoding="utf-8")
-    # At least the well-known sample entries should appear.
     assert "Proxify" in html
     assert "Workana" in html
     assert "Devlane" in html
@@ -33,22 +32,25 @@ def test_index_contains_company_names(output_dir: Path) -> None:
 def test_index_renders_status_badges(output_dir: Path) -> None:
     build(output_dir=output_dir)
     html = (output_dir / "index.html").read_text(encoding="utf-8")
-    assert "badge-accepts" in html
-    assert "badge-rejects" in html
-    assert "badge-unknown" in html
+    # New design exposes status-{value} classes on each badge.
+    assert "status-accepts" in html
+    assert "status-rejects" in html
+    assert "status-unknown" in html
 
 
-def test_index_has_summary_counts(output_dir: Path) -> None:
+def test_index_has_status_tabs(output_dir: Path) -> None:
     build(output_dir=output_dir)
     html = (output_dir / "index.html").read_text(encoding="utf-8")
-    assert 'class="summary-list"' in html
-    assert 'class="summary-accepts"' in html or "summary-accepts" in html
+    assert 'class="status-tabs"' in html
+    assert 'data-status="accepts"' in html
+    assert 'data-status="rejects"' in html
 
 
 def test_static_assets_copied(output_dir: Path) -> None:
     build(output_dir=output_dir)
     assert (output_dir / "static" / "main.css").is_file()
     assert (output_dir / "static" / "filter.js").is_file()
+    assert (output_dir / "static" / "tweaks.js").is_file()
 
 
 def test_build_wipes_existing_output(output_dir: Path) -> None:
@@ -67,20 +69,48 @@ def test_build_handles_empty_data_dir(tmp_path: Path, output_dir: Path) -> None:
     empty_data.mkdir()
     index_path = build(output_dir=output_dir, data_dir=empty_data)
     html = index_path.read_text(encoding="utf-8")
-    assert ">0<" in html  # total count of 0
+    # Empty dataset still renders the all-tab with a 0 count.
+    assert 'data-status="all"' in html
     assert (output_dir / "static" / "main.css").is_file()
 
 
 def test_default_paths_resolve_under_repo() -> None:
-    # Sanity-check that the module-level defaults point at real folders.
     assert TEMPLATES_DIR.is_dir()
     assert STATIC_DIR.is_dir()
     assert DEFAULT_OUTPUT_DIR.name == "site"
 
 
-def test_index_links_are_safe(output_dir: Path) -> None:
+def test_company_links_are_internal(output_dir: Path) -> None:
     build(output_dir=output_dir)
     html = (output_dir / "index.html").read_text(encoding="utf-8")
-    # Every outbound company link should be rel='noopener nofollow' target='_blank'.
-    assert 'rel="noopener nofollow"' in html
+    # Company rows now link to per-company static pages.
+    assert 'href="company/proxify.html"' in html
+
+
+def test_stats_page_generated(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    stats = output_dir / "stats.html"
+    assert stats.is_file()
+    html = stats.read_text(encoding="utf-8")
+    assert "Estadísticas" in html
+    assert "stat-card" in html
+    assert "bar-chart" in html
+
+
+def test_company_detail_pages_generated(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    company_dir = output_dir / "company"
+    assert company_dir.is_dir()
+    proxify = company_dir / "proxify.html"
+    assert proxify.is_file()
+    html = proxify.read_text(encoding="utf-8")
+    assert "Proxify" in html
+    assert "Volver a todas las empresas" in html
+
+
+def test_company_detail_outbound_links_safe(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    html = (output_dir / "company" / "proxify.html").read_text(encoding="utf-8")
+    # External links should still carry the noopener-nofollow attrs.
+    assert 'rel="noopener noreferrer nofollow"' in html
     assert 'target="_blank"' in html

@@ -11,3 +11,10 @@ build/
 .ruff_cache/
 *.so
 .env
+
+# Frontend build artifacts (compiled from src/ts/*.ts on build)
+node_modules/
+static/filter.js
+static/filter.js.map
+static/tweaks.js
+static/tweaks.js.map
