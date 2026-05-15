@@ -33,7 +33,22 @@ jobs:
           cache: pip
           cache-dependency-path: pyproject.toml
 
-      - name: Install package
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Enable corepack + pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.1.2 --activate
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend bundle (TypeScript → static/*.js)
+        run: pnpm run build:js
+
+      - name: Install Python package
         run: pip install -e .
 
       - name: Validate data before build

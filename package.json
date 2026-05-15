@@ -1,0 +1,23 @@
+{
+  "name": "remote-venezuela-hiring-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TypeScript sources for the static frontend (compiled to static/ at build time).",
+  "packageManager": "pnpm@11.1.2",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build:js": "node scripts/build-js.mjs",
+    "watch:js": "node scripts/build-js.mjs --watch",
+    "ci": "tsc --noEmit && node scripts/build-js.mjs"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.32",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
