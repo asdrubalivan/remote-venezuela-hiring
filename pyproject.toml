@@ -30,6 +30,7 @@ dev = [
 rvh-validate = "remote_venezuela_hiring.validate_data:main"
 rvh-build-site = "remote_venezuela_hiring.build_site:main"
 rvh-issue-to-yaml = "remote_venezuela_hiring.issue_to_yaml:main"
+rvh-update-readme = "remote_venezuela_hiring.update_readme:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -119,6 +120,9 @@ ignore = [
 "src/remote_venezuela_hiring/issue_to_yaml.py" = [
     "T201",    # CLI tool — print is correct here
 ]
+"src/remote_venezuela_hiring/update_readme.py" = [
+    "T201",    # CLI tool — print is correct here
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -153,6 +157,7 @@ module = "tests.*"
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
 check_untyped_defs = true
+disallow_untyped_decorators = false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true

@@ -126,7 +126,7 @@ def _make_env(templates_dir: Path) -> Environment:
 
 def _status_summary(companies: list[Company]) -> dict[str, int]:
     """Counts by status — also used as legacy ``summary`` for tests."""
-    summary = dict.fromkeys(CompanyStatus, 0)
+    summary: dict[CompanyStatus, int] = dict.fromkeys(CompanyStatus, 0)
     for company in companies:
         summary[company.status] += 1
     return {status.value: count for status, count in summary.items()}

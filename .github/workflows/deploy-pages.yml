@@ -24,6 +24,10 @@ jobs:
   build:
     name: build site
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -60,6 +64,19 @@ jobs:
 
       - name: Build site
         run: python -m remote_venezuela_hiring.build_site
+
+      - name: Update README table
+        run: python -m remote_venezuela_hiring.update_readme
+
+      - name: Commit updated README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --quiet README.md || (
+            git add README.md &&
+            git commit -m "chore: update companies table in README [skip ci]" &&
+            git push
+          )
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

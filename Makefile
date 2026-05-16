@@ -27,5 +27,8 @@ build:
 	node scripts/build-js.mjs
 	.venv/bin/python -m remote_venezuela_hiring.build_site
 
+update-readme:  ## Actualiza la tabla de empresas en README.md
+	.venv/bin/python -m remote_venezuela_hiring.update_readme
+
 serve: build
 	cd site && python -m http.server 8080

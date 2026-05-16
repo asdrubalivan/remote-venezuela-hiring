@@ -50,6 +50,31 @@ El sitio web los muestra como:
 
 ---
 
+## Directorio de empresas
+
+<!-- COMPANIES_TABLE_START -->
+| Empresa | Estado | Plataforma | Método | Tags | Verificada |
+|:--------|:------:|:----------:|:------:|:----:|:----------:|
+| [Interfell](https://interfell.com/) | ✅ Acepta | LinkedIn | Reporte comunitario | backend, frontend, remote | 16 may 2026 |
+| [Oberstaff](https://www.oberstaff.com/) | ✅ Acepta | Desconocido | Reporte comunitario | digital-marketing, marketing, recruitment, seo | 16 may 2026 |
+| [Proxify](https://proxify.io/) | ✅ Acepta | LinkedIn | Formulario de solicitud | backend, contractor, python | 15 may 2026 |
+| [Remote.com](https://remote.com/) | ✅ Acepta | Sitio de la empresa | Oferta pública | hr, remote, worldwide | 15 may 2026 |
+| [Team International](https://www.teaminternational.com/) | ✅ Acepta | Desconocido | Formulario de solicitud | backend, frontend | 15 may 2026 |
+| [Workana](https://www.workana.com/) | ✅ Acepta | Sitio de la empresa | Formulario de solicitud | freelance, latam, remote | 15 may 2026 |
+| [Devlane](https://www.devlane.com/) | ❌ No acepta | Desconocido | Formulario de solicitud | backend, staff-augmentation | 15 may 2026 |
+| [Strider](https://www.onstrider.com/) | ❌ No acepta | LinkedIn | Reporte comunitario | — | 16 may 2026 |
+| [Virtasant](https://virtasant.com/) | ❌ No acepta | Sitio de la empresa | Reporte comunitario | cloud, consulting, remote | 15 may 2026 |
+| [X-Team](https://www.xteam.com/) | ❌ No acepta | Sitio de la empresa | Formulario de solicitud | remote | 16 may 2026 |
+| [Customer.io](https://customer.io/) | ❓ Desconocido | Greenhouse | Oferta pública | backend, remote, saas | 15 may 2026 |
+| [Hostinger](https://www.hostinger.com/) | ❓ Desconocido | TeamTailor | Oferta pública | hosting, remote, tech | 15 may 2026 |
+| [Tesorio](https://www.tesorio.com/) | ❓ Desconocido | Greenhouse | Oferta pública | fintech, remote, saas | 15 may 2026 |
+| [Xebia](https://xebia.com/) | ❓ Desconocido | Lever | Oferta pública | consulting, remote | 15 may 2026 |
+<!-- COMPANIES_TABLE_END -->
+
+> Tabla actualizada automáticamente en cada push a `main`. Ver el [sitio interactivo](https://asdrubalivan.github.io/remote-venezuela-hiring/) para filtros avanzados y detalle completo.
+
+---
+
 ## Cómo usar el sitio
 
 Visita el sitio en GitHub Pages para navegar y filtrar empresas por estado, plataforma, etiquetas y más. Haz clic en el nombre de cualquier empresa para ver los detalles completos.

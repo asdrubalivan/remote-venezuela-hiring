@@ -15,7 +15,7 @@ repos:
         args: ["--maxkb=500"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.7
+    rev: v0.15.13
     hooks:
       - id: ruff
         args: ["--fix"]
@@ -47,9 +47,9 @@ repos:
         files: ^data/companies/.*\.yaml$
 
       - id: pytest
-        name: pytest
-        entry: pytest
-        language: system
+        name: pytest (unit tests)
+        entry: scripts/run-tests.sh
+        language: script
         pass_filenames: false
         files: ^(src|tests)/
         stages: [pre-push]
