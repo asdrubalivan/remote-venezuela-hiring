@@ -79,40 +79,22 @@ Visita el sitio en GitHub Pages para navegar y filtrar empresas por estado, plat
 ```bash
 git clone https://github.com/asdrubalivan/remote-venezuela-hiring.git
 cd remote-venezuela-hiring
-python -m venv .venv
+make setup
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -e ".[dev]"
 ```
 
-## Validación
+`make setup` crea el entorno virtual, instala dependencias Python y Node, e instala los pre-commit hooks automáticamente.
 
-```bash
-python -m remote_venezuela_hiring.validate_data
-```
+### Comandos disponibles
 
-Sale con código 0 si es válido (se permiten advertencias), sale con código 1 si hay errores.
-
-## Compilación
-
-```bash
-python -m remote_venezuela_hiring.build_site
-```
-
-Genera el sitio estático completo en `./site/`.
-
-## Tests
-
-```bash
-pytest tests/ -v
-```
-
-## Vista previa local
-
-```bash
-python -m remote_venezuela_hiring.build_site
-cd site && python -m http.server 8080
-# Abre http://localhost:8080
-```
+| Comando | Descripción |
+|---|---|
+| `make setup` | Setup completo del entorno (primera vez) |
+| `make test` | Corre pytest |
+| `make lint` | Ruff + Mypy |
+| `make validate` | Valida los YAML de empresas |
+| `make build` | Genera el bundle JS y el sitio estático en `./site/` |
+| `make serve` | Build + servidor local en http://localhost:8080 |
 
 ## Despliegue
 
