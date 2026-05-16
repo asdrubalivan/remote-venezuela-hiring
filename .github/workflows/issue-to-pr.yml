@@ -67,6 +67,9 @@ jobs:
       - name: Validate every entry
         run: python -m remote_venezuela_hiring.validate_data
 
+      - name: Update README table
+        run: python -m remote_venezuela_hiring.update_readme
+
       - name: Open pull request
         id: cpr
         uses: peter-evans/create-pull-request@v7

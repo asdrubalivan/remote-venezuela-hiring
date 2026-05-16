@@ -64,6 +64,7 @@ El sitio web los muestra como:
 | [Devlane](https://www.devlane.com/) | ❌ No acepta | Desconocido | Formulario de solicitud | backend, staff-augmentation | 15 may 2026 |
 | [Strider](https://www.onstrider.com/) | ❌ No acepta | LinkedIn | Reporte comunitario | — | 16 may 2026 |
 | [Virtasant](https://virtasant.com/) | ❌ No acepta | Sitio de la empresa | Reporte comunitario | cloud, consulting, remote | 15 may 2026 |
+| [X-Team](https://www.xteam.com/) | ❌ No acepta | Sitio de la empresa | Formulario de solicitud | remote | 16 may 2026 |
 | [Customer.io](https://customer.io/) | ❓ Desconocido | Greenhouse | Oferta pública | backend, remote, saas | 15 may 2026 |
 | [Hostinger](https://www.hostinger.com/) | ❓ Desconocido | TeamTailor | Oferta pública | hosting, remote, tech | 15 may 2026 |
 | [Tesorio](https://www.tesorio.com/) | ❓ Desconocido | Greenhouse | Oferta pública | fintech, remote, saas | 15 may 2026 |
