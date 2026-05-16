@@ -11,7 +11,7 @@ from remote_venezuela_hiring.build_site import (
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def output_dir(tmp_path: Path) -> Path:
     return tmp_path / "site"
 
