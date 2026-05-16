@@ -22,5 +22,7 @@ static/tweaks.js.map
 # pnpm artifact written by `pnpm approve-builds` (not needed in repo)
 pnpm-workspace.yaml
 
-# Claude Code session artifacts
+# Claude Code session artifacts (excluir skills del proyecto)
 .claude/
+!.claude/skills/
+!.claude/skills/**
