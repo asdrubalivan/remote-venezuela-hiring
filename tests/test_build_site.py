@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import pytest
@@ -10,7 +11,7 @@ from remote_venezuela_hiring.build_site import (
 )
 
 
-@pytest.fixture
+@pytest.fixture()
 def output_dir(tmp_path: Path) -> Path:
     return tmp_path / "site"
 
@@ -46,6 +47,10 @@ def test_index_has_status_tabs(output_dir: Path) -> None:
     assert 'data-status="rejects"' in html
 
 
+@pytest.mark.skipif(
+    bool(os.environ.get("RVH_SKIP_JS_BUILD")),
+    reason="JS bundle not compiled when RVH_SKIP_JS_BUILD is set",
+)
 def test_static_assets_copied(output_dir: Path) -> None:
     build(output_dir=output_dir)
     assert (output_dir / "static" / "main.css").is_file()
