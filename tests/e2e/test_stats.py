@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from playwright.sync_api import Page, expect
 
 
@@ -15,10 +17,9 @@ def test_bar_charts_have_fills(page: Page, base_url: str) -> None:
     page.goto(f"{base_url}/stats.html")
     fills = page.locator(".bar-fill")
     assert fills.count() > 0
-    # First bar's width style is non-zero.
     style = fills.first.get_attribute("style") or ""
     assert "width" in style
-    assert "0%" not in style
+    assert not re.search(r"width:\s*0%", style)
 
 
 def test_nav_links_round_trip(page: Page, base_url: str) -> None:
