@@ -1,0 +1,10 @@
+id: x-team
+name: X-Team
+website: https://www.xteam.com
+status: rejects
+last_checked: 2026-05-16
+verification_method: application_form
+hiring_platform: company_site
+tags: [remote]
+notes: Application form on company website does not accept candidates based in Venezuela.
+archived: false
