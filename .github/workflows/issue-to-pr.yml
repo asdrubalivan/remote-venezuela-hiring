@@ -71,6 +71,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v7
         with:
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: |
             ${{ steps.which.outputs.kind }}: ${{ github.event.issue.title }}
 
