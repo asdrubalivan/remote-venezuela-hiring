@@ -75,3 +75,12 @@ jobs:
 
       - name: Build site (smoke test)
         run: python -m remote_venezuela_hiring.build_site
+
+      - name: Check README table is up to date
+        run: |
+          python -m remote_venezuela_hiring.update_readme
+          git diff --exit-code README.md || {
+            echo ""
+            echo "README.md is out of date. Run: make update-readme"
+            exit 1
+          }
