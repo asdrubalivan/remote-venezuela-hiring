@@ -20,9 +20,11 @@ def visible_row_count(page: Page) -> int:
 def test_index_loads_with_expected_companies(page: Page, base_url: str) -> None:
     page.goto(base_url)
     expect(page.locator(".page-title")).to_contain_text("Compatibilidad")
-    # 9 active YAML files; all archived=false in current dataset.
-    assert visible_row_count(page) == 9
-    expect(page.locator(".status-tab[data-status='all'] .status-tab-count")).to_have_text("9")
+    tab_count = int(
+        page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text()
+    )
+    assert tab_count > 0
+    assert visible_row_count(page) == tab_count
 
 
 def test_search_filters_rows(page: Page, base_url: str) -> None:
@@ -69,12 +71,15 @@ def test_sort_by_name_toggles_direction(page: Page, base_url: str) -> None:
 
 def test_clear_filters_button(page: Page, base_url: str) -> None:
     page.goto(base_url)
+    total = int(
+        page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text()
+    )
     page.fill("#company-search", "proxify")
     page.wait_for_timeout(180)
     expect(page.locator("#clear-filters")).to_be_visible()
     page.click("#clear-filters")
     page.wait_for_function("window.RVH.filter.getState().search === ''")
-    assert visible_row_count(page) == 9
+    assert visible_row_count(page) == total
 
 
 def test_empty_state_when_no_match(page: Page, base_url: str) -> None:
