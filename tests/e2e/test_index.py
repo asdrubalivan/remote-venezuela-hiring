@@ -20,9 +20,7 @@ def visible_row_count(page: Page) -> int:
 def test_index_loads_with_expected_companies(page: Page, base_url: str) -> None:
     page.goto(base_url)
     expect(page.locator(".page-title")).to_contain_text("Compatibilidad")
-    tab_count = int(
-        page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text()
-    )
+    tab_count = int(page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text())
     assert tab_count > 0
     assert visible_row_count(page) == tab_count
 
@@ -71,9 +69,7 @@ def test_sort_by_name_toggles_direction(page: Page, base_url: str) -> None:
 
 def test_clear_filters_button(page: Page, base_url: str) -> None:
     page.goto(base_url)
-    total = int(
-        page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text()
-    )
+    total = int(page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text())
     page.fill("#company-search", "proxify")
     page.wait_for_timeout(180)
     expect(page.locator("#clear-filters")).to_be_visible()
