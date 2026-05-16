@@ -12,4 +12,6 @@ if [ ! -x "$PYTEST" ]; then
     exit 1
 fi
 
+# E2E tests (tests/e2e/) are excluded here because they require Playwright,
+# which is not expected to be installed locally. They run in CI via validate.yml.
 exec "$PYTEST" --ignore=tests/e2e -q "$@"
