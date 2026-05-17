@@ -1,10 +1,13 @@
 {
-  "id": "Hostinger",
-  "status": "rejects",
-  "verification_method": "application_form",
+  "name": "CC Solutions",
+  "website": "https://ccsolutions.io/",
+  "status": "accepts",
+  "verification_method": "community_report",
+  "hiring_platform": "greenhouse",
+  "tags": "",
   "notes": "",
   "confirmation": [
     "La información que aporto es factual y observable.",
-    "No incluí datos personales."
+    "No incluí datos personales (nombres, correos, capturas)."
   ]
 }
