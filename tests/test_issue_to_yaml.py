@@ -138,6 +138,33 @@ def test_main_add_subcommand_writes_file(isolated_data_dir: Path, tmp_path: Path
     assert (isolated_data_dir / "acme-inc.yaml").is_file()
 
 
+def test_build_update_status_normalizes_id_case(isolated_data_dir: Path) -> None:
+    seed_path = isolated_data_dir / "hostinger.yaml"
+    seed_path.write_text(
+        (
+            "id: hostinger\n"
+            "name: Hostinger\n"
+            "website: https://hostinger.com\n"
+            "status: accepts\n"
+            "last_checked: 2026-01-01\n"
+            "verification_method: application_form\n"
+            "tags: []\n"
+            "archived: false\n"
+        ),
+        encoding="utf-8",
+    )
+
+    form = {
+        "id": "Hostinger",
+        "status": "rejects",
+        "verification_method": "community_report",
+    }
+
+    company = build_update_status(form, data_dir=isolated_data_dir)
+    assert company.id == "hostinger"
+    assert company.status.value == "rejects"
+
+
 def test_main_returns_nonzero_on_validation_error(isolated_data_dir: Path, tmp_path: Path) -> None:
     form = _add_form()
     form["website"] = "not a url"
