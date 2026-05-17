@@ -146,7 +146,7 @@ def build_update_status(form: dict[str, str], data_dir: Path = DATA_DIR) -> Comp
         msg = f"missing required fields: {', '.join(missing)}"
         raise ValueError(msg)
 
-    company_id = form["id"]
+    company_id = slugify(form["id"])
     path = data_dir / f"{company_id}.yaml"
     if not path.is_file():
         msg = f"no existing entry for id '{company_id}' at {path}"
