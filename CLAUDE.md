@@ -4,6 +4,7 @@
 
 - **Nunca hacer commits directamente a `main`.** Todos los cambios van en una rama y se proponen mediante Pull Request.
 - Al ejecutar tareas con agentes, usar siempre `isolation: "worktree"` para que los cambios queden en una rama aislada.
+- **Siempre usar el virtualenv `.venv/` para ejecutar comandos Python.** Nunca usar `python`, `python3`, `pytest`, `ruff` ni `mypy` directamente — usar siempre `.venv/bin/python`, `.venv/bin/pytest`, `.venv/bin/ruff`, `.venv/bin/mypy`, etc.
 
 ## Arquitectura
 
