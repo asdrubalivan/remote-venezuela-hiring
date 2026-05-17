@@ -1,14 +1,15 @@
 id: hostinger
 name: Hostinger
-website: https://www.hostinger.com
-status: unknown
-last_checked: 2026-05-15
-verification_method: public_job_post
+website: https://www.hostinger.com/
+status: rejects
+last_checked: 2026-05-17
+verification_method: application_form
 hiring_platform: teamtailor
 tags:
-  - hosting
-  - remote
-  - tech
-notes: >
-  Lists remote positions. Venezuela-specific application flow not confirmed.
+- hosting
+- remote
+- tech
+notes: 'Lists remote positions. Venezuela-specific application flow not confirmed.
+
+  '
 archived: false
