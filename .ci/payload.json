@@ -1,13 +1,10 @@
 {
-  "name": "Team International",
-  "website": "https://www.teaminternational.com/",
-  "status": "accepts",
+  "id": "Hostinger",
+  "status": "rejects",
   "verification_method": "application_form",
-  "hiring_platform": "unknown",
-  "tags": "backend, frontend",
   "notes": "",
   "confirmation": [
     "La información que aporto es factual y observable.",
-    "No incluí datos personales (nombres, correos, capturas)."
+    "No incluí datos personales."
   ]
 }
