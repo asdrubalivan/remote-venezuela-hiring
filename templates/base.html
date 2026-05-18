@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light" data-density="Comfortable">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Compatibilidad de Contratación Remota en Venezuela{% endblock %}</title>
   <meta name="description" content="Base de datos pública, mantenida por la comunidad, sobre empresas que podrían admitir candidatos remotos basados en Venezuela." />
+  <meta name="color-scheme" content="light dark" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ static_prefix|default('static') }}/main.css" />
   <script>
-    // Apply persisted tweaks before paint to avoid theme flash.
+    // Apply persisted display prefs before paint to avoid a flash / reflow.
     (function () {
       try {
-        var t = JSON.parse(localStorage.getItem("rvh-tweaks") || "{}");
         var root = document.documentElement;
-        if (t.darkMode) root.setAttribute("data-theme", "dark");
-        if (t.density) root.setAttribute("data-density", t.density);
-        var LIGHT = { "#1d4ed8": "#dbeafe", "#6d28d9": "#ede9fe", "#0e7490": "#cffafe", "#065f46": "#d1fae5" };
-        var DARK  = { "#1d4ed8": "#3b82f6", "#6d28d9": "#8b5cf6", "#0e7490": "#06b6d4", "#065f46": "#10b981" };
-        if (t.accent) {
-          root.style.setProperty("--accent", t.darkMode ? (DARK[t.accent] || t.accent) : t.accent);
-          root.style.setProperty("--accent-light", t.darkMode ? "rgba(59,130,246,0.12)" : (LIGHT[t.accent] || "#dbeafe"));
+        var savedTheme = localStorage.getItem("rvh-theme");
+        var dark = savedTheme
+          ? savedTheme === "dark"
+          : window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (dark) root.setAttribute("data-theme", "dark");
+        if (localStorage.getItem("rvh-density") === "compact") {
+          root.setAttribute("data-density", "compact");
         }
       } catch (e) {}
     })();
@@ -34,7 +34,7 @@
 
   <main id="main-content" role="main">
     <noscript>
-      <div class="container">
+      <div class="page">
         <p class="noscript-notice">
           La búsqueda y los filtros requieren JavaScript. Sin él la tabla se muestra completa.
         </p>
@@ -55,9 +55,7 @@
     </div>
   </footer>
 
-  <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
-  {% block scripts %}
-  <script src="{{ static_prefix|default('static') }}/tweaks.js" defer></script>
-  {% endblock %}
+  <script src="{{ static_prefix|default('static') }}/theme.js" defer></script>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

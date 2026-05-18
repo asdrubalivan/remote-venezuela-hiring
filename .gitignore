@@ -16,8 +16,8 @@ build/
 node_modules/
 static/filter.js
 static/filter.js.map
-static/tweaks.js
-static/tweaks.js.map
+static/theme.js
+static/theme.js.map
 
 # pnpm artifact written by `pnpm approve-builds` (not needed in repo)
 pnpm-workspace.yaml

@@ -19,7 +19,7 @@ def visible_row_count(page: Page) -> int:
 
 def test_index_loads_with_expected_companies(page: Page, base_url: str) -> None:
     page.goto(base_url)
-    expect(page.locator(".page-title")).to_contain_text("Compatibilidad")
+    expect(page.locator(".hero-title")).to_contain_text("Compatibilidad")
     tab_count = int(page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text())
     assert tab_count > 0
     assert visible_row_count(page) == tab_count
@@ -97,8 +97,8 @@ def test_filter_applied_event_fires(page: Page, base_url: str) -> None:
     # Install a listener and verify it captures the event payload.
     page.evaluate(
         "window.__capturedEvents = [];"
-        "jQuery(document).on('rvh:filter:applied', function (e, payload) {"
-        "  window.__capturedEvents.push(payload);"
+        "document.addEventListener('rvh:filter:applied', function (e) {"
+        "  window.__capturedEvents.push(e.detail);"
         "});"
     )
     page.click(".status-tab[data-status='rejects']")

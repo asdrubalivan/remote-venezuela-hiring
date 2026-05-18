@@ -2,7 +2,7 @@
 //
 // Single source of truth for the DOM contract: what statuses exist, what
 // actions the reducer accepts, what custom events look like, and what
-// `window.RVH` exposes to Playwright. Both filter.ts and tweaks.ts import
+// `window.RVH` exposes to Playwright. Both filter.ts and theme.ts import
 // from here; if any field drifts, `pnpm typecheck` fails in CI.
 
 export type Status = "all" | "accepts" | "rejects" | "unknown";
@@ -42,20 +42,13 @@ export interface FilterAppliedDetail {
   visible: number;
 }
 
-// ── Tweaks ─────────────────────────────────────────────────────────────
+// ── Display preferences (theme + density) ──────────────────────────────
 
-export type AccentHex = "#1d4ed8" | "#6d28d9" | "#0e7490" | "#065f46";
-export type Density = "Comfortable" | "Compact";
+export type Theme = "light" | "dark";
+export type Density = "comfortable" | "compact";
 
-export interface TweaksState {
-  accent: AccentHex;
-  darkMode: boolean;
-  density: Density;
-}
-
-export interface TweaksChangedDetail {
-  state: TweaksState;
-  patch: Partial<TweaksState>;
+export interface ThemeChangedDetail {
+  theme: Theme;
 }
 
 // ── Public API exposed on window.RVH ───────────────────────────────────
@@ -66,15 +59,21 @@ export interface FilterAPI {
   rowCount(): number;
 }
 
-export interface TweaksAPI {
-  get(): TweaksState;
-  set(patch: Partial<TweaksState>): void;
-  reset(): void;
+export interface ThemeAPI {
+  get(): Theme;
+  set(theme: Theme): void;
+  toggle(): void;
+}
+
+export interface DensityAPI {
+  get(): Density;
+  set(density: Density): void;
 }
 
 export interface RVHNamespace {
   filter?: FilterAPI;
-  tweaks?: TweaksAPI;
+  theme?: ThemeAPI;
+  density?: DensityAPI;
 }
 
 declare global {
@@ -83,8 +82,7 @@ declare global {
   }
   interface DocumentEventMap {
     "rvh:filter:applied": CustomEvent<FilterAppliedDetail>;
-    "rvh:tweaks:changed": CustomEvent<TweaksChangedDetail>;
-    "rvh:tweaks:toggled": CustomEvent<{ open: boolean }>;
+    "rvh:theme:changed": CustomEvent<ThemeChangedDetail>;
   }
 }
 
