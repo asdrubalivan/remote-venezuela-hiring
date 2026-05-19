@@ -11,7 +11,6 @@
     "ci": "tsc --noEmit && node scripts/build-js.mjs"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.32",
     "esbuild": "^0.25.0",
     "typescript": "^5.7.0"
   },

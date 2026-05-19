@@ -55,7 +55,7 @@ def test_static_assets_copied(output_dir: Path) -> None:
     build(output_dir=output_dir)
     assert (output_dir / "static" / "main.css").is_file()
     assert (output_dir / "static" / "filter.js").is_file()
-    assert (output_dir / "static" / "tweaks.js").is_file()
+    assert (output_dir / "static" / "theme.js").is_file()
 
 
 def test_build_wipes_existing_output(output_dir: Path) -> None:

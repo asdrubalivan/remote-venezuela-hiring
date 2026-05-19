@@ -26,7 +26,7 @@ def _compile_frontend() -> None:
     """Compile src/ts/*.ts → static/*.js via the esbuild bundler.
 
     Runs only when Node is available *and* the TS sources exist. The compiled
-    artifacts (static/filter.js, static/tweaks.js) are not committed; tests and
+    artifacts (static/filter.js, static/theme.js) are not committed; tests and
     CI regenerate them on demand. Setting ``RVH_SKIP_JS_BUILD=1`` skips it
     (useful for unit tests that don't care about the bundle's contents).
     """
@@ -205,6 +205,8 @@ def _index_context(companies: list[Company]) -> dict[str, object]:
         "tag_options": tags,
         "status_tabs": status_tabs,
         "visible_count": len(active),
+        "hero_accepts": status_counts.get("accepts", 0),
+        "today": today_utc(),
     }
 
 
