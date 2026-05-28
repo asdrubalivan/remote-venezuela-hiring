@@ -7,6 +7,21 @@
   <h1 class="stats-title">Estadísticas</h1>
   <p class="stats-lede">Datos basados en {{ active_total }} registro{% if active_total != 1 %}s{% endif %} activo{% if active_total != 1 %}s{% endif %} al {{ format_date(today) }}.</p>
 
+  <section class="proportion" aria-label="Proporción por estado">
+    <div class="proportion-title">Distribución de {{ active_total }} empresa{% if active_total != 1 %}s{% endif %}</div>
+    <div class="proportion-bar" role="img"
+         aria-label="{{ status_pct.accepts }}% acepta, {{ status_pct.rejects }}% no acepta, {{ status_pct.unknown }}% desconocido">
+      {% if status_counts.accepts %}<span class="proportion-seg seg-accepts" style="width: {{ status_pct.accepts }}%"></span>{% endif %}
+      {% if status_counts.rejects %}<span class="proportion-seg seg-rejects" style="width: {{ status_pct.rejects }}%"></span>{% endif %}
+      {% if status_counts.unknown %}<span class="proportion-seg seg-unknown" style="width: {{ status_pct.unknown }}%"></span>{% endif %}
+    </div>
+    <div class="proportion-legend">
+      <span class="proportion-key"><span class="status-dot status-dot-accepts"></span> Probablemente acepta <b>{{ status_counts.accepts }}</b> ({{ status_pct.accepts }}%)</span>
+      <span class="proportion-key"><span class="status-dot status-dot-rejects"></span> No acepta <b>{{ status_counts.rejects }}</b> ({{ status_pct.rejects }}%)</span>
+      <span class="proportion-key"><span class="status-dot status-dot-unknown"></span> Desconocido <b>{{ status_counts.unknown }}</b> ({{ status_pct.unknown }}%)</span>
+    </div>
+  </section>
+
   <div class="stat-grid">
     <div class="stat-card">
       <div class="stat-card-label">Total activas</div>

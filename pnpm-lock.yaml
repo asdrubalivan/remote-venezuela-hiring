@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@types/jquery':
-        specifier: ^3.5.32
-        version: 3.5.34
       esbuild:
         specifier: ^0.25.0
         version: 0.25.12
@@ -176,12 +173,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@types/jquery@3.5.34':
-    resolution: {integrity: sha512-3m3939S3erqmTLJANS/uy0B6V7BorKx7RorcGZVjZ62dF5PAGbKEDZK1CuLtKombJkFA2T1jl8LAIIs7IV6gBQ==}
-
-  '@types/sizzle@2.3.10':
-    resolution: {integrity: sha512-TC0dmN0K8YcWEAEfiPi5gJP14eJe30TTGjkvek3iM/1NdHHsdCA/Td6GvNndMOo/iSnIsZ4HuuhrYPDAmbxzww==}
-
   esbuild@0.25.12:
     resolution: {integrity: sha512-bbPBYYrtZbkt6Os6FiTLCTFxvq4tt3JKall1vRwshA3fdVztsLAatFaZobhkBC8/BrPetoa0oksYoKXoG4ryJg==}
     engines: {node: '>=18'}
@@ -271,12 +262,6 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.12':
     optional: true
-
-  '@types/jquery@3.5.34':
-    dependencies:
-      '@types/sizzle': 2.3.10
-
-  '@types/sizzle@2.3.10': {}
 
   esbuild@0.25.12:
     optionalDependencies:

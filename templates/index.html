@@ -3,16 +3,21 @@
 
 {% block content %}
 <div class="page page-index">
-  <header class="page-header">
-    <h1 class="page-title">
+  <header class="hero">
+    <h1 class="hero-title">
       Compatibilidad de Contratación Remota en 🇻🇪 Venezuela
     </h1>
-    <p class="page-lede">
+    <p class="hero-lede">
       Base de datos pública, mantenida por la comunidad, de empresas que pueden
       aceptar candidatos remotos desde Venezuela.
     </p>
+    <div class="hero-stats" aria-label="Resumen">
+      <span class="hero-stat"><strong>{{ visible_count }}</strong> empresas</span>
+      <span class="hero-stat hero-stat-accepts"><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
+      <span class="hero-stat">actualizado {{ format_date(today) }}</span>
+    </div>
     <div class="callout callout-notice" role="note">
-      <svg class="callout-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg class="callout-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
       <span>
@@ -23,9 +28,9 @@
     </div>
   </header>
 
-  <section class="filter-bar" role="search" aria-label="Filtrar empresas">
+  <section class="toolbar" role="search" aria-label="Filtrar empresas">
     <div class="search-field">
-      <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
       <input
@@ -38,39 +43,51 @@
       />
     </div>
 
-    <select id="filter-method" class="filter-select" aria-label="Filtrar por verificación">
-      <option value="all">Verificación: Todas</option>
-      {% for value in verification_options %}
-      <option value="{{ value }}">{{ verification_labels[value] }}</option>
-      {% endfor %}
-    </select>
+    <button type="button" id="filter-toggle" class="filter-toggle" aria-expanded="false" aria-controls="filter-panel">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
+      </svg>
+      Filtros
+      <span class="filter-toggle-count" id="filter-toggle-count" hidden>0</span>
+    </button>
 
-    <select id="filter-platform" class="filter-select" aria-label="Filtrar por plataforma">
-      <option value="all">Plataforma: Todas</option>
-      {% for value in platform_options %}
-      <option value="{{ value }}">{{ platform_labels[value] }}</option>
-      {% endfor %}
-    </select>
+    <div class="filter-panel is-collapsed" id="filter-panel">
+      <select id="filter-method" class="filter-select" aria-label="Filtrar por verificación">
+        <option value="all">Verificación: Todas</option>
+        {% for value in verification_options %}
+        <option value="{{ value }}">{{ verification_labels[value] }}</option>
+        {% endfor %}
+      </select>
 
-    <select id="filter-tag" class="filter-select" aria-label="Filtrar por etiqueta">
-      <option value="all">Etiqueta: Todas</option>
-      {% for tag in tag_options %}
-      <option value="{{ tag }}">{{ tag }}</option>
-      {% endfor %}
-    </select>
+      <select id="filter-platform" class="filter-select" aria-label="Filtrar por plataforma">
+        <option value="all">Plataforma: Todas</option>
+        {% for value in platform_options %}
+        <option value="{{ value }}">{{ platform_labels[value] }}</option>
+        {% endfor %}
+      </select>
 
-    <label class="filter-check">
-      <input type="checkbox" id="filter-archived" />
-      Mostrar archivadas
-    </label>
+      <select id="filter-tag" class="filter-select" aria-label="Filtrar por etiqueta">
+        <option value="all">Etiqueta: Todas</option>
+        {% for tag in tag_options %}
+        <option value="{{ tag }}">{{ tag }}</option>
+        {% endfor %}
+      </select>
 
-    <button type="button" id="clear-filters" class="btn-ghost is-hidden" aria-label="Limpiar filtros">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+      <label class="filter-check">
+        <input type="checkbox" id="filter-archived" />
+        Mostrar archivadas
+      </label>
+    </div>
+
+    <button type="button" id="clear-filters" class="btn-ghost is-hidden" aria-label="Limpiar todos los filtros">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
       Limpiar
     </button>
   </section>
+
+  <div class="filter-chips" id="filter-chips" aria-label="Filtros activos"></div>
 
   <section class="status-tabs" role="tablist" aria-label="Filtrar por estado">
     {% for tab in status_tabs %}
@@ -99,7 +116,7 @@
           <th scope="col" class="sort-th is-active" data-sort="name" data-dir="asc" style="min-width:200px">
             <span>Empresa <span class="sort-arrow">▲</span></span>
           </th>
-          <th scope="col" class="sort-th" data-sort="status" style="min-width:220px">
+          <th scope="col" class="sort-th" data-sort="status" style="min-width:200px">
             <span>Estado <span class="sort-arrow">⇅</span></span>
           </th>
           <th scope="col" class="sort-th" data-sort="last_checked" style="min-width:130px">
@@ -141,7 +158,7 @@
             </div>
           </td>
 
-          <td>
+          <td data-label="Estado">
             <span class="status-badge status-{{ company.status.value }}">
               <span class="status-badge-dot"></span>
               {{ status_labels[company.status.value] }}
@@ -151,15 +168,15 @@
             </span>
           </td>
 
-          <td class="cell-date{% if stale %} is-stale{% endif %}">
+          <td class="cell-date{% if stale %} is-stale{% endif %}" data-label="Últ. verificación">
             {{ format_date(company.last_checked) }}
           </td>
 
-          <td class="hide-mobile cell-muted">
+          <td class="hide-mobile cell-muted" data-label="Verificación">
             {{ verification_labels[company.verification_method.value] }}
           </td>
 
-          <td class="hide-mobile cell-muted">
+          <td class="hide-mobile cell-muted" data-label="Plataforma">
             {% if company.hiring_platform %}
               {{ platform_labels[company.hiring_platform.value] }}
             {% else %}
@@ -167,7 +184,7 @@
             {% endif %}
           </td>
 
-          <td class="hide-mobile">
+          <td class="hide-mobile" data-label="Etiquetas">
             <div class="tag-list">
               {% for tag in company.tags[:3] %}
               <span class="tag-badge">{{ tag }}</span>
@@ -198,6 +215,5 @@
 {% endblock %}
 
 {% block scripts %}
-{{ super() }}
 <script src="{{ static_prefix|default('static') }}/filter.js" defer></script>
 {% endblock %}

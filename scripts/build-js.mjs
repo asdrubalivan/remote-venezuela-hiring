@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Compiles src/ts/{filter,tweaks}.ts → static/{filter,tweaks}.js as IIFE
-// bundles with jQuery treated as a global ($). Run by `pnpm run build:js`
+// Compiles src/ts/{filter,theme}.ts → static/{filter,theme}.js as IIFE
+// bundles (vanilla, no runtime dependencies). Run by `pnpm run build:js`
 // and invoked from the Python build pipeline.
 
 import { build, context } from "esbuild";
@@ -14,7 +14,7 @@ const root = resolve(here, "..");
 const baseOptions = {
   entryPoints: [
     resolve(root, "src/ts/filter.ts"),
-    resolve(root, "src/ts/tweaks.ts"),
+    resolve(root, "src/ts/theme.ts"),
   ],
   outdir: resolve(root, "static"),
   bundle: true,
@@ -23,8 +23,6 @@ const baseOptions = {
   sourcemap: true,
   legalComments: "none",
   logLevel: "info",
-  // jQuery loaded from CDN as a global — don't try to resolve it.
-  external: ["jquery"],
   define: { "process.env.NODE_ENV": '"production"' },
 };
 
@@ -36,5 +34,5 @@ if (watch) {
   console.log("[build-js] watching src/ts/*.ts …");
 } else {
   await build(baseOptions);
-  console.log("[build-js] compiled static/filter.js + static/tweaks.js");
+  console.log("[build-js] compiled static/filter.js + static/theme.js");
 }

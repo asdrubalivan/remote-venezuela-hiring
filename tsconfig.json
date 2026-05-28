@@ -15,7 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": false,
-    "types": ["jquery"]
+    "types": []
   },
   "include": ["src/ts/**/*.ts"]
 }

@@ -1,14 +1,13 @@
-// filter.ts — Index page filtering, sorting and status tabs.
+// filter.ts — Index page filtering, sorting, status tabs and active-filter
+// chips. Vanilla TypeScript, no framework.
 //
 // Patterns:
 //   - Reducer: every interaction becomes a discriminated `FilterAction`;
 //     `reduce(state, action)` is pure and exhaustively typed.
 //   - Strategy maps: FILTERS and SORTERS are objects keyed by column/filter
 //     name, so adding a new column is one entry, not an if/else branch.
-//   - Module/Namespace: exposes window.RVH.filter for tests + custom event
-//     `rvh:filter:applied` for async-friendly Playwright waits.
-//
-// jQuery is loaded from CDN as a global; declared here as `$` only for typing.
+//   - Module/Namespace: exposes window.RVH.filter for tests + native custom
+//     event `rvh:filter:applied` for async-friendly Playwright waits.
 
 import {
   type FilterAction,
@@ -21,13 +20,11 @@ import {
   isStatus,
 } from "./contracts";
 
-declare const jQuery: JQueryStatic;
-
-(function ($: JQueryStatic): void {
+(function (): void {
   "use strict";
 
-  const $table = $("#company-table");
-  if ($table.length === 0) return;
+  const table = document.getElementById("company-table");
+  if (!table) return;
 
   // ── Strategy maps ────────────────────────────────────────────────────
   const FILTERS: Record<string, (row: HTMLElement, s: FilterState) => boolean> = {
@@ -53,14 +50,40 @@ declare const jQuery: JQueryStatic;
   };
 
   // ── DOM refs (captured once) ─────────────────────────────────────────
-  const $tbody          = $table.find("tbody");
-  const tbodyEl         = $tbody[0] as HTMLElement;
-  const rows: HTMLElement[] = $tbody.find(".company-row").toArray();
-  const $statusTabs     = $(".status-tab");
-  const $sortHeaders    = $(".sort-th");
-  const $clearBtn       = $("#clear-filters");
-  const $emptyState     = $("#empty-state");
-  const $resultsCounter = $("#results-counter");
+  const tbodyEl     = table.querySelector("tbody") as HTMLElement;
+  const rows        = Array.from(tbodyEl.querySelectorAll<HTMLElement>(".company-row"));
+  const statusTabs  = Array.from(document.querySelectorAll<HTMLElement>(".status-tab"));
+  const sortHeaders = Array.from(document.querySelectorAll<HTMLElement>(".sort-th"));
+  const clearBtn        = document.getElementById("clear-filters");
+  const emptyState      = document.getElementById("empty-state");
+  const resultsCounter  = document.getElementById("results-counter");
+  const chipsEl         = document.getElementById("filter-chips");
+  const searchInput     = document.getElementById("company-search") as HTMLInputElement | null;
+  const methodSel       = document.getElementById("filter-method") as HTMLSelectElement | null;
+  const platformSel     = document.getElementById("filter-platform") as HTMLSelectElement | null;
+  const tagSel          = document.getElementById("filter-tag") as HTMLSelectElement | null;
+  const archivedCheck   = document.getElementById("filter-archived") as HTMLInputElement | null;
+  const filterToggle    = document.getElementById("filter-toggle");
+  const filterPanel     = document.getElementById("filter-panel");
+  const filterToggleCnt = document.getElementById("filter-toggle-count");
+
+  // Status-tab labels, read once (text node minus dot and count badge).
+  const statusLabels: Record<string, string> = {};
+  for (const tab of statusTabs) {
+    const key = String(tab.dataset["status"]);
+    const clone = tab.cloneNode(true) as HTMLElement;
+    clone.querySelector(".status-tab-count")?.remove();
+    clone.querySelector(".status-dot")?.remove();
+    statusLabels[key] = (clone.textContent ?? "").trim();
+  }
+
+  function optionLabel(sel: HTMLSelectElement | null, value: string): string {
+    if (!sel) return value;
+    for (const opt of Array.from(sel.options)) {
+      if (opt.value === value) return opt.text;
+    }
+    return value;
+  }
 
   // ── State ────────────────────────────────────────────────────────────
   const initialState: FilterState = {
@@ -135,6 +158,57 @@ declare const jQuery: JQueryStatic;
     );
   }
 
+  // ── Active-filter chips ──────────────────────────────────────────────
+  type ChipKind = "search" | "status" | "method" | "platform" | "tag";
+
+  function renderChips(s: FilterState): void {
+    if (!chipsEl) return;
+    const chips: Array<{ kind: ChipKind; label: string }> = [];
+    if (s.search) chips.push({ kind: "search", label: `“${s.search}”` });
+    if (s.status !== "all") {
+      chips.push({ kind: "status", label: statusLabels[s.status] ?? s.status });
+    }
+    if (s.method !== "all") {
+      chips.push({ kind: "method", label: optionLabel(methodSel, s.method) });
+    }
+    if (s.platform !== "all") {
+      chips.push({ kind: "platform", label: optionLabel(platformSel, s.platform) });
+    }
+    if (s.tag !== "all") chips.push({ kind: "tag", label: s.tag });
+
+    chipsEl.textContent = "";
+    for (const chip of chips) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "filter-chip";
+      btn.dataset["clear"] = chip.kind;
+      btn.setAttribute("aria-label", `Quitar filtro: ${chip.label}`);
+      const text = document.createElement("span");
+      text.textContent = chip.label;
+      const x = document.createElement("span");
+      x.className = "filter-chip-x";
+      x.setAttribute("aria-hidden", "true");
+      x.textContent = "✕";
+      btn.append(text, x);
+      chipsEl.appendChild(btn);
+    }
+  }
+
+  function updateFilterToggle(s: FilterState): void {
+    if (!filterToggleCnt) return;
+    let n = 0;
+    if (s.method !== "all") n += 1;
+    if (s.platform !== "all") n += 1;
+    if (s.tag !== "all") n += 1;
+    if (s.archived) n += 1;
+    if (n > 0) {
+      filterToggleCnt.textContent = String(n);
+      filterToggleCnt.hidden = false;
+    } else {
+      filterToggleCnt.hidden = true;
+    }
+  }
+
   // ── Render (idempotent) ──────────────────────────────────────────────
   function render(): void {
     const visible: HTMLElement[] = [];
@@ -162,56 +236,56 @@ declare const jQuery: JQueryStatic;
     tbodyEl.appendChild(frag);
 
     const counts = countByStatus(state);
-    $statusTabs.each(function () {
-      const $tab = $(this);
-      const key = String($tab.data("status")) as Status;
+    for (const tab of statusTabs) {
+      const key = String(tab.dataset["status"]) as Status;
       const isActive = state.status === key;
-      $tab
-        .toggleClass("is-active", isActive)
-        .attr("aria-selected", isActive ? "true" : "false");
-      const count = counts[key] ?? 0;
-      $tab.find(".status-tab-count").text(String(count));
-    });
-
-    const totalForStatus =
-      state.status === "all" ? counts.all : (counts[state.status] ?? 0);
-    if (visible.length !== totalForStatus) {
-      $resultsCounter.text(visible.length + " de " + counts.all + " empresas");
-    } else {
-      $resultsCounter.text(
-        visible.length + " empresa" + (visible.length !== 1 ? "s" : ""),
-      );
+      tab.classList.toggle("is-active", isActive);
+      tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      const countEl = tab.querySelector(".status-tab-count");
+      if (countEl) countEl.textContent = String(counts[key] ?? 0);
     }
 
-    $clearBtn.toggleClass("is-hidden", !hasActiveFilters(state));
-
-    if (visible.length === 0) {
-      $emptyState.prop("hidden", false);
-      $table.css("display", "none");
-    } else {
-      $emptyState.prop("hidden", true);
-      $table.css("display", "");
-    }
-
-    $sortHeaders.each(function () {
-      const $th = $(this);
-      const arrow = $th.find(".sort-arrow");
-      if ($th.data("sort") === state.sortBy) {
-        $th.addClass("is-active");
-        arrow.text(state.sortDir === "asc" ? "▲" : "▼");
-        $th.attr(
-          "aria-sort",
-          state.sortDir === "asc" ? "ascending" : "descending",
-        );
+    if (resultsCounter) {
+      const totalForStatus =
+        state.status === "all" ? counts.all : (counts[state.status] ?? 0);
+      if (visible.length !== totalForStatus) {
+        resultsCounter.textContent = visible.length + " de " + counts.all + " empresas";
       } else {
-        $th.removeClass("is-active");
-        arrow.text("⇅");
-        $th.attr("aria-sort", "none");
+        resultsCounter.textContent =
+          visible.length + " empresa" + (visible.length !== 1 ? "s" : "");
       }
-    });
+    }
+
+    clearBtn?.classList.toggle("is-hidden", !hasActiveFilters(state));
+
+    if (emptyState && (table as HTMLElement)) {
+      if (visible.length === 0) {
+        emptyState.hidden = false;
+        (table as HTMLElement).style.display = "none";
+      } else {
+        emptyState.hidden = true;
+        (table as HTMLElement).style.display = "";
+      }
+    }
+
+    for (const th of sortHeaders) {
+      const arrow = th.querySelector(".sort-arrow");
+      if (th.dataset["sort"] === state.sortBy) {
+        th.classList.add("is-active");
+        if (arrow) arrow.textContent = state.sortDir === "asc" ? "▲" : "▼";
+        th.setAttribute("aria-sort", state.sortDir === "asc" ? "ascending" : "descending");
+      } else {
+        th.classList.remove("is-active");
+        if (arrow) arrow.textContent = "⇅";
+        th.setAttribute("aria-sort", "none");
+      }
+    }
+
+    renderChips(state);
+    updateFilterToggle(state);
 
     const detail: FilterAppliedDetail = { state, visible: visible.length };
-    $(document).trigger("rvh:filter:applied", [detail]);
+    document.dispatchEvent(new CustomEvent("rvh:filter:applied", { detail }));
   }
 
   function dispatch(action: FilterAction): void {
@@ -219,39 +293,88 @@ declare const jQuery: JQueryStatic;
     render();
   }
 
-  // ── Controllers (jQuery delegation, debounced search) ────────────────
+  function resetControls(): void {
+    if (searchInput) searchInput.value = "";
+    if (methodSel) methodSel.value = "all";
+    if (platformSel) platformSel.value = "all";
+    if (tagSel) tagSel.value = "all";
+  }
+
+  // ── Controllers ──────────────────────────────────────────────────────
   let searchTimer: ReturnType<typeof setTimeout> | null = null;
-  $("#company-search").on("input", function () {
-    const v = String($(this).val() ?? "").trim().toLowerCase();
+  searchInput?.addEventListener("input", () => {
+    const v = String(searchInput.value ?? "").trim().toLowerCase();
     if (searchTimer) clearTimeout(searchTimer);
     searchTimer = setTimeout(() => dispatch({ type: "SEARCH", value: v }), 120);
   });
 
-  $("#filter-method").on("change", function () {
-    dispatch({ type: "FILTER", patch: { method: (this as HTMLSelectElement).value } });
+  methodSel?.addEventListener("change", () => {
+    dispatch({ type: "FILTER", patch: { method: methodSel.value } });
   });
-  $("#filter-platform").on("change", function () {
-    dispatch({ type: "FILTER", patch: { platform: (this as HTMLSelectElement).value } });
+  platformSel?.addEventListener("change", () => {
+    dispatch({ type: "FILTER", patch: { platform: platformSel.value } });
   });
-  $("#filter-tag").on("change", function () {
-    dispatch({ type: "FILTER", patch: { tag: (this as HTMLSelectElement).value } });
+  tagSel?.addEventListener("change", () => {
+    dispatch({ type: "FILTER", patch: { tag: tagSel.value } });
   });
-  $("#filter-archived").on("change", function () {
-    dispatch({ type: "ARCHIVED", value: (this as HTMLInputElement).checked });
+  archivedCheck?.addEventListener("change", () => {
+    dispatch({ type: "ARCHIVED", value: archivedCheck.checked });
   });
 
-  $statusTabs.on("click", function () {
-    const raw = String($(this).data("status"));
-    if (isStatus(raw)) dispatch({ type: "STATUS", value: raw });
-  });
-  $sortHeaders.on("click", function () {
-    const raw = String($(this).data("sort"));
-    if (isSortKey(raw)) dispatch({ type: "SORT", key: raw });
-  });
-  $("#clear-filters, #empty-clear").on("click", function () {
-    $("#company-search").val("");
-    $("#filter-method, #filter-platform, #filter-tag").val("all");
+  for (const tab of statusTabs) {
+    tab.addEventListener("click", () => {
+      const raw = String(tab.dataset["status"]);
+      if (isStatus(raw)) dispatch({ type: "STATUS", value: raw });
+    });
+  }
+  for (const th of sortHeaders) {
+    th.addEventListener("click", () => {
+      const raw = String(th.dataset["sort"]);
+      if (isSortKey(raw)) dispatch({ type: "SORT", key: raw });
+    });
+  }
+
+  function clearAll(): void {
+    resetControls();
     dispatch({ type: "CLEAR" });
+  }
+  clearBtn?.addEventListener("click", clearAll);
+  document.getElementById("empty-clear")?.addEventListener("click", clearAll);
+
+  // Per-chip removal (event delegation).
+  chipsEl?.addEventListener("click", (e) => {
+    const chip = (e.target as HTMLElement).closest<HTMLElement>(".filter-chip");
+    if (!chip) return;
+    switch (chip.dataset["clear"]) {
+      case "search":
+        if (searchInput) searchInput.value = "";
+        dispatch({ type: "SEARCH", value: "" });
+        break;
+      case "status":
+        dispatch({ type: "STATUS", value: "all" });
+        break;
+      case "method":
+        if (methodSel) methodSel.value = "all";
+        dispatch({ type: "FILTER", patch: { method: "all" } });
+        break;
+      case "platform":
+        if (platformSel) platformSel.value = "all";
+        dispatch({ type: "FILTER", patch: { platform: "all" } });
+        break;
+      case "tag":
+        if (tagSel) tagSel.value = "all";
+        dispatch({ type: "FILTER", patch: { tag: "all" } });
+        break;
+      default:
+        break;
+    }
+  });
+
+  // Mobile: collapsible filter panel.
+  filterToggle?.addEventListener("click", () => {
+    if (!filterPanel) return;
+    const collapsed = filterPanel.classList.toggle("is-collapsed");
+    filterToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
   });
 
   // ── Public API for Playwright ────────────────────────────────────────
@@ -263,4 +386,4 @@ declare const jQuery: JQueryStatic;
   };
 
   render();
-})(jQuery);
+})();
