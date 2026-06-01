@@ -7,6 +7,7 @@ from remote_venezuela_hiring.build_site import (
     DEFAULT_OUTPUT_DIR,
     STATIC_DIR,
     TEMPLATES_DIR,
+    _make_env,
     build,
     website_with_utm,
 )
@@ -140,3 +141,9 @@ def test_website_with_utm_plain_url() -> None:
 def test_website_with_utm_existing_params() -> None:
     result = website_with_utm("https://example.com?ref=foo")
     assert result == "https://example.com?ref=foo&utm_source=contrataenve.com&utm_medium=referral"
+
+
+def test_website_with_utm_is_jinja_global() -> None:
+    env = _make_env(TEMPLATES_DIR)
+    assert "website_with_utm" in env.globals
+    assert env.globals["website_with_utm"] is website_with_utm

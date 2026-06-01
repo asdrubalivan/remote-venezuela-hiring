@@ -127,6 +127,7 @@ def _make_env(templates_dir: Path) -> Environment:
     env.globals["verification_labels"] = VERIFICATION_LABELS
     env.globals["platform_labels"] = PLATFORM_LABELS
     env.globals["format_date"] = _format_date
+    env.globals["website_with_utm"] = website_with_utm
     return env
 
 
