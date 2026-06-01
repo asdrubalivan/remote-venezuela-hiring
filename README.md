@@ -63,6 +63,7 @@ El sitio web los muestra como:
 | [Proxify](https://proxify.io/) | ✅ Acepta | LinkedIn | Formulario de solicitud | backend, contractor, python | 15 may 2026 |
 | [Remote.com](https://remote.com/) | ✅ Acepta | Sitio de la empresa | Oferta pública | hr, remote, worldwide | 15 may 2026 |
 | [Team International](https://www.teaminternational.com/) | ✅ Acepta | Desconocido | Formulario de solicitud | backend, frontend | 15 may 2026 |
+| [Virtrify](https://www.virtrify.com/) | ✅ Acepta | Desconocido | Reclutador/a | hr, it, seo, va | 1 jun 2026 |
 | [Workana](https://www.workana.com/) | ✅ Acepta | Sitio de la empresa | Formulario de solicitud | freelance, latam, remote | 15 may 2026 |
 | [Devlane](https://www.devlane.com/) | ❌ No acepta | Desconocido | Formulario de solicitud | backend, staff-augmentation | 15 may 2026 |
 | [Hostinger](https://www.hostinger.com/) | ❌ No acepta | TeamTailor | Formulario de solicitud | hosting, remote, tech | 17 may 2026 |
