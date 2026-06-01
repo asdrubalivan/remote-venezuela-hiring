@@ -78,6 +78,9 @@ jobs:
             git push
           )
 
+      - name: Add CNAME for custom domain
+        run: echo "contrataenve.com" > site/CNAME
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
