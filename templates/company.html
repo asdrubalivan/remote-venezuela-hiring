@@ -21,7 +21,7 @@
           <span class="mini-tag mini-tag-archived">ARCHIVADA</span>
           {% endif %}
         </div>
-        <a class="company-card-website" href="{{ company.website_str() }}" target="_blank" rel="noopener noreferrer nofollow">
+        <a class="company-card-website" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">
           {{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>

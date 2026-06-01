@@ -688,6 +688,7 @@ select:focus:not(:focus-visible) { outline: none; }
 }
 .company-link:hover { color: var(--accent); }
 .cell-domain {
+  display: block;
   font-size: var(--fs-xs); color: var(--text-subtle);
   margin-top: 2px; font-family: var(--font-mono);
 }

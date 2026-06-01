@@ -7,7 +7,9 @@ from remote_venezuela_hiring.build_site import (
     DEFAULT_OUTPUT_DIR,
     STATIC_DIR,
     TEMPLATES_DIR,
+    _make_env,
     build,
+    website_with_utm,
 )
 
 
@@ -129,3 +131,33 @@ def test_agents_txt_generated(output_dir: Path) -> None:
     assert "User-agent: *" in content
     assert "Allow: /" in content
     assert "data/companies" in content
+
+
+def test_website_with_utm_plain_url() -> None:
+    result = website_with_utm("https://proxify.io")
+    assert result == "https://proxify.io?utm_source=contrataenve.com&utm_medium=referral"
+
+
+def test_website_with_utm_existing_params() -> None:
+    result = website_with_utm("https://example.com?ref=foo")
+    assert result == "https://example.com?ref=foo&utm_source=contrataenve.com&utm_medium=referral"
+
+
+def test_website_with_utm_is_jinja_global() -> None:
+    env = _make_env(TEMPLATES_DIR)
+    assert "website_with_utm" in env.globals
+    assert env.globals["website_with_utm"] is website_with_utm
+
+
+def test_index_domain_links_have_utm_params(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    html = (output_dir / "index.html").read_text(encoding="utf-8")
+    # Jinja2 escapa & a &amp; en atributos HTML — eso es correcto y esperado.
+    assert "utm_source=contrataenve.com&amp;utm_medium=referral" in html
+    assert '<a class="cell-domain"' in html
+
+
+def test_company_detail_website_link_has_utm(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    html = (output_dir / "company" / "proxify.html").read_text(encoding="utf-8")
+    assert "utm_source=contrataenve.com&amp;utm_medium=referral" in html

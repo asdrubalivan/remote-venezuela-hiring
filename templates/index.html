@@ -153,9 +153,12 @@
             {% if company.archived %}
             <span class="mini-tag mini-tag-archived">ARCHIVADA</span>
             {% endif %}
-            <div class="cell-domain">
+            <a class="cell-domain"
+               href="{{ website_with_utm(company.website_str()) }}"
+               target="_blank"
+               rel="noopener noreferrer nofollow">
               {{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}
-            </div>
+            </a>
           </td>
 
           <td data-label="Estado">
