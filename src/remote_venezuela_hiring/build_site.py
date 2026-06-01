@@ -103,6 +103,12 @@ SPANISH_MONTHS: dict[int, str] = {
 }
 
 
+def website_with_utm(url: str) -> str:
+    utm = "utm_source=contrataenve.com&utm_medium=referral"
+    separator = "&" if "?" in url else "?"
+    return f"{url}{separator}{utm}"
+
+
 def _format_date(d: date) -> str:
     """Return ``"15 may 2026"``-style date strings for the templates."""
     return f"{d.day} {SPANISH_MONTHS[d.month]} {d.year}"

@@ -8,6 +8,7 @@ from remote_venezuela_hiring.build_site import (
     STATIC_DIR,
     TEMPLATES_DIR,
     build,
+    website_with_utm,
 )
 
 
@@ -129,3 +130,13 @@ def test_agents_txt_generated(output_dir: Path) -> None:
     assert "User-agent: *" in content
     assert "Allow: /" in content
     assert "data/companies" in content
+
+
+def test_website_with_utm_plain_url() -> None:
+    result = website_with_utm("https://proxify.io")
+    assert result == "https://proxify.io?utm_source=contrataenve.com&utm_medium=referral"
+
+
+def test_website_with_utm_existing_params() -> None:
+    result = website_with_utm("https://example.com?ref=foo")
+    assert result == "https://example.com?ref=foo&utm_source=contrataenve.com&utm_medium=referral"
