@@ -119,3 +119,13 @@ def test_company_detail_outbound_links_safe(output_dir: Path) -> None:
     # External links should still carry the noopener-nofollow attrs.
     assert 'rel="noopener noreferrer nofollow"' in html
     assert 'target="_blank"' in html
+
+
+def test_agents_txt_generated(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    agents = output_dir / "agents.txt"
+    assert agents.is_file()
+    content = agents.read_text(encoding="utf-8")
+    assert "User-agent: *" in content
+    assert "Allow: /" in content
+    assert "data/companies" in content
