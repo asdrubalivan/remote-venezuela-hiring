@@ -59,6 +59,7 @@ El sitio web los muestra como:
 | [BairesDev](https://www.bairesdev.com/) | ✅ Acepta | Greenhouse | Formulario de solicitud | backend, frontend | 17 may 2026 |
 | [CC Solutions](https://ccsolutions.io/) | ✅ Acepta | Greenhouse | Reporte comunitario | — | 17 may 2026 |
 | [Interfell](https://interfell.com/) | ✅ Acepta | LinkedIn | Reporte comunitario | backend, frontend, remote | 16 may 2026 |
+| [Not Average](https://www.notaverage.media/) | ✅ Acepta | Sitio de la empresa | Oferta pública | influencers, marketing, remote | 1 jun 2026 |
 | [Oberstaff](https://www.oberstaff.com/) | ✅ Acepta | Desconocido | Reporte comunitario | digital-marketing, marketing, recruitment, seo | 16 may 2026 |
 | [Proxify](https://proxify.io/) | ✅ Acepta | LinkedIn | Formulario de solicitud | backend, contractor, python | 15 may 2026 |
 | [Remote.com](https://remote.com/) | ✅ Acepta | Sitio de la empresa | Oferta pública | hr, remote, worldwide | 15 may 2026 |
