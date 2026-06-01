@@ -46,6 +46,13 @@ repos:
         pass_filenames: false
         files: ^data/companies/.*\.yaml$
 
+      - id: update-readme
+        name: update README companies table
+        entry: scripts/update-readme.sh
+        language: script
+        pass_filenames: false
+        files: ^data/companies/.*\.yaml$
+
       - id: pytest
         name: pytest (unit tests)
         entry: scripts/run-tests.sh
