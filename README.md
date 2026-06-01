@@ -55,6 +55,7 @@ El sitio web los muestra como:
 <!-- COMPANIES_TABLE_START -->
 | Empresa | Estado | Plataforma | Método | Tags | Verificada |
 |:--------|:------:|:----------:|:------:|:----:|:----------:|
+| [Ancient Global](https://www.ancient.global/) | ✅ Acepta | Sitio de la empresa | Reclutador/a | backend, frontend | 1 jul 2025 |
 | [BairesDev](https://www.bairesdev.com/) | ✅ Acepta | Greenhouse | Formulario de solicitud | backend, frontend | 17 may 2026 |
 | [CC Solutions](https://ccsolutions.io/) | ✅ Acepta | Greenhouse | Reporte comunitario | — | 17 may 2026 |
 | [Interfell](https://interfell.com/) | ✅ Acepta | LinkedIn | Reporte comunitario | backend, frontend, remote | 16 may 2026 |

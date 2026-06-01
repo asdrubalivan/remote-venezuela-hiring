@@ -1,0 +1,11 @@
+id: ancient-global
+name: Ancient Global
+website: https://www.ancient.global
+status: accepts
+last_checked: "2025-07-01"
+verification_method: recruiter
+hiring_platform: company_site
+tags:
+  - backend
+  - frontend
+archived: false
