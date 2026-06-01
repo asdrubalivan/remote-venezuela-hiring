@@ -66,6 +66,7 @@ El sitio web los muestra como:
 | [Workana](https://www.workana.com/) | ✅ Acepta | Sitio de la empresa | Formulario de solicitud | freelance, latam, remote | 15 may 2026 |
 | [Devlane](https://www.devlane.com/) | ❌ No acepta | Desconocido | Formulario de solicitud | backend, staff-augmentation | 15 may 2026 |
 | [Hostinger](https://www.hostinger.com/) | ❌ No acepta | TeamTailor | Formulario de solicitud | hosting, remote, tech | 17 may 2026 |
+| [Lazer Technologies](https://lazertechnologies.com/) | ❌ No acepta | Desconocido | Reporte comunitario | ai, consulting, software | 1 jun 2026 |
 | [Strider](https://www.onstrider.com/) | ❌ No acepta | LinkedIn | Reporte comunitario | — | 16 may 2026 |
 | [Virtasant](https://virtasant.com/) | ❌ No acepta | Sitio de la empresa | Reporte comunitario | cloud, consulting, remote | 15 may 2026 |
 | [X-Team](https://www.xteam.com/) | ❌ No acepta | Sitio de la empresa | Formulario de solicitud | remote | 16 may 2026 |
