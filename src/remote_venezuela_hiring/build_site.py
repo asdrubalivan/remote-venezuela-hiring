@@ -210,6 +210,18 @@ def _index_context(companies: list[Company]) -> dict[str, object]:
     }
 
 
+def _write_agents_txt(output_dir: Path) -> None:
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        "# Proyecto de datos abiertos sobre empresas que contratan desde Venezuela.\n"
+        "# Datos estructurados (YAML) disponibles en:\n"
+        "# https://github.com/asdrubalivan/remote-venezuela-hiring/tree/main/data/companies\n"
+    )
+    (output_dir / "agents.txt").write_text(content, encoding="utf-8")
+
+
 def build(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     data_dir: Path = DATA_DIR,
@@ -273,6 +285,8 @@ def build(
 
     if static_dir.exists():
         shutil.copytree(static_dir, output_dir / "static")
+
+    _write_agents_txt(output_dir)
 
     return index_path
 
