@@ -41,8 +41,8 @@ repos:
     hooks:
       - id: rvh-validate
         name: validate company YAML data
-        entry: python3 -m remote_venezuela_hiring.validate_data
-        language: system
+        entry: scripts/run-validate.sh
+        language: script
         pass_filenames: false
         files: ^data/companies/.*\.yaml$
 
