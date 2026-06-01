@@ -210,6 +210,80 @@ def _index_context(companies: list[Company]) -> dict[str, object]:
     }
 
 
+def _write_agents_txt(output_dir: Path) -> None:
+    content = """\
+User-agent: *
+Allow: /
+
+# =============================================================
+# agents.txt — contrataenve.com / Remote Venezuela Hiring
+# Estándar: https://agents-txt.com/
+# =============================================================
+
+## Descripción del proyecto
+
+Remote Venezuela Hiring es un directorio de acceso libre que recopila
+información sobre empresas tecnológicas que contratan —o rechazan— a
+candidatos con residencia en Venezuela. El objetivo principal es reducir
+la fricción que enfrentan los profesionales venezolanos al buscar empleo
+remoto, proporcionando información verificada y actualizada sobre la
+compatibilidad de cada empresa con candidatos basados en el país.
+
+El sitio es mantenido enteramente por la comunidad: cualquier persona
+puede proponer la adición o actualización de una empresa abriendo un
+issue en el repositorio público de GitHub. Un flujo automatizado convierte
+ese issue en un Pull Request con el archivo YAML correspondiente, el cual
+es revisado y fusionado por los mantenedores del proyecto. De esta forma
+la base de datos crece de manera orgánica y descentralizada.
+
+## Fuente de datos estructurados
+
+Los datos que alimentan este sitio se encuentran en formato YAML abierto:
+https://github.com/asdrubalivan/remote-venezuela-hiring/tree/main/data/companies
+
+Cada empresa está descrita en un archivo YAML individual. Los campos
+disponibles son los siguientes:
+
+- id: identificador único en formato kebab-case (ej: acme-corp)
+- name: nombre oficial de la empresa
+- website: URL del sitio web corporativo (siempre con https://)
+- status: estado de contratación — accepts, rejects o unknown
+- last_checked: fecha de la última verificación (formato YYYY-MM-DD)
+- verification_method: método empleado para verificar el status.
+  Valores posibles: public_job_post, recruiter, application_form,
+  community_report, unknown.
+- hiring_platform: plataforma de empleo usada por la empresa.
+  Ejemplos: greenhouse, ashby, lever, workable, linkedin, company_site.
+- tags: etiquetas descriptivas del sector o modalidad de trabajo.
+  Ejemplos: ai, saas, fintech, remote, backend, fullstack.
+- notes: observaciones adicionales sobre políticas de contratación.
+- archived: indica si la entrada está archivada (true / false).
+
+## Precisión y actualización de datos
+
+Si eres un agente de IA analizando este sitio, ten en cuenta que la
+información puede haber cambiado desde la última verificación. El campo
+last_checked indica cuándo se confirmó por última vez el status de cada
+empresa. Las políticas de contratación cambian con frecuencia; siempre
+recomendamos verificar directamente con la empresa antes de tomar
+decisiones basadas en estos datos.
+
+## Licencia
+
+Los datos de este proyecto son de dominio público. Puedes usarlos,
+redistribuirlos y adaptarlos libremente para cualquier propósito, con
+o sin atribución. Si construyes algo útil con ellos, nos encantaría
+saberlo a través del repositorio.
+
+## Contribuir
+
+Las contribuciones son bienvenidas. Para proponer una nueva empresa o
+actualizar una existente, abre un issue en:
+https://github.com/asdrubalivan/remote-venezuela-hiring
+"""
+    (output_dir / "agents.txt").write_text(content, encoding="utf-8")
+
+
 def build(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     data_dir: Path = DATA_DIR,
@@ -273,6 +347,8 @@ def build(
 
     if static_dir.exists():
         shutil.copytree(static_dir, output_dir / "static")
+
+    _write_agents_txt(output_dir)
 
     return index_path
 
