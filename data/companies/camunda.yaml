@@ -1,0 +1,15 @@
+id: camunda
+name: Camunda
+website: https://camunda.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: ashby
+tags:
+  - backend
+  - java
+  - process-automation
+  - remote
+notes: >
+  Esta vacante puntual (Core/API & Process Automation) figura como 'Remote - Anywhere' sin países excluidos. La elegibilidad en Camunda varía por equipo: otra vacante (Reliability/Distributed Systems) sí restringe a países específicos. Verificar caso por caso.
+archived: false

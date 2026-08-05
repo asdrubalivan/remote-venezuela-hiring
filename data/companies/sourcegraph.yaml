@@ -1,0 +1,15 @@
+id: sourcegraph
+name: Sourcegraph
+website: https://sourcegraph.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: greenhouse
+tags:
+  - ai-agents
+  - code-intelligence
+  - devtools
+  - remote-global
+notes: >
+  Vacantes indican 'we hire almost anywhere in the world', solo con preferencia de solapamiento horario EST/CEST, sin exclusión de países.
+archived: false

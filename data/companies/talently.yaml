@@ -1,0 +1,15 @@
+id: talently
+name: Talently
+website: https://talently.tech
+status: accepts
+last_checked: 2026-08-05
+verification_method: application_form
+hiring_platform: linkedin
+tags:
+  - backend
+  - python
+  - remote-latam
+  - staffing
+notes: >
+  El candidato aplicó a Python Engineer en Talently (staffing tech LatAm) vía LinkedIn, indicando que puede alinearse con horario Pacífico desde Venezuela.
+archived: false

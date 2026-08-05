@@ -1,0 +1,15 @@
+id: remote-talent-latam
+name: Remote Talent LATAM
+website: https://remotetalentlatam.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: application_form
+hiring_platform: workable
+tags:
+  - backend
+  - fullstack
+  - latam
+  - remote
+notes: >
+  El formulario de aplicación en Workable para Sr Full Stack Engineer incluye explícitamente la bandera de Venezuela dentro del listado de países LATAM elegibles.
+archived: false

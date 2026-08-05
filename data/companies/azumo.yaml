@@ -1,0 +1,15 @@
+id: azumo
+name: Azumo
+website: https://azumo.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - backend
+  - latam
+  - python
+  - remote
+notes: >
+  La vacante de Python Engineer (LatAm Remote), publicada en builtin.com, indica explícitamente que solo consideran candidatos ubicados en Latinoamérica, sin excluir a Venezuela de la región elegible.
+archived: false

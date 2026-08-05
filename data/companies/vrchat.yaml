@@ -1,0 +1,15 @@
+id: vrchat
+name: VRChat
+website: https://vrchat.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: lever
+tags:
+  - backend
+  - fintech-payments
+  - nodejs
+  - remote-anywhere
+notes: >
+  Publicación indica 'Remote — Anywhere' y que VRChat es 100% remota, trabaja desde donde quieras, sin exclusión de países.
+archived: false
