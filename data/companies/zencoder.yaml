@@ -1,0 +1,15 @@
+id: zencoder
+name: Zencoder
+website: https://zencoder.ai
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - gcp
+  - kubernetes
+  - remote-global
+  - sre
+notes: >
+  Publicación en Himalayas indica 'Open to candidates from all countries', sin restricciones geográficas.
+archived: false

@@ -1,0 +1,15 @@
+id: teamex
+name: TeamEx
+website: https://teamex.io
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: company_site
+tags:
+  - ai
+  - fullstack
+  - latam
+  - staffing
+notes: >
+  El sitio oficial lista Venezuela explícitamente entre los países latinoamericanos de los que reclutan talento tech.
+archived: false

@@ -1,0 +1,15 @@
+id: fullinfo
+name: Fullinfo
+website: https://fullinfo.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - aws-serverless
+  - backend
+  - latam-remote
+  - typescript
+notes: >
+  Requisito textual: candidato 'must be based within 3 hours of Central European Time or be located in LATAM', sin exclusión de países latinoamericanos.
+archived: false

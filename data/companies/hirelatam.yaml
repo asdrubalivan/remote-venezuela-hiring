@@ -1,0 +1,15 @@
+id: hirelatam
+name: HireLATAM
+website: https://hirelatam.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: application_form
+hiring_platform: other
+tags:
+  - backend
+  - latam
+  - remote
+  - senior
+notes: >
+  El formulario real de aplicación para Remote Sr Backend Developer (recruiterflow.com/hirelatam) incluye el código de país +58 de Venezuela; la única exclusión mencionada es para ciudadanos de Estados Unidos.
+archived: false

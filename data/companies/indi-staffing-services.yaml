@@ -1,0 +1,15 @@
+id: indi-staffing-services
+name: INDI Staffing Services
+website: https://www.indistaffingservices.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: linkedin
+tags:
+  - backend
+  - django
+  - python
+  - remote
+notes: >
+  Vacante 'Senior Python Developer - Remote' en LinkedIn listada explícitamente para 'Latin America', sin exclusión de países.
+archived: false

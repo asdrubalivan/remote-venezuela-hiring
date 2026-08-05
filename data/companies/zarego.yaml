@@ -1,0 +1,15 @@
+id: zarego
+name: Zarego
+website: https://zarego.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - ai-assisted-dev
+  - react
+  - remote-latam
+  - ruby-on-rails
+notes: >
+  Publicación (vía Jobgether) especifica 'Candidatos deben residir en Latinoamérica (LATAM)' sin exclusión de países puntuales.
+archived: false
