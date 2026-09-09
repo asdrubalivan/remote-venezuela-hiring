@@ -72,7 +72,6 @@ El sitio web los muestra como:
 | [Blue Coding](https://bluecoding.com/) | ✅ Acepta | Lever | Oferta pública | fullstack, healthtech, latam, staffing | 5 ago 2026 |
 | [Buffer](https://buffer.com/) | ✅ Acepta | Sitio de la empresa | Oferta pública | growth-engineering, marketing-tech, react, remote-global | 5 ago 2026 |
 | [Bydrec](https://bydrec.com/) | ✅ Acepta | Otra | Oferta pública | fullstack, latam, nearshore, video-platform | 5 ago 2026 |
-| [Camunda](https://camunda.com/) | ✅ Acepta | Ashby | Oferta pública | backend, java, process-automation, remote | 5 ago 2026 |
 | [Canonical](https://canonical.com/) | ✅ Acepta | Greenhouse | Oferta pública | backend, golang, kubernetes, python | 5 ago 2026 |
 | [CC Solutions](https://ccsolutions.io/) | ✅ Acepta | Greenhouse | Reporte comunitario | — | 17 may 2026 |
 | [Circle.so](https://circle.so/) | ✅ Acepta | Greenhouse | Oferta pública | ai, backend, full-stack, remote | 5 ago 2026 |
@@ -101,7 +100,6 @@ El sitio web los muestra como:
 | [INDI Staffing Services](https://www.indistaffingservices.com/) | ✅ Acepta | LinkedIn | Oferta pública | backend, django, python, remote | 5 ago 2026 |
 | [Interfell](https://interfell.com/) | ✅ Acepta | LinkedIn | Reporte comunitario | backend, frontend, remote | 16 may 2026 |
 | [ioet](https://www.ioet.com/) | ✅ Acepta | TeamTailor | Oferta pública | data-engineering, latam-remote, nearshore, python | 5 ago 2026 |
-| [Kake](https://kake.co/) | ✅ Acepta | Sitio de la empresa | Formulario de solicitud | backend, remote-latam, senior, staffing | 5 ago 2026 |
 | [KDCI](https://www.kdci.co/) | ✅ Acepta | Sitio de la empresa | Oferta pública | bpo-outsourcing, llm-engineering, philippines-based, remote-worldwide | 5 ago 2026 |
 | [Kubikware](https://kubikware.com/) | ✅ Acepta | Otra | Oferta pública | agency, latam, python, react | 5 ago 2026 |
 | [Lemon.io](https://lemon.io/) | ✅ Acepta | Otra | Reporte comunitario | ai, contractor, latam, marketplace | 5 ago 2026 |
@@ -143,7 +141,6 @@ El sitio web los muestra como:
 | [Verisma](https://verisma.com/) | ✅ Acepta | Otra | Oferta pública | healthcare-data, hipaa-adjacent, interoperability, remote-worldwide | 5 ago 2026 |
 | [Virtrify](https://www.virtrify.com/) | ✅ Acepta | Desconocido | Reclutador/a | hr, it, seo, va | 1 jun 2026 |
 | [VRChat](https://vrchat.com/) | ✅ Acepta | Lever | Oferta pública | backend, fintech-payments, nodejs, remote-anywhere | 5 ago 2026 |
-| [Wizdaa](https://www.wizdaa.com/) | ✅ Acepta | Otra | Oferta pública | ai, architecture, backend, latam | 5 ago 2026 |
 | [Workana](https://www.workana.com/) | ✅ Acepta | Sitio de la empresa | Formulario de solicitud | freelance, latam, remote | 15 may 2026 |
 | [Zaelot](https://zaelot.com/) | ✅ Acepta | Otra | Oferta pública | ai-integration, fullstack, nextjs, remote-latam | 5 ago 2026 |
 | [Zarego](https://zarego.com/) | ✅ Acepta | Otra | Oferta pública | ai-assisted-dev, react, remote-latam, ruby-on-rails | 5 ago 2026 |
