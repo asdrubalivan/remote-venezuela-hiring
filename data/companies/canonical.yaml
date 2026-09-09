@@ -1,0 +1,15 @@
+id: canonical
+name: Canonical
+website: https://canonical.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: greenhouse
+tags:
+  - backend
+  - golang
+  - kubernetes
+  - python
+notes: >
+  Ubicación 'Home Based - Americas; Home based - EMEA', sin exclusión de países dentro de esas regiones. LatAm queda incluida en 'Americas'.
+archived: false

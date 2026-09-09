@@ -1,0 +1,15 @@
+id: freelance-latin-america
+name: Freelance Latin America
+website: https://freelancelatam.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: workable
+tags:
+  - backend
+  - latam
+  - python
+  - remote
+notes: >
+  El posting de Sr Backend Developer en Workable lista explícitamente 'Venezuela, Bolivarian Republic of' junto a Colombia, Argentina, Costa Rica, México y Chile como países elegibles.
+archived: false

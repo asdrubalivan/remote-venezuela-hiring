@@ -1,0 +1,15 @@
+id: greenbox-capital
+name: Greenbox Capital
+website: https://greenboxcapital.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - databricks
+  - fintech
+  - python
+  - remote-latam
+notes: >
+  Publicación (vía Jobgether) indica 'Remote from: Latin America' / 'Remote, Central/South America' sin exclusión de países específicos.
+archived: false

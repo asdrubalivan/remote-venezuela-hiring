@@ -1,0 +1,15 @@
+id: cloudbeds
+name: Cloudbeds
+website: https://www.cloudbeds.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: greenhouse
+tags:
+  - agentic-workflows
+  - ai
+  - backend
+  - python
+notes: >
+  Ubicación 'Latin America; North America', sin restricción de país. El aviso de salario US-based se refiere a la tabla de compensación, no a elegibilidad geográfica.
+archived: false

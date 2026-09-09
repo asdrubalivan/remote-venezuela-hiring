@@ -1,0 +1,15 @@
+id: tether
+name: Tether
+website: https://tether.to
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: company_site
+tags:
+  - backend-nodejs
+  - crypto
+  - remote-worldwide
+  - stablecoin
+notes: >
+  Título de la vacante es literalmente 'Senior Backend Developer (100% remote Worldwide)', sin restricciones de país.
+archived: false

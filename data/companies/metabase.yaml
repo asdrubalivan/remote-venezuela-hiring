@@ -1,0 +1,15 @@
+id: metabase
+name: Metabase
+website: https://www.metabase.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: company_site
+tags:
+  - devops
+  - open-source
+  - remote-global
+  - sre
+notes: >
+  Posting indica 'Global Remote' y describe al equipo como 'fully distributed (from Thailand to California)', sin restricciones geográficas.
+archived: false

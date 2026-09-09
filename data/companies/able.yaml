@@ -1,0 +1,15 @@
+id: able
+name: Able
+website: https://able.co
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: greenhouse
+tags:
+  - fullstack
+  - javascript
+  - latam
+  - product-studio
+notes: >
+  La vacante especifica '100% remote within LatAm' sin exclusión de países dentro de la región.
+archived: false

@@ -1,0 +1,15 @@
+id: dualentry
+name: DualEntry
+website: https://dualentry.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: ashby
+tags:
+  - ai-engineering
+  - backend
+  - python
+  - remote-latam
+notes: >
+  Vacantes indican 'Remote (EU, LATAM)' y 'Remote (EMEA, EU, LATAM, UK, NORDICS)', sin exclusión de países dentro de LATAM.
+archived: false

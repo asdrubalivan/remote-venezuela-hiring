@@ -1,0 +1,15 @@
+id: turing
+name: Turing
+website: https://turing.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: company_site
+tags:
+  - ai-training-data
+  - freelance
+  - python
+  - remote-global
+notes: >
+  Rol freelance de evaluación y fine-tuning de LLMs, sin restricción geográfica explícita en la publicación. Contrato mensual renovable.
+archived: false

@@ -1,0 +1,15 @@
+id: humansignal
+name: HumanSignal
+website: https://humansignal.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: greenhouse
+tags:
+  - django
+  - fullstack
+  - react
+  - remote-americas
+notes: >
+  Publicación indica contratación 'across North and South America as well as Europe', sin exclusión de ningún país de Latinoamérica.
+archived: false

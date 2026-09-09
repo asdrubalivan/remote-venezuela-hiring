@@ -1,0 +1,15 @@
+id: zentact
+name: Zentact
+website: https://zentact.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: other
+tags:
+  - distributed-systems
+  - fintech
+  - remote-global
+  - typescript
+notes: >
+  Vacante descrita como 'fully remote-friendly work environment' sin mención de restricciones de país o región.
+archived: false

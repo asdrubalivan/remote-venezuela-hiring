@@ -1,0 +1,15 @@
+id: allied-global-technology-services
+name: Allied Global Technology Services
+website: https://alliedglobal.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: linkedin
+tags:
+  - aws
+  - data-engineer
+  - latam
+  - redshift
+notes: >
+  Vacante 'Senior Data Engineer – Data Quality & AWS Redshift' listada explícitamente como 'Remote – LATAM', sin exclusión de países.
+archived: false

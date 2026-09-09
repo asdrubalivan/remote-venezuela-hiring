@@ -62,9 +62,11 @@ def test_sort_by_name_toggles_direction(page: Page, base_url: str) -> None:
     page.click(".sort-th[data-sort='name']")
     page.wait_for_function("window.RVH.filter.getState().sortDir === 'desc'")
     expect(page.locator(".sort-th[data-sort='name']")).to_have_attribute("aria-sort", "descending")
-    first_name = page.locator(".company-row:visible .company-link").first.inner_text()
-    # In desc order, Xebia (X) should come first alphabetically before Customer.io.
-    assert first_name.lower().startswith(("x", "w", "v", "t", "r", "p"))
+    # Verify the visible rows are actually in descending alphabetical order,
+    # rather than hardcoding which company name happens to sort last — that
+    # assumption breaks every time a new company is added to the directory.
+    names = page.locator(".company-row:visible .company-link").all_inner_texts()
+    assert names == sorted(names, key=str.lower, reverse=True)
 
 
 def test_clear_filters_button(page: Page, base_url: str) -> None:

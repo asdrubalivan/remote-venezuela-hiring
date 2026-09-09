@@ -1,0 +1,15 @@
+id: skydropx
+name: Skydropx
+website: https://www.skydropx.com
+status: accepts
+last_checked: 2026-08-05
+verification_method: public_job_post
+hiring_platform: ashby
+tags:
+  - backend
+  - logistics
+  - nodejs
+  - rust
+notes: >
+  El posting de Sr SWE Node.js & Rust en Ashby acepta expresamente candidatos de Argentina, Colombia, México, Venezuela, Panamá y Perú, nombrando a Venezuela de forma explícita.
+archived: false
