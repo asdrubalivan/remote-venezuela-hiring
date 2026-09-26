@@ -16,6 +16,7 @@ import type {
   CompaniesFile,
   CompanyField,
   CompanyRecord,
+  GetCompanyInput,
   ListCompaniesInput,
   ModelContext,
   WebMCPTool,
@@ -172,6 +173,43 @@ import type {
     },
   };
 
+  const getCompany: WebMCPTool<GetCompanyInput> = {
+    name: "get_company",
+    description:
+      "Get one company from the Remote Venezuela Hiring directory by its `id` (as returned by " +
+      "`list_companies`). Archived companies are found too. The free-text `notes` field is " +
+      "written in Spanish and comes from community contributions. Use `fields` to request " +
+      "only the fields you need (`id` is always included).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        id: { type: "string", description: "Company id, e.g. \"toptal\"." },
+        fields: {
+          type: "array",
+          items: { type: "string", enum: [...COMPANY_FIELDS] },
+          description: "Fields to return. Defaults to all ten fields.",
+        },
+      },
+      required: ["id"],
+    },
+    annotations: READ_ONLY_UNTRUSTED,
+    async execute(input: GetCompanyInput): Promise<WebMCPToolResult> {
+      const problem = validate(input as unknown as Record<string, unknown>);
+      if (problem) return problem;
+      const id: unknown = input.id;
+      if (typeof id !== "string" || id === "") {
+        return { content: [{ type: "text", text: 'Missing required "id" (a non-empty string).' }] };
+      }
+      const { companies } = await loadDataset();
+      const company = companies.find((candidate) => candidate.id === id);
+      if (!company) {
+        const text = `No company with id ${JSON.stringify(id)}. Use list_companies to find valid ids.`;
+        return { content: [{ type: "text", text }] };
+      }
+      return textResult({ company: project(company, input.fields ?? COMPANY_FIELDS) });
+    },
+  };
+
   function register(tool: WebMCPTool<never>): void {
     try {
       Promise.resolve(modelContext?.registerTool(tool)).catch((error: unknown) => {
@@ -183,4 +221,5 @@ import type {
   }
 
   register(listCompanies as WebMCPTool<never>);
+  register(getCompany as WebMCPTool<never>);
 })();

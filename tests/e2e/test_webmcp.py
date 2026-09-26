@@ -69,7 +69,7 @@ def _published(site_dir: Path) -> list[dict[str, object]]:
 
 def test_registers_list_companies_tool(page: Page, base_url: str) -> None:
     _open_with_webmcp(page, base_url)
-    assert page.evaluate("Object.keys(window.__tools)") == ["list_companies"]
+    assert "list_companies" in page.evaluate("Object.keys(window.__tools)")
     tool = page.evaluate("window.__tools.list_companies")
     assert tool["name"] == "list_companies"
     assert "notes" in tool["description"]
@@ -308,3 +308,57 @@ def test_invalid_field_name_returns_message_listing_valid_fields(page: Page, bas
     assert "fields" in text
     assert "salary" in text
     assert "verification_method" in text
+
+
+def _get(page: Page, args: dict[str, object]) -> dict[str, object]:
+    return _call(page, "get_company", args)
+
+
+def test_registers_get_company_tool_read_only_and_untrusted(page: Page, base_url: str) -> None:
+    _open_with_webmcp(page, base_url)
+    page.wait_for_function("Boolean(window.__tools.get_company)")
+    tool = page.evaluate("window.__tools.get_company")
+    assert tool["name"] == "get_company"
+    assert tool["annotations"]["readOnlyHint"] is True
+    assert tool["annotations"]["untrustedContentHint"] is True
+    assert tool["inputSchema"]["required"] == ["id"]
+
+
+def test_get_company_returns_the_requested_company(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    company = cast("dict[str, object]", _get(page, {"id": "alpha"})["company"])
+    assert set(company) == ALL_FIELDS
+    assert company["name"] == "Alpha"
+    assert company["notes"] == "Contratan desde Venezuela"
+
+
+def test_get_company_respects_fields_and_keeps_id(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    company = _get(page, {"id": "beta", "fields": ["status"]})["company"]
+    assert company == {"id": "beta", "status": "rejects"}
+
+
+def test_get_company_finds_archived_companies(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    company = cast("dict[str, object]", _get(page, {"id": "delta"})["company"])
+    assert company["archived"] is True
+
+
+def test_get_company_unknown_id_returns_message(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    text = _call_text(page, "get_company", {"id": "no-such-company"})
+    assert "no-such-company" in text
+    assert "list_companies" in text
+
+
+def test_get_company_requires_an_id(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    text = _call_text(page, "get_company", {})
+    assert '"id"' in text
+
+
+def test_get_company_invalid_field_returns_message(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    text = _call_text(page, "get_company", {"id": "alpha", "fields": ["salary"]})
+    assert "fields" in text
+    assert "salary" in text

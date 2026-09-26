@@ -146,6 +146,11 @@ export interface ListCompaniesInput {
   fields?: CompanyField[];
 }
 
+export interface GetCompanyInput {
+  id: string;
+  fields?: CompanyField[];
+}
+
 export interface WebMCPToolAnnotations {
   readOnlyHint?: boolean;
   untrustedContentHint?: boolean;
