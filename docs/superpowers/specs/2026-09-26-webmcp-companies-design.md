@@ -102,7 +102,7 @@ Salida: `{ content: [{ type: "text", text }] }`, donde `text` es el JSON de `{ "
 ### Annotations y errores
 
 - Ambas tools: `readOnlyHint: true` y `untrustedContentHint: true` (las `notes` vienen de contribuciones de la comunidad). Son declaraciones nuestras; el efecto que tengan en el navegador no está confirmado.
-- Los errores de entrada (valor de enum inválido, `id` inexistente, `fields` con un nombre desconocido) no lanzan excepciones. Se devuelve un `content` de texto con el problema y los valores válidos, para que el agente se corrija, como recomienda el README.
+- Los errores de entrada (valor de enum inválido, `id` inexistente, `fields` con un nombre desconocido) no lanzan excepciones. Se devuelve un `content` de texto con el problema y los valores válidos, para que el agente se corrija, como recomienda el README. El resultado lleva además `isError: true` (convención de MCP), para que el agente distinga un error de un dato sin leer el mensaje; los resultados correctos no llevan el campo. El spec de WebMCP no define `isError` (su `execute` devuelve `any`), así que es una convención nuestra que el navegador o el cliente pueden ignorar.
 - Un fallo al cargar `companies.json` sí rechaza la promesa de `execute` (el llamador recibe `null` sin mensaje); no se cachea y la siguiente llamada reintenta.
 - `execute` trata una entrada `null` o `undefined` como `{}`: `list_companies` devuelve la lista sin filtros y `get_company` responde que falta el `id`.
 
