@@ -18,6 +18,8 @@ static/filter.js
 static/filter.js.map
 static/theme.js
 static/theme.js.map
+static/webmcp.js
+static/webmcp.js.map
 
 # pnpm artifact written by `pnpm approve-builds` (not needed in repo)
 pnpm-workspace.yaml
