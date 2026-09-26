@@ -58,3 +58,17 @@ Corre en `push` a `main` y en `pull_request` contra `main`. Pasos en orden:
 5. Validación de YAML (`validate_data`)
 6. Playwright install + pytest (unit + E2E)
 7. Build del sitio completo (smoke test)
+
+## Agent skills
+
+### Issue tracker
+
+Los issues viven en GitHub Issues (CLI `gh`). Ver `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Vocabulario por defecto (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). Ver `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` en la raíz. Ver `docs/agents/domain.md`.
