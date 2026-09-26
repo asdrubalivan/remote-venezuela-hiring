@@ -159,6 +159,7 @@ export interface WebMCPToolAnnotations {
 
 export interface WebMCPToolResult {
   content: Array<{ type: "text"; text: string }>;
+  isError?: boolean;
 }
 
 export interface WebMCPTool<Input> {

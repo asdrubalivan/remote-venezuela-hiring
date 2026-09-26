@@ -64,6 +64,13 @@ import type {
     return { content: [{ type: "text", text: JSON.stringify(payload) }] };
   }
 
+  // Input problems are returned, not thrown: a rejection reaches the caller as
+  // a bare `null`. `isError` (MCP's convention) lets an agent tell them apart
+  // from data without parsing the message.
+  function errorResult(message: string): WebMCPToolResult {
+    return { content: [{ type: "text", text: message }], isError: true };
+  }
+
   // Agents can send anything, so enum-like inputs are checked at runtime and a
   // problem is answered as plain text (a thrown error reaches the caller as a
   // bare `null`, which an agent can't act on).
@@ -74,8 +81,9 @@ import type {
   ];
 
   function invalid(name: string, got: unknown, valid: readonly string[]): WebMCPToolResult {
-    const text = `Invalid value for "${name}": ${JSON.stringify(got)}. Valid values: ${valid.join(", ")}.`;
-    return { content: [{ type: "text", text }] };
+    return errorResult(
+      `Invalid value for "${name}": ${JSON.stringify(got)}. Valid values: ${valid.join(", ")}.`,
+    );
   }
 
   function validate(input: Record<string, unknown>): WebMCPToolResult | null {
@@ -201,13 +209,14 @@ import type {
       if (problem) return problem;
       const id: unknown = input.id;
       if (typeof id !== "string" || id === "") {
-        return { content: [{ type: "text", text: 'Missing required "id" (a non-empty string).' }] };
+        return errorResult('Missing required "id" (a non-empty string).');
       }
       const { companies } = await loadDataset();
       const company = companies.find((candidate) => candidate.id === id);
       if (!company) {
-        const text = `No company with id ${JSON.stringify(id)}. Use list_companies to find valid ids.`;
-        return { content: [{ type: "text", text }] };
+        return errorResult(
+          `No company with id ${JSON.stringify(id)}. Use list_companies to find valid ids.`,
+        );
       }
       return textResult({ company: project(company, input.fields ?? COMPANY_FIELDS) });
     },

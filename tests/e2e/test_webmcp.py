@@ -382,3 +382,33 @@ def test_get_company_with_missing_input_returns_message(page: Page, base_url: st
     _open_with_stub_dataset(page, base_url)
     for raw_input in ("undefined", "null"):
         assert '"id"' in _execute_with(page, "get_company", raw_input)
+
+
+def _raw_result(page: Page, tool: str, args: dict[str, object]) -> dict[str, object]:
+    result = page.evaluate(
+        "async ([name, args]) => window.__tools[name].execute(args, {})", [tool, args]
+    )
+    return cast("dict[str, object]", result)
+
+
+def test_input_errors_are_flagged_with_is_error(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    failing_calls: list[tuple[str, dict[str, object]]] = [
+        ("list_companies", {"status": "bogus"}),
+        ("list_companies", {"fields": ["salary"]}),
+        ("get_company", {"id": "no-such-company"}),
+        ("get_company", {}),
+        ("get_company", {"id": "alpha", "fields": ["salary"]}),
+    ]
+    for tool, args in failing_calls:
+        assert _raw_result(page, tool, args).get("isError") is True, (tool, args)
+
+
+def test_successful_results_are_not_flagged_as_errors(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    successful_calls: list[tuple[str, dict[str, object]]] = [
+        ("list_companies", {}),
+        ("get_company", {"id": "alpha"}),
+    ]
+    for tool, args in successful_calls:
+        assert "isError" not in _raw_result(page, tool, args), tool
