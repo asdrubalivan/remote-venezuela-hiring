@@ -149,3 +149,162 @@ def test_register_failure_only_warns(page: Page, base_url: str) -> None:
     page.wait_for_timeout(300)
     assert errors == []
     assert any("list_companies" in w for w in warnings)
+
+
+def _company(**overrides: object) -> dict[str, object]:
+    base: dict[str, object] = {
+        "id": "x",
+        "name": "X",
+        "website": "https://x.example/",
+        "status": "unknown",
+        "last_checked": "2026-01-01",
+        "verification_method": "unknown",
+        "hiring_platform": None,
+        "tags": [],
+        "notes": None,
+        "archived": False,
+    }
+    return base | overrides
+
+
+STUB_DATASET = {
+    "schema_version": 1,
+    "generated_at": "2026-09-26T12:00:00Z",
+    "companies": [
+        _company(
+            id="alpha",
+            name="Alpha",
+            status="accepts",
+            verification_method="application_form",
+            hiring_platform="greenhouse",
+            tags=["ai", "backend"],
+            notes="Contratan desde Venezuela",
+        ),
+        _company(
+            id="beta",
+            name="Beta",
+            status="rejects",
+            verification_method="community_report",
+            hiring_platform="lever",
+            tags=["backend"],
+        ),
+        _company(id="delta", name="Delta", status="accepts", tags=["ai"], archived=True)
+        | {"verification_method": "recruiter", "hiring_platform": "greenhouse"},
+        _company(id="epsilon", name="Epsilon", status="accepts", tags=["ai", "frontend"])
+        | {
+            "verification_method": "public_job_post",
+            "hiring_platform": "greenhouse",
+            "notes": "ÁGIL equipo remoto",
+        },
+        _company(id="gamma", name="Gamma", notes="Solo residentes de EE. UU."),
+    ],
+}
+
+
+def _open_with_stub_dataset(page: Page, base_url: str) -> None:
+    page.route("**/companies.json", lambda route: route.fulfill(json=STUB_DATASET))
+    _open_with_webmcp(page, base_url)
+
+
+def _ids(page: Page, args: dict[str, object] | None = None) -> list[object]:
+    companies = cast("list[dict[str, object]]", _call(page, "list_companies", args)["companies"])
+    return [c["id"] for c in companies]
+
+
+def _call_text(page: Page, tool: str, args: dict[str, object]) -> str:
+    """Invoke a tool that is expected to answer with a plain-text message."""
+    result = page.evaluate(
+        "async ([name, args]) => window.__tools[name].execute(args, {})", [tool, args]
+    )
+    text: str = result["content"][0]["text"]
+    return text
+
+
+def test_stub_dataset_excludes_archived_by_default(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page) == ["alpha", "beta", "epsilon", "gamma"]
+
+
+def test_include_archived_returns_archived_companies_too(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    result = _call(page, "list_companies", {"include_archived": True})
+    assert result["count"] == 5
+    assert _ids(page, {"include_archived": True}) == ["alpha", "beta", "delta", "epsilon", "gamma"]
+
+
+def test_filter_by_status(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"status": "accepts"}) == ["alpha", "epsilon"]
+    assert _ids(page, {"status": "rejects"}) == ["beta"]
+
+
+def test_filter_by_verification_method(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"verification_method": "recruiter"}) == []
+    assert _ids(page, {"verification_method": "recruiter", "include_archived": True}) == ["delta"]
+
+
+def test_filter_by_hiring_platform(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"hiring_platform": "greenhouse"}) == ["alpha", "epsilon"]
+
+
+def test_filter_by_tag_is_exact(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"tag": "ai"}) == ["alpha", "epsilon"]
+    assert _ids(page, {"tag": "back"}) == []
+
+
+def test_query_matches_name_case_insensitively(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"query": "ALPHA"}) == ["alpha"]
+
+
+def test_query_matches_tags(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"query": "backend"}) == ["alpha", "beta"]
+
+
+def test_query_matches_notes_including_accents(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"query": "venezuela"}) == ["alpha"]
+    assert _ids(page, {"query": "ágil"}) == ["epsilon"]
+
+
+def test_filters_combine_with_and(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    assert _ids(page, {"status": "accepts", "tag": "frontend"}) == ["epsilon"]
+
+
+def test_no_match_returns_empty_list(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    result = _call(page, "list_companies", {"query": "no-such-company"})
+    assert result == {"count": 0, "companies": []}
+
+
+def test_invalid_enum_value_returns_message_instead_of_throwing(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    text = _call_text(page, "list_companies", {"status": "bogus"})
+    assert "status" in text
+    assert "bogus" in text
+    assert "accepts, rejects, unknown" in text
+
+
+def test_invalid_verification_method_and_platform_list_valid_values(
+    page: Page, base_url: str
+) -> None:
+    _open_with_stub_dataset(page, base_url)
+    method = _call_text(page, "list_companies", {"verification_method": "telepathy"})
+    assert "verification_method" in method
+    assert "application_form" in method
+    platform = _call_text(page, "list_companies", {"hiring_platform": "myspace"})
+    assert "hiring_platform" in platform
+    assert "greenhouse" in platform
+
+
+def test_invalid_field_name_returns_message_listing_valid_fields(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    text = _call_text(page, "list_companies", {"fields": ["name", "salary"]})
+    assert "fields" in text
+    assert "salary" in text
+    assert "verification_method" in text

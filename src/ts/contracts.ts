@@ -95,6 +95,28 @@ export const COMPANY_FIELDS = [
 
 export type CompanyField = (typeof COMPANY_FIELDS)[number];
 
+export const COMPANY_STATUSES = ["accepts", "rejects", "unknown"] as const;
+
+export const VERIFICATION_METHODS = [
+  "application_form",
+  "recruiter",
+  "public_job_post",
+  "community_report",
+  "unknown",
+] as const;
+
+export const HIRING_PLATFORMS = [
+  "greenhouse",
+  "ashby",
+  "lever",
+  "workable",
+  "teamtailor",
+  "linkedin",
+  "company_site",
+  "other",
+  "unknown",
+] as const;
+
 export interface CompanyRecord {
   id: string;
   name: string;
@@ -115,6 +137,12 @@ export interface CompaniesFile {
 }
 
 export interface ListCompaniesInput {
+  query?: string;
+  status?: (typeof COMPANY_STATUSES)[number];
+  verification_method?: (typeof VERIFICATION_METHODS)[number];
+  hiring_platform?: (typeof HIRING_PLATFORMS)[number];
+  tag?: string;
+  include_archived?: boolean;
   fields?: CompanyField[];
 }
 

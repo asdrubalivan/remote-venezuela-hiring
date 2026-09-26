@@ -6,7 +6,12 @@
 // the same bundle works from `/` and from `/company/<id>.html`. Browsers
 // without WebMCP are left untouched.
 
-import { COMPANY_FIELDS } from "./contracts";
+import {
+  COMPANY_FIELDS,
+  COMPANY_STATUSES,
+  HIRING_PLATFORMS,
+  VERIFICATION_METHODS,
+} from "./contracts";
 import type {
   CompaniesFile,
   CompanyField,
@@ -58,19 +63,94 @@ import type {
     return { content: [{ type: "text", text: JSON.stringify(payload) }] };
   }
 
+  // Agents can send anything, so enum-like inputs are checked at runtime and a
+  // problem is answered as plain text (a thrown error reaches the caller as a
+  // bare `null`, which an agent can't act on).
+  const ENUM_FILTERS: ReadonlyArray<[string, readonly string[]]> = [
+    ["status", COMPANY_STATUSES],
+    ["verification_method", VERIFICATION_METHODS],
+    ["hiring_platform", HIRING_PLATFORMS],
+  ];
+
+  function invalid(name: string, got: unknown, valid: readonly string[]): WebMCPToolResult {
+    const text = `Invalid value for "${name}": ${JSON.stringify(got)}. Valid values: ${valid.join(", ")}.`;
+    return { content: [{ type: "text", text }] };
+  }
+
+  function validate(input: Record<string, unknown>): WebMCPToolResult | null {
+    for (const [name, valid] of ENUM_FILTERS) {
+      const value = input[name];
+      if (value !== undefined && !valid.includes(value as string)) {
+        return invalid(name, value, valid);
+      }
+    }
+    const fields = input["fields"];
+    if (fields !== undefined) {
+      if (!Array.isArray(fields)) return invalid("fields", fields, COMPANY_FIELDS);
+      for (const field of fields) {
+        if (!COMPANY_FIELDS.includes(field as CompanyField)) {
+          return invalid("fields", field, COMPANY_FIELDS);
+        }
+      }
+    }
+    return null;
+  }
+
+  function matches(company: CompanyRecord, input: ListCompaniesInput): boolean {
+    if (company.archived && !input.include_archived) return false;
+    if (input.status && company.status !== input.status) return false;
+    if (input.verification_method && company.verification_method !== input.verification_method) {
+      return false;
+    }
+    if (input.hiring_platform && company.hiring_platform !== input.hiring_platform) return false;
+    if (input.tag && !company.tags.includes(input.tag)) return false;
+    const query = input.query?.trim().toLowerCase();
+    if (query) {
+      // Same haystack as the search box on the index page.
+      const haystack = `${company.name} ${company.tags.join(" ")} ${company.notes ?? ""}`;
+      if (!haystack.toLowerCase().includes(query)) return false;
+    }
+    return true;
+  }
+
   const READ_ONLY_UNTRUSTED = { readOnlyHint: true, untrustedContentHint: true } as const;
 
   const listCompanies: WebMCPTool<ListCompaniesInput> = {
     name: "list_companies",
     description:
       "List companies from the Remote Venezuela Hiring directory: companies that accept or " +
-      "reject candidates living in Venezuela. Each entry has status (accepts, rejects or " +
+      "reject candidates living in Venezuela. Filters are optional and combined with AND; " +
+      "archived companies are excluded unless `include_archived` is true. Each entry has status (accepts, rejects or " +
       "unknown), how it was verified and when. The free-text `notes` field is written in " +
       "Spanish and comes from community contributions. The full list is large: use `fields` " +
       "to request only the fields you need (`id` is always included).",
     inputSchema: {
       type: "object",
       properties: {
+        query: {
+          type: "string",
+          description: "Case-insensitive text to look for in the name, tags and notes.",
+        },
+        status: {
+          type: "string",
+          enum: [...COMPANY_STATUSES],
+          description: "Only companies with this stance towards candidates from Venezuela.",
+        },
+        verification_method: {
+          type: "string",
+          enum: [...VERIFICATION_METHODS],
+          description: "Only companies whose status was verified this way.",
+        },
+        hiring_platform: {
+          type: "string",
+          enum: [...HIRING_PLATFORMS],
+          description: "Only companies that hire through this platform.",
+        },
+        tag: { type: "string", description: "Only companies with exactly this tag." },
+        include_archived: {
+          type: "boolean",
+          description: "Also return archived companies. Defaults to false.",
+        },
         fields: {
           type: "array",
           items: { type: "string", enum: [...COMPANY_FIELDS] },
@@ -80,9 +160,11 @@ import type {
     },
     annotations: READ_ONLY_UNTRUSTED,
     async execute(input: ListCompaniesInput): Promise<WebMCPToolResult> {
+      const problem = validate(input as Record<string, unknown>);
+      if (problem) return problem;
       const { companies } = await loadDataset();
       const fields = input.fields ?? COMPANY_FIELDS;
-      const visible = companies.filter((company) => !company.archived);
+      const visible = companies.filter((company) => matches(company, input));
       return textResult({
         count: visible.length,
         companies: visible.map((company) => project(company, fields)),
