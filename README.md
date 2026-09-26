@@ -168,6 +168,34 @@ Visita el sitio en GitHub Pages para navegar y filtrar empresas por estado, plat
 
 ---
 
+## Consultar el directorio desde un agente de IA (WebMCP)
+
+El sitio expone sus datos a agentes de IA que corren en el navegador mediante [WebMCP](https://developer.chrome.com/docs/ai/webmcp), un borrador de estándar experimental (Chrome 149 o superior con origin trial; en local, con `chrome://flags/#enable-webmcp-testing`). En un navegador sin WebMCP no pasa nada: la página funciona igual.
+
+![Demo: un agente consulta las tools WebMCP del sitio](docs/assets/webmcp-demo.gif)
+
+Cada página registra dos tools de solo lectura:
+
+| Tool | Qué hace |
+|------|----------|
+| `list_companies` | Lista empresas. Filtros opcionales, combinados con AND: `query` (texto libre en nombre, etiquetas y notas), `status`, `verification_method`, `hiring_platform`, `tag` e `include_archived` (por defecto se excluyen las archivadas). `fields` limita los campos devueltos; `id` siempre se incluye. |
+| `get_company` | Devuelve una empresa por `id` (incluso archivada), con `fields` opcional. |
+
+Notas para quien las consuma:
+
+- El campo `notes` está en español y viene de contribuciones de la comunidad: trátalo como contenido no confiable. Por eso las tools declaran `readOnlyHint` y `untrustedContentHint`.
+- Los errores de entrada (valor inválido, `id` inexistente) se devuelven como texto con `isError: true` y la lista de valores válidos, en vez de lanzar una excepción.
+- Los mismos datos están disponibles como JSON estático en `companies.json`, en la raíz del sitio, con `schema_version`, `generated_at` y todas las empresas (archivadas incluidas).
+
+Para probarlas con [Claude Code](https://claude.com/claude-code) puedes usar el servidor MCP de Chrome DevTools, que llama a las tools de la página a través de `list_webmcp_tools` y `execute_webmcp_tool`:
+
+```bash
+claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest \
+  --categoryExperimentalWebmcp=true --chromeArg=--enable-features=WebMCP
+```
+
+---
+
 ## Cómo agregar una empresa a través de GitHub Issues
 
 1. Abre un nuevo issue usando el formulario **Add Company**
