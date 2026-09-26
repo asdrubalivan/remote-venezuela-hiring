@@ -1,7 +1,7 @@
 # Diseño: WebMCP con la lista de empresas
 
 **Fecha:** 2026-09-26
-**Estado:** Borrador (pendiente de revisión)
+**Estado:** Implementado en los tickets #41 a #44 (rama `feat/webmcp`); #45 (verificación manual en Chrome 149) pendiente
 
 ## Problema
 
@@ -12,6 +12,8 @@ Los datos del directorio solo existen como YAML en el repo y como filas HTML en 
 Publicar los datos como un `companies.json` estático en el build, y registrar dos tools de WebMCP en cada página que lo consultan del lado del cliente. El sitio sigue siendo 100% estático.
 
 Términos de dominio (Empresa, Status, Método de verificación, Desactualizada, Archivada) según `CONTEXT.md`.
+
+Se implementó en cinco tickets de GitHub: #41 (`companies.json`), #42 (`list_companies`), #43 (filtros y errores), #44 (`get_company`) y #45 (verificación manual en Chrome).
 
 ## Contexto verificado del spec de WebMCP
 
@@ -54,7 +56,7 @@ No confirmado: la detección de soporte en Chrome, el efecto concreto de las ann
 }
 ```
 
-- Incluye todas las empresas, archivadas incluidas, con los diez campos del modelo `Company`, ordenadas por `name`.
+- Incluye todas las empresas, archivadas incluidas, con los diez campos del modelo `Company`, ordenadas por `name` sin distinguir mayúsculas (el orden de `load_all_companies`).
 - Se serializa desde el modelo `Company` (sin duplicar el esquema), en UTF-8 y sin escapar caracteres no ASCII.
 - `hiring_platform` y `notes` son `null` cuando no están definidos.
 - `website` es el valor tal cual, sin parámetros UTM.
@@ -68,7 +70,7 @@ Fuente en `src/ts/webmcp.ts`, compilado por `scripts/build-js.mjs` a `static/web
 
 - **Detección:** si `"modelContext" in document` es falso, el script no hace nada y no lanza errores.
 - **URL de los datos:** se resuelve relativa al propio script (`new URL("../companies.json", <src del script>)`), lo que funciona igual desde `/` y desde `/company/`.
-- **Carga:** un solo `fetch`, con la promesa cacheada para todas las llamadas.
+- **Carga:** un solo `fetch`, con la promesa cacheada para las llamadas siguientes. Un fallo de carga no se cachea: la promesa se rechaza para quien llamó y la siguiente llamada reintenta.
 - **Registro:** cada `registerTool` se envuelve en un `catch` que emite `console.warn`, para que un fallo de registro no rompa la página.
 
 ### Tool `list_companies`
@@ -101,11 +103,12 @@ Salida: `{ content: [{ type: "text", text }] }`, donde `text` es el JSON de `{ "
 
 - Ambas tools: `readOnlyHint: true` y `untrustedContentHint: true` (las `notes` vienen de contribuciones de la comunidad). Son declaraciones nuestras; el efecto que tengan en el navegador no está confirmado.
 - Los errores de entrada (valor de enum inválido, `id` inexistente, `fields` con un nombre desconocido) no lanzan excepciones. Se devuelve un `content` de texto con el problema y los valores válidos, para que el agente se corrija, como recomienda el README.
-- Un fallo al cargar `companies.json` sí puede rechazar la promesa; el mensaje se deja además en `console.warn`.
+- Un fallo al cargar `companies.json` sí rechaza la promesa de `execute` (el llamador recibe `null` sin mensaje); no se cachea y la siguiente llamada reintenta.
+- `execute` trata una entrada `null` o `undefined` como `{}`: `list_companies` devuelve la lista sin filtros y `get_company` responde que falta el `id`.
 
 ## Tests (TDD — escritos antes del código)
 
-### `tests/test_build_site.py` (Python)
+### `tests/test_build_site.py` (Python, 10 tests)
 
 | Test | Descripción |
 |------|-------------|
@@ -116,7 +119,7 @@ Salida: `{ content: [{ type: "text", text }] }`, donde `text` es el JSON de `{ "
 | `test_companies_json_sorted_by_name` | Orden por `name` |
 | `test_companies_json_matches_models` | Todo elemento valida contra `Company` |
 
-### `tests/e2e/test_webmcp.py` (Playwright)
+### `tests/e2e/test_webmcp.py` (Playwright, 31 tests)
 
 Chromium de Playwright no trae WebMCP. Un `add_init_script` inyecta un `document.modelContext` falso cuyo `registerTool` guarda las tools; los tests invocan luego sus `execute`.
 
@@ -133,6 +136,10 @@ Chromium de Playwright no trae WebMCP. Un `add_init_script` inyecta un `document
 | `test_invalid_enum_returns_message` | Un `status` inválido devuelve texto con los valores válidos |
 | `test_works_from_company_page` | Las tools funcionan desde `/company/<id>.html` |
 | `test_no_errors_without_webmcp` | Sin `document.modelContext`, la página carga sin errores de consola |
+| `test_register_failure_only_warns` | Un `registerTool` que falla solo deja un `console.warn` |
+| `test_*_missing_input_*` | Entrada `null` o `undefined` no lanza en ninguna de las dos tools |
+
+Las tablas listan los casos representativos; el conjunto completo (cada filtro, cada valor inválido, `get_company`) está en los archivos de test. Los tests de filtros usan un `companies.json` de prueba servido con `page.route`, porque los datos reales no tienen empresas archivadas.
 
 ### Verificación manual
 
@@ -148,8 +155,8 @@ En Chrome 149 con el flag `chrome://flags/#enable-webmcp-testing` y la extensió
 | `scripts/build-js.mjs` | Añade `webmcp.ts` a los entry points (y actualiza el comentario de cabecera) |
 | `templates/base.html` | Carga `{{ static_prefix }}/webmcp.js` con `defer` |
 | `.gitignore` | Ignora `static/webmcp.js` y `static/webmcp.js.map` (artefactos compilados, como `filter` y `theme`) |
-| `tests/test_build_site.py` | 6 tests nuevos |
-| `tests/e2e/test_webmcp.py` | Nuevo: 11 tests |
+| `tests/test_build_site.py` | 10 tests nuevos |
+| `tests/e2e/test_webmcp.py` | Nuevo: 31 tests |
 
 ## Fuera de alcance
 

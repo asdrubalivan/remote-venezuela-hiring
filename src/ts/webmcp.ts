@@ -160,7 +160,9 @@ import type {
       },
     },
     annotations: READ_ONLY_UNTRUSTED,
-    async execute(input: ListCompaniesInput): Promise<WebMCPToolResult> {
+    async execute(rawInput: ListCompaniesInput | null | undefined): Promise<WebMCPToolResult> {
+      // An agent may call with no arguments at all.
+      const input = rawInput ?? {};
       const problem = validate(input as Record<string, unknown>);
       if (problem) return problem;
       const { companies } = await loadDataset();
@@ -193,8 +195,9 @@ import type {
       required: ["id"],
     },
     annotations: READ_ONLY_UNTRUSTED,
-    async execute(input: GetCompanyInput): Promise<WebMCPToolResult> {
-      const problem = validate(input as unknown as Record<string, unknown>);
+    async execute(rawInput: GetCompanyInput | null | undefined): Promise<WebMCPToolResult> {
+      const input: Partial<GetCompanyInput> = rawInput ?? {};
+      const problem = validate(input as Record<string, unknown>);
       if (problem) return problem;
       const id: unknown = input.id;
       if (typeof id !== "string" || id === "") {

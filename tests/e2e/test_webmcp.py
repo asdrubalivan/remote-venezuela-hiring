@@ -362,3 +362,23 @@ def test_get_company_invalid_field_returns_message(page: Page, base_url: str) ->
     text = _call_text(page, "get_company", {"id": "alpha", "fields": ["salary"]})
     assert "fields" in text
     assert "salary" in text
+
+
+def _execute_with(page: Page, tool: str, raw_input: str) -> str:
+    """Call ``execute`` with a literal JS value (``undefined``/``null``) as input."""
+    result = page.evaluate(f"async () => window.__tools.{tool}.execute({raw_input}, {{}})")
+    text: str = result["content"][0]["text"]
+    return text
+
+
+def test_list_companies_treats_missing_input_as_no_filters(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    for raw_input in ("undefined", "null"):
+        text = _execute_with(page, "list_companies", raw_input)
+        assert json.loads(text)["count"] == 4
+
+
+def test_get_company_with_missing_input_returns_message(page: Page, base_url: str) -> None:
+    _open_with_stub_dataset(page, base_url)
+    for raw_input in ("undefined", "null"):
+        assert '"id"' in _execute_with(page, "get_company", raw_input)
