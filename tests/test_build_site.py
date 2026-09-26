@@ -1,5 +1,8 @@
+import json
 import os
+import re
 from pathlib import Path
+from typing import cast
 
 import pytest
 
@@ -11,6 +14,7 @@ from remote_venezuela_hiring.build_site import (
     build,
     website_with_utm,
 )
+from remote_venezuela_hiring.models import Company
 
 
 @pytest.fixture
@@ -161,3 +165,136 @@ def test_company_detail_website_link_has_utm(output_dir: Path) -> None:
     build(output_dir=output_dir)
     html = (output_dir / "company" / "proxify.html").read_text(encoding="utf-8")
     assert "utm_source=contrataenve.com&amp;utm_medium=referral" in html
+
+
+COMPANY_FIELDS = {
+    "id",
+    "name",
+    "website",
+    "status",
+    "last_checked",
+    "verification_method",
+    "hiring_platform",
+    "tags",
+    "notes",
+    "archived",
+}
+
+
+def _read_companies_json(output_dir: Path) -> dict[str, object]:
+    data: dict[str, object] = json.loads(
+        (output_dir / "companies.json").read_text(encoding="utf-8")
+    )
+    return data
+
+
+def _entries(output_dir: Path) -> list[dict[str, object]]:
+    return cast("list[dict[str, object]]", _read_companies_json(output_dir)["companies"])
+
+
+def test_build_writes_companies_json(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    assert (output_dir / "companies.json").is_file()
+
+
+def test_companies_json_envelope(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    data = _read_companies_json(output_dir)
+    assert set(data) == {"schema_version", "generated_at", "companies"}
+    assert data["schema_version"] == 1
+    # ISO 8601 in UTC, e.g. 2026-09-26T12:00:00Z
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", str(data["generated_at"]))
+    assert len(_entries(output_dir)) > 0
+
+
+def test_companies_json_entries_have_exactly_the_ten_fields(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    for entry in _entries(output_dir):
+        assert set(entry) == COMPANY_FIELDS
+
+
+def test_companies_json_entry_serialization(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    entries = {str(e["id"]): e for e in _entries(output_dir)}
+    toptal = entries["toptal"]
+    assert toptal["name"] == "Toptal"
+    assert toptal["status"] == "accepts"
+    assert toptal["last_checked"] == "2026-08-05"
+    assert toptal["verification_method"] == "public_job_post"
+    assert toptal["hiring_platform"] == "other"
+    assert toptal["tags"] == ["ai", "freelance", "global", "marketplace"]
+    assert toptal["archived"] is False
+    # Plain website: no UTM tracking parameters in the public contract.
+    website = str(toptal["website"])
+    assert website.startswith("https://toptal.com")
+    assert "utm_" not in website
+
+
+def test_companies_json_uses_null_for_missing_optional_fields(
+    tmp_path: Path, output_dir: Path
+) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "minimal.yaml").write_text(
+        "id: minimal\nname: Minimal\nwebsite: https://minimal.example\n"
+        "status: unknown\nlast_checked: 2026-01-01\nverification_method: unknown\n",
+        encoding="utf-8",
+    )
+    build(output_dir=output_dir, data_dir=data_dir)
+    [entry] = _entries(output_dir)
+    assert entry["hiring_platform"] is None
+    assert entry["notes"] is None
+    assert entry["tags"] == []
+
+
+def test_companies_json_includes_archived_companies(tmp_path: Path, output_dir: Path) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "old.yaml").write_text(
+        "id: old\nname: Old\nwebsite: https://old.example\nstatus: rejects\n"
+        "last_checked: 2026-01-01\nverification_method: community_report\narchived: true\n",
+        encoding="utf-8",
+    )
+    build(output_dir=output_dir, data_dir=data_dir)
+    [entry] = _entries(output_dir)
+    assert entry["id"] == "old"
+    assert entry["archived"] is True
+
+
+def test_companies_json_sorted_by_name(tmp_path: Path, output_dir: Path) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    for slug, name in [("zeta", "Zeta"), ("alpha", "alpha"), ("beta", "Beta")]:
+        (data_dir / f"{slug}.yaml").write_text(
+            f"id: {slug}\nname: {name}\nwebsite: https://{slug}.example\nstatus: unknown\n"
+            "last_checked: 2026-01-01\nverification_method: unknown\n",
+            encoding="utf-8",
+        )
+    build(output_dir=output_dir, data_dir=data_dir)
+    names = [e["name"] for e in _entries(output_dir)]
+    assert names == ["alpha", "Beta", "Zeta"]
+
+
+def test_companies_json_keeps_non_ascii_text_readable(tmp_path: Path, output_dir: Path) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    (data_dir / "acento.yaml").write_text(
+        "id: acento\nname: Acento\nwebsite: https://acento.example\nstatus: unknown\n"
+        "last_checked: 2026-01-01\nverification_method: unknown\nnotes: Contratación remota\n",
+        encoding="utf-8",
+    )
+    build(output_dir=output_dir, data_dir=data_dir)
+    raw = (output_dir / "companies.json").read_text(encoding="utf-8")
+    assert "Contratación remota" in raw
+
+
+def test_companies_json_entries_validate_against_model(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    for entry in _entries(output_dir):
+        Company.model_validate(entry)
+
+
+def test_agents_txt_mentions_companies_json(output_dir: Path) -> None:
+    build(output_dir=output_dir)
+    content = (output_dir / "agents.txt").read_text(encoding="utf-8")
+    assert "companies.json" in content

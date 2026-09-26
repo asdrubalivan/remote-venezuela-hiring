@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -248,6 +249,10 @@ la base de datos crece de manera orgánica y descentralizada.
 Los datos que alimentan este sitio se encuentran en formato YAML abierto:
 https://github.com/asdrubalivan/remote-venezuela-hiring/tree/main/data/companies
 
+El sitio publica además esos mismos datos como JSON, en /companies.json
+(raíz del sitio). Es un contrato público versionado con schema_version,
+generated_at y la lista completa de empresas, archivadas incluidas.
+
 Cada empresa está descrita en un archivo YAML individual. Los campos
 disponibles son los siguientes:
 
@@ -289,6 +294,21 @@ actualizar una existente, abre un issue en:
 https://github.com/asdrubalivan/remote-venezuela-hiring
 """
     (output_dir / "agents.txt").write_text(content, encoding="utf-8")
+
+
+COMPANIES_JSON_SCHEMA_VERSION: int = 1
+
+
+def _write_companies_json(output_dir: Path, companies: list[Company]) -> None:
+    """Publish the dataset as the public ``companies.json`` contract."""
+    payload = {
+        "schema_version": COMPANIES_JSON_SCHEMA_VERSION,
+        "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "companies": [company.model_dump(mode="json") for company in companies],
+    }
+    (output_dir / "companies.json").write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
 
 
 def build(
@@ -356,6 +376,7 @@ def build(
         shutil.copytree(static_dir, output_dir / "static")
 
     _write_agents_txt(output_dir)
+    _write_companies_json(output_dir, companies)
 
     return index_path
 
