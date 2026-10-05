@@ -27,7 +27,9 @@ RVHProto.register("metro", function (root) {
     return { x: r.left + r.width / 2 - origin.left, y: r.top + r.height / 2 - origin.top };
   }
 
-  // Coloca la línea entre el centro de la primera y la última estación visibles.
+  // La línea sale del filete de la cabecera (borde superior del tbody, que no es
+  // sticky) y termina en el centro de la última estación visible.
+  var body = board.querySelector("tbody");
   function layout() {
     var list = stops();
     if (!list.length) {
@@ -38,11 +40,12 @@ RVHProto.register("metro", function (root) {
     var origin = board.getBoundingClientRect();
     var first = center(list[0], origin);
     var last = center(list[list.length - 1], origin);
-    var height = Math.max(0, last.y - first.y);
+    var top = body ? body.getBoundingClientRect().top - origin.top : first.y;
+    var height = Math.max(0, last.y - top);
     line.style.left = first.x + "px";
-    line.style.top = first.y + "px";
+    line.style.top = top + "px";
     line.style.height = height + "px";
-    return { top: first.y, height: height, origin: origin, stops: list };
+    return { top: top, height: height, origin: origin, stops: list };
   }
 
   function stopRunning() {
