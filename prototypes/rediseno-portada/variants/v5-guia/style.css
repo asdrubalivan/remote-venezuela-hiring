@@ -17,7 +17,8 @@ html[data-proto="guia"] {
   --f: "Archivo", "Arial Narrow", "Roboto Condensed", sans-serif;
   --gutter: 48px;
   --az-w: 46px;            /* ancho visible de cada pestaña del canto */
-  --az-cell: clamp(18px, calc((100svh - 150px) / 26), 30px);
+  --band-h: 56px;          /* banda negra superior */
+  --az-cell: clamp(18px, calc((100svh - 172px) / 26), 30px);
   --rh-h: 38px;            /* cabecera con palabras guía */
   --head-h: 36px;          /* encabezados de la tabla */
   --sticky: calc(var(--rh-h) + var(--head-h));
@@ -145,7 +146,7 @@ html[data-proto="guia"] .band {
   display: flex;
   align-items: center;
   gap: 8px 32px;
-  min-height: 56px;
+  min-height: var(--band-h);
   padding: 0 var(--gutter);
   background: var(--band);
   color: var(--band-fg);
@@ -645,12 +646,12 @@ html[data-proto="guia"] .count {
 }
 
 /* ── Índice A–Z: el canto troquelado ───────────────────────────────────── */
+/* Arranca bajo la banda de palabras guía y llena la altura disponible. */
 html[data-proto="guia"] .az {
   position: fixed;
   right: 0;
-  top: calc(50% + 28px);
+  top: calc(var(--band-h) + var(--rh-h) + 10px);
   z-index: 35;
-  transform: translateY(-50%);
 }
 
 html[data-proto="guia"] .az-list {
@@ -710,12 +711,13 @@ html[data-proto="guia"] .dir {
   font-variant-numeric: tabular-nums;
 }
 
-html[data-proto="guia"] .col-name { width: 27%; }
-html[data-proto="guia"] .col-st { width: 23%; }
-html[data-proto="guia"] .col-date { width: 11%; }
-html[data-proto="guia"] .col-method { width: 13%; }
-html[data-proto="guia"] .col-plat { width: 11%; }
-html[data-proto="guia"] .col-tags { width: 15%; }
+/* Columnas de contenido fijo en px para que nada se corte; el nombre (con sus
+   puntos guía) se queda con el resto. */
+html[data-proto="guia"] .col-st { width: 262px; }
+html[data-proto="guia"] .col-date { width: 138px; }
+html[data-proto="guia"] .col-method { width: 152px; }
+html[data-proto="guia"] .col-plat { width: 134px; }
+html[data-proto="guia"] .col-tags { width: 18%; }
 
 html[data-proto="guia"] .dir thead th {
   position: sticky;
@@ -745,12 +747,13 @@ html[data-proto="guia"] .h-static {
   border: 0;
   background: transparent;
   font-size: 12px;
-  font-stretch: 87.5%;
+  font-stretch: 75%;
   font-weight: 750;
-  letter-spacing: 0.07em;
-  line-height: 1.05;
+  letter-spacing: 0.05em;
+  line-height: 1;
   text-align: left;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 html[data-proto="guia"] .h-name .sort {
@@ -864,10 +867,12 @@ html[data-proto="guia"] .row:hover > td {
   background: var(--paper-deep);
 }
 
+/* Si el nombre no deja sitio, la web baja a su propia línea con los puntos detrás. */
 html[data-proto="guia"] .lead {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 8px;
+  gap: 0 8px;
   min-width: 0;
 }
 
@@ -899,13 +904,12 @@ html[data-proto="guia"] .name:hover {
 }
 
 html[data-proto="guia"] .web {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow: hidden;
+  flex: 0 0 auto;
+  max-width: 100%;
   color: var(--ink-soft);
   font-size: 13px;
+  line-height: 1.3;
   text-decoration: none;
-  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -980,16 +984,25 @@ html[data-proto="guia"] .c-plat,
 html[data-proto="guia"] .c-tags {
   color: var(--ink-soft);
   font-size: 13px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
+html[data-proto="guia"] .c-method,
+html[data-proto="guia"] .c-plat {
+  white-space: nowrap;
+}
+
+/* Etiquetas: dos como máximo más "+N"; si no caben, saltan de línea enteras. */
 html[data-proto="guia"] .c-tags {
   font-size: 12.5px;
+  line-height: 1.3;
 }
 
-html[data-proto="guia"] .t + .t::before {
-  content: " · " / "";
+html[data-proto="guia"] .t {
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .t:not(:last-child)::after {
+  content: " ·" / "";
 }
 
 html[data-proto="guia"] .t--more {
@@ -1075,22 +1088,37 @@ html[data-proto="guia"] .foot a {
   font-weight: 700;
 }
 
-/* ── Tablet: la tabla se queda sin etiquetas para no apretar ───────────── */
+/* ── Portátil y tablet: la tabla se queda sin etiquetas para no apretar ── */
+@media (max-width: 1366px) and (min-width: 761px) {
+  /* La columna queda en 0 (no oculta): el colspan de las letras sigue contándola. */
+  html[data-proto="guia"] .col-tags {
+    width: 0;
+  }
+
+  html[data-proto="guia"] .h-tags,
+  html[data-proto="guia"] .c-tags {
+    display: none;
+  }
+}
+
+/* Tablet: también sin plataforma y sin la web junto al nombre. */
 @media (max-width: 1180px) and (min-width: 761px) {
+  html[data-proto="guia"] {
+    --gutter: 32px;
+  }
+
   html[data-proto="guia"] .mast {
     grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
     column-gap: 36px;
   }
 
-  html[data-proto="guia"] .col-name { width: 28%; }
-  html[data-proto="guia"] .col-st { width: 30%; }
-  html[data-proto="guia"] .col-date { width: 12%; }
-  html[data-proto="guia"] .col-method { width: 16%; }
-  html[data-proto="guia"] .col-plat { width: 14%; }
+  html[data-proto="guia"] .col-plat {
+    width: 0;
+  }
 
-  html[data-proto="guia"] .col-tags,
-  html[data-proto="guia"] .h-tags,
-  html[data-proto="guia"] .c-tags {
+  html[data-proto="guia"] .h-plat,
+  html[data-proto="guia"] .c-plat,
+  html[data-proto="guia"] .web {
     display: none;
   }
 }
@@ -1241,14 +1269,13 @@ html[data-proto="guia"] .foot a {
     text-align: left;
   }
 
-  /* El canto se vuelve una tira horizontal pegada arriba. */
+  /* El canto se vuelve una tira horizontal pegada bajo las palabras guía,
+     visible desde el primer viewport. */
   html[data-proto="guia"] .az {
     position: sticky;
     top: var(--rh-h);
     right: auto;
     z-index: 25;
-    margin: 0 calc(-1 * var(--gutter));
-    transform: none;
     background: var(--ink);
   }
 
