@@ -612,7 +612,7 @@ html[data-proto="boleto"] .bo-coupon {
   --bo-body: var(--bo-stock);
   --bo-overprint: linear-gradient(transparent, transparent);
   position: relative;
-  min-height: 98px;
+  min-height: 86px;
   border-radius: 6px;
   color: var(--bo-ink);
   background:
@@ -696,7 +696,6 @@ html[data-proto="boleto"] .bo-date {
 }
 html[data-proto="boleto"] .bo-coupon .bo-c--status {
   display: grid;
-  grid-template-rows: auto 1fr;
   justify-items: center;
   align-items: center;
   padding-right: 20px;
@@ -884,8 +883,9 @@ html[data-proto="boleto"] #stage[data-density="compact"] .bo-stamp--rejects .bo-
   html[data-proto="boleto"] .bo-filter-panel.is-open { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   html[data-proto="boleto"] .bo-filter-panel .bo-select { max-width: none; width: 100%; }
 }
-@media (min-width: 1181px) {
-  html[data-proto="boleto"] #stage[data-density="compact"] .bo-coupon .bo-lbl { display: none; }
+/* donde la fila de encabezados ordenables está a la vista, el cupón no repite las etiquetas */
+@media (min-width: 761px) {
+  html[data-proto="boleto"] .bo-coupon .bo-lbl { display: none; }
 }
 
 /* ---------- Móvil: el cupón se vuelve talón de una columna ---------- */
@@ -928,9 +928,9 @@ html[data-proto="boleto"] #stage[data-density="compact"] .bo-stamp--rejects .bo-
     flex-direction: column-reverse;
     align-items: stretch;
     gap: 12px;
-    margin: 26px -6px 0;
+    margin: 26px 0 0;
   }
-  html[data-proto="boleto"] .bo-count { align-self: flex-end; padding: 0 6px; font-size: 14px; }
+  html[data-proto="boleto"] .bo-count { align-self: flex-end; padding: 0; font-size: 14px; }
   html[data-proto="boleto"] .bo-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; }
   html[data-proto="boleto"] .bo-tab {
     flex-direction: column;
@@ -939,7 +939,7 @@ html[data-proto="boleto"] #stage[data-density="compact"] .bo-stamp--rejects .bo-
     height: 60px;
     padding: 0 4px;
     border-radius: 6px 6px 0 0;
-    font-size: 14.5px;
+    font-size: 13px;
     letter-spacing: 0.02em;
   }
   html[data-proto="boleto"] .bo-tab__n { font-size: 13px; padding: 3px 5px 2px; }
