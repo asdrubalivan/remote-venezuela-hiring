@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- PROTOTIPO — rediseño de la portada. Código descartable. -->
+  <title>Compatibilidad de Contratación Remota en Venezuela</title>
+  <meta name="description" content="Base de datos pública, mantenida por la comunidad, sobre empresas que podrían admitir candidatos remotos basados en Venezuela." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  {% for v in variants %}{% if v.fonts %}
+  <link rel="stylesheet" href="{{ v.fonts }}" />
+  {% endif %}{% endfor %}
+  <style>
+{{ proto_css | safe }}
+  </style>
+  {% for v in variants %}
+  <style data-variant-css="{{ v.slug }}">
+{{ v.css | safe }}
+  </style>
+  {% endfor %}
+</head>
+<body>
+  <div id="stage" class="proto-stage"></div>
+
+  {% for v in variants %}
+  <template id="tpl-{{ v.n }}" data-slug="{{ v.slug }}">
+{{ v.markup | safe }}
+  </template>
+  {% endfor %}
+
+  <nav class="proto-bar" id="proto-bar" aria-label="Prototipos">
+    <button type="button" class="proto-bar-step" data-proto-step="-1" aria-label="Variante anterior">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="proto-bar-picks">
+      {% for v in variants %}
+      <button type="button" class="proto-bar-pick" data-proto-pick="{{ v.n }}" title="{{ v.name }}">{{ v.n }}</button>
+      {% endfor %}
+    </div>
+    <div class="proto-bar-label">
+      <strong id="proto-bar-name"></strong>
+      <span id="proto-bar-state"></span>
+    </div>
+    <button type="button" class="proto-bar-step" data-proto-step="1" aria-label="Variante siguiente">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </nav>
+
+  <script>
+    window.RVH_PROTO_VARIANTS = {{ variant_meta | tojson }};
+    window.RVHProto = { hooks: {}, register: function (slug, fn) { this.hooks[slug] = fn; } };
+  </script>
+  {% for v in variants %}{% if v.js %}
+  <script data-variant-js="{{ v.slug }}">
+{{ v.js | safe }}
+  </script>
+  {% endif %}{% endfor %}
+  <script>
+{{ proto_js | safe }}
+  </script>
+</body>
+</html>

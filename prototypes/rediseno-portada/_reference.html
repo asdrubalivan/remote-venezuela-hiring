@@ -1,0 +1,147 @@
+{#
+  PROTOTIPO — markup de referencia, sin estilo. Contiene TODOS los textos de la
+  portada actual y todos los ganchos data-rvh-* que proto.js entiende. Cada
+  variante parte de aquí y reorganiza la estructura a su manera, sin perder
+  textos ni ganchos.
+#}
+<a class="skip-link" href="#main-content">Saltar al contenido</a>
+
+<header role="banner">
+  <a href="./" aria-label="Remote Venezuela Hiring — inicio">
+    <span>Remote Venezuela</span>
+    <span>🇻🇪 Hiring</span>
+  </a>
+  <nav aria-label="Navegación principal">
+    <a href="./" aria-current="page">Empresas</a>
+    <a href="../stats.html">Estadísticas</a>
+  </nav>
+  <div>
+    <button type="button" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">⚙</button>
+    <div data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+      <div>Tema</div>
+      <div role="radiogroup" aria-label="Tema">
+        <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro">☀</button>
+        <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro">☾</button>
+      </div>
+      <div>Densidad de la tabla</div>
+      <div role="radiogroup" aria-label="Densidad de la tabla">
+        <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+        <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+      </div>
+    </div>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</header>
+
+<main id="main-content">
+  <header>
+    <h1>Compatibilidad de Contratación Remota en 🇻🇪 Venezuela</h1>
+    <p>Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+    <div aria-label="Resumen">
+      <span><strong>{{ visible_count }}</strong> empresas</span>
+      <span><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
+      <span>actualizado {{ format_date(today) }}</span>
+    </div>
+    <div role="note">
+      No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+      La compatibilidad puede cambiar — siempre verifica directamente.
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub ↗</a>
+    </div>
+  </header>
+
+  <section role="search" aria-label="Filtrar empresas">
+    <input type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+
+    <button type="button" data-rvh-filter-toggle aria-expanded="false">
+      Filtros <span data-rvh-filter-count hidden>0</span>
+    </button>
+
+    <div data-rvh-filter-panel>
+      <select data-rvh-filter="method" aria-label="Filtrar por verificación">
+        <option value="all">Verificación: Todas</option>
+        {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+      </select>
+      <select data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+        <option value="all">Plataforma: Todas</option>
+        {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+      </select>
+      <select data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+        <option value="all">Etiqueta: Todas</option>
+        {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+      </select>
+      <label><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+    </div>
+
+    <button type="button" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">Limpiar</button>
+  </section>
+
+  <div role="tablist" aria-label="Filtrar por estado">
+    {% for tab in status_tabs %}
+    <button type="button" role="tab" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}">
+      {{ tab.label }} <span>{{ tab.count }}</span>
+    </button>
+    {% endfor %}
+    <span data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th scope="col" data-rvh-sort="name">Empresa</th>
+        <th scope="col" data-rvh-sort="status">Estado</th>
+        <th scope="col" data-rvh-sort="last_checked">Últ. verificación</th>
+        <th scope="col" data-rvh-sort="verification_method">Verificación</th>
+        <th scope="col" data-rvh-sort="hiring_platform">Plataforma</th>
+        <th scope="col">Etiquetas</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for company in companies %}
+      {% set stale = company.is_stale() %}
+      <tr data-rvh-row
+          data-status="{{ company.status.value }}"
+          data-method="{{ company.verification_method.value }}"
+          data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+          data-tags="{{ company.tags | join(',') }}"
+          data-archived="{{ '1' if company.archived else '0' }}"
+          data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+          data-name="{{ company.name }}"
+          data-last-checked="{{ company.last_checked.isoformat() }}">
+        <td>
+          <a href="company/{{ company.id }}.html">{{ company.name }}</a>
+          {% if company.archived %}<span>ARCHIVADA</span>{% endif %}
+          <a href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
+        </td>
+        <td>{{ status_labels[company.status.value] }}{% if stale %} <span>DESACT.</span>{% endif %}</td>
+        <td>{{ format_date(company.last_checked) }}</td>
+        <td>{{ verification_labels[company.verification_method.value] }}</td>
+        <td>{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
+        <td>
+          {% for tag in company.tags[:3] %}<span>{{ tag }}</span>{% endfor %}
+          {% if company.tags|length > 3 %}<span>+{{ company.tags|length - 3 }}</span>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div data-rvh-empty role="status" aria-live="polite" hidden>
+    <div>—</div>
+    <p>Ninguna empresa coincide con los filtros.</p>
+    <button type="button" data-rvh-clear>Limpiar filtros</button>
+  </div>
+
+  <div>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues ↗</a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML ↗</a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos ↗</a>
+  </div>
+</main>
+
+<footer role="contentinfo">
+  <p>
+    Generado el {{ generated_at }} ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>
