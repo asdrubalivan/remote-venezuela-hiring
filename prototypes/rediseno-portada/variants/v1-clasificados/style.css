@@ -1,1 +1,1397 @@
-/* PROTOTIPO — v1-clasificados */
+/* PROTOTIPO — v1 Clasificados.
+   La página dominical de Empleos: papel periódico gris, tinta negra, cabezales
+   invertidos en grotesca condensada, avisos en serif de texto con cifras tabulares,
+   filetes dobles y simples. El rojo es del bolígrafo y de nadie más.
+   Todo selector va acotado a html[data-proto="clasificados"]. */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+html[data-proto="clasificados"] {
+  --paper: #dfe0df;
+  --paper-2: #ebeceb;
+  --ink: #141414;
+  --ink-2: #383939;
+  --ink-3: #545656;
+  --hair: #8f9190;
+  --tint: rgba(20, 20, 20, 0.055);
+  --pen: #d1221b;
+  --pen-blend: multiply;
+  --inv: #141414;
+  --on-inv: #eeefed;
+  --on-inv-2: #b7b9b8;
+  --mast: #141414;
+  --on-mast: #eeefed;
+  --on-mast-2: #b7b9b8;
+  --flag-1: #c3c5c2;
+  --flag-2: #2b2c2c;
+  --flag-3: #747675;
+  --flag-star: #f1f2f0;
+  --flag-edge: #141414;
+  --f-cond: "Archivo", "Arial Narrow", sans-serif;
+  --f-serif: "Source Serif 4", Georgia, serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: clamp(16px, 2.8vw, 40px);
+  --maxw: 1440px;
+  color-scheme: light;
+  background: var(--paper);
+  accent-color: var(--ink);
+  scrollbar-color: var(--ink) var(--paper);
+}
+
+html[data-proto="clasificados"][data-theme="dark"] {
+  --paper: #161717;
+  --paper-2: #202121;
+  --ink: #e4e5e3;
+  --ink-2: #c5c7c5;
+  --ink-3: #a0a2a1;
+  --hair: #4e5050;
+  --tint: rgba(228, 229, 227, 0.07);
+  --pen: #ff5a4b;
+  --pen-blend: normal;
+  --inv: #e4e5e3;
+  --on-inv: #121313;
+  --on-inv-2: #3d3f3f;
+  --mast: #0a0a0a;
+  --on-mast: #e4e5e3;
+  --on-mast-2: #a9abaa;
+  --flag-1: #c3c5c2;
+  --flag-2: #2b2c2c;
+  --flag-3: #747675;
+  --flag-star: #f1f2f0;
+  --flag-edge: #8f9190;
+  color-scheme: dark;
+}
+
+/* ── Base y superficies del navegador ───────────────────────────────────── */
+html[data-proto="clasificados"] body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-serif);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html[data-proto="clasificados"] :where(#stage *, #stage *::before, #stage *::after) {
+  box-sizing: border-box;
+}
+
+html[data-proto="clasificados"] #stage [hidden] {
+  display: none !important;
+}
+
+html[data-proto="clasificados"] ::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+html[data-proto="clasificados"] :where(#stage) :focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+html[data-proto="clasificados"] ::-webkit-scrollbar {
+  width: 14px;
+  height: 10px;
+  background: var(--paper);
+}
+
+html[data-proto="clasificados"] ::-webkit-scrollbar-thumb {
+  background: var(--ink);
+  border: 4px solid var(--paper);
+}
+
+html[data-proto="clasificados"] :where(#stage a) {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+html[data-proto="clasificados"] :where(#stage button, #stage input, #stage select) {
+  font: inherit;
+  color: inherit;
+}
+
+html[data-proto="clasificados"] .cl-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+html[data-proto="clasificados"] .i {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-proto="clasificados"] .cl-wrap {
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+html[data-proto="clasificados"] .cl-skip {
+  position: absolute;
+  left: 12px;
+  top: -80px;
+  z-index: 60;
+  padding: 12px 16px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  font: 800 1rem/1 var(--f-cond);
+  font-stretch: 75%;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+
+html[data-proto="clasificados"] .cl-skip:focus {
+  top: 12px;
+}
+
+/* ── Cabecera: banda negra con la mancheta ──────────────────────────────── */
+html[data-proto="clasificados"] .cl-mast {
+  background: var(--mast);
+  color: var(--on-mast);
+}
+
+html[data-proto="clasificados"][data-theme="dark"] .cl-mast {
+  border-bottom: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-mast :focus-visible {
+  outline-color: var(--on-mast);
+}
+
+html[data-proto="clasificados"] .cl-mast__in {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-height: 64px;
+}
+
+html[data-proto="clasificados"] .cl-brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+  font-family: var(--f-cond);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: 1.875rem;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+html[data-proto="clasificados"] .cl-brand__b {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.28em;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.86em;
+  text-transform: none;
+  letter-spacing: 0;
+  font-variation-settings: "opsz" 40;
+}
+
+html[data-proto="clasificados"] .cl-brand .cl-flag {
+  width: 1.05em;
+  height: 0.7em;
+  align-self: center;
+  --flag-edge: var(--on-mast);
+}
+
+html[data-proto="clasificados"] .cl-nav {
+  display: flex;
+  align-self: stretch;
+  padding-left: 28px;
+  border-left: 1px solid color-mix(in srgb, var(--on-mast) 30%, transparent);
+}
+
+html[data-proto="clasificados"] .cl-nav a,
+html[data-proto="clasificados"] .cl-gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+html[data-proto="clasificados"] .cl-nav a {
+  position: relative;
+  color: var(--on-mast-2);
+}
+
+html[data-proto="clasificados"] .cl-nav a:hover {
+  color: var(--on-mast);
+}
+
+html[data-proto="clasificados"] .cl-nav a[aria-current="page"] {
+  color: var(--on-mast);
+}
+
+html[data-proto="clasificados"] .cl-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 4px;
+  background: var(--on-mast);
+}
+
+html[data-proto="clasificados"] .cl-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+html[data-proto="clasificados"] .cl-gh .i {
+  width: 15px;
+  height: 15px;
+}
+
+html[data-proto="clasificados"] .cl-gh:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+html[data-proto="clasificados"] .cl-settings {
+  position: relative;
+}
+
+html[data-proto="clasificados"] .cl-iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-iconbtn .i {
+  width: 22px;
+  height: 22px;
+  transition: transform 0.5s var(--ease);
+}
+
+html[data-proto="clasificados"] .cl-iconbtn:hover,
+html[data-proto="clasificados"] .cl-iconbtn[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--on-mast) 16%, transparent);
+}
+
+html[data-proto="clasificados"] .cl-iconbtn[aria-expanded="true"] .i {
+  transform: rotate(60deg);
+}
+
+html[data-proto="clasificados"] .cl-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 40;
+  display: grid;
+  gap: 8px;
+  width: 252px;
+  padding: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-menu :focus-visible {
+  outline-color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-menu__label {
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+html[data-proto="clasificados"] .cl-seg + .cl-menu__label {
+  margin-top: 8px;
+}
+
+html[data-proto="clasificados"] .cl-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1.5px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-seg button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-seg button + button {
+  border-left: 1.5px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-seg button .i {
+  width: 20px;
+  height: 20px;
+}
+
+html[data-proto="clasificados"] .cl-seg button:hover {
+  background: var(--tint);
+}
+
+html[data-proto="clasificados"] .cl-seg button[aria-checked="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Titular, tira de fecha, entradilla y aviso ─────────────────────────── */
+html[data-proto="clasificados"] .cl-head {
+  padding-top: clamp(20px, 2.6vw, 34px);
+}
+
+html[data-proto="clasificados"] .cl-title {
+  margin: 0;
+  font-family: var(--f-cond);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 0.6rem + 6.4vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.012em;
+  text-transform: uppercase;
+}
+
+html[data-proto="clasificados"] .cl-flag--title {
+  width: auto;
+  height: 0.7em;
+  margin: 0 0.02em;
+  vertical-align: baseline;
+}
+
+/* Filetes: grueso-fino arriba, fino-grueso abajo, como en la página impresa. */
+html[data-proto="clasificados"] .cl-folio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 24px;
+  margin-top: clamp(16px, 1.8vw, 26px);
+  padding: 16px 2px 15px;
+  background:
+    linear-gradient(var(--ink), var(--ink)) top / 100% 3px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 6px / 100% 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 calc(100% - 6px) / 100% 1px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) bottom / 100% 3px no-repeat;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+html[data-proto="clasificados"] .cl-folio strong {
+  font-weight: 900;
+  font-size: 1.1875rem;
+  letter-spacing: 0.01em;
+}
+
+html[data-proto="clasificados"] .cl-folio__mark {
+  position: relative;
+}
+
+html[data-proto="clasificados"] .cl-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 24px 48px;
+  align-items: start;
+  padding-top: 22px;
+}
+
+html[data-proto="clasificados"] .cl-lede {
+  margin: 0;
+  max-width: 32em;
+  font-size: clamp(1.125rem, 0.9rem + 0.6vw, 1.4375rem);
+  line-height: 1.36;
+  font-variation-settings: "opsz" 28;
+  text-wrap: pretty;
+}
+
+html[data-proto="clasificados"] .cl-notice {
+  display: block;
+  padding: 12px 16px 13px;
+  border: 3px double var(--ink);
+  font-size: 0.9375rem;
+  line-height: 1.42;
+  font-variation-settings: "opsz" 12;
+}
+
+html[data-proto="clasificados"] .cl-notice__head {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+html[data-proto="clasificados"] .cl-notice__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+html[data-proto="clasificados"] .cl-notice__link .i {
+  width: 14px;
+  height: 14px;
+}
+
+html[data-proto="clasificados"] .cl-notice__link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ── Búsqueda y filtros: controles estándar en tinta ────────────────────── */
+html[data-proto="clasificados"] .cl-search {
+  padding-top: 22px;
+}
+
+html[data-proto="clasificados"] .cl-search__row {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+html[data-proto="clasificados"] .cl-field {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+html[data-proto="clasificados"] .cl-field > .i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+html[data-proto="clasificados"] .cl-field input {
+  width: 100%;
+  height: 50px;
+  margin: 0;
+  padding: 0 14px 0 46px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper-2);
+  font-family: var(--f-serif);
+  font-size: 1.0625rem;
+  caret-color: var(--ink);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-proto="clasificados"] .cl-field input::placeholder {
+  color: var(--ink-3);
+  font-style: italic;
+  opacity: 1;
+}
+
+html[data-proto="clasificados"] .cl-field input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 50px;
+  padding: 0 18px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-btn .i {
+  width: 18px;
+  height: 18px;
+}
+
+html[data-proto="clasificados"] .cl-btn:hover,
+html[data-proto="clasificados"] .cl-btn[aria-expanded="true"],
+html[data-proto="clasificados"] .cl-btn--solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+html[data-proto="clasificados"] .cl-btn--solid:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-btn--quiet {
+  border-color: transparent;
+}
+
+html[data-proto="clasificados"] .cl-btn--quiet:hover {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 5px;
+  background: var(--ink);
+  color: var(--paper);
+  font-stretch: 100%;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="clasificados"] .cl-btn:hover .cl-badge,
+html[data-proto="clasificados"] .cl-btn[aria-expanded="true"] .cl-badge {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-filters {
+  display: none;
+}
+
+html[data-proto="clasificados"] .cl-filters.is-open {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 10px;
+  padding: 12px 0 2px;
+  border-top: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-sel {
+  position: relative;
+  display: inline-flex;
+}
+
+html[data-proto="clasificados"] .cl-sel select {
+  min-height: 44px;
+  margin: 0;
+  padding: 0 40px 0 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper-2);
+  font-family: var(--f-cond);
+  font-stretch: 87.5%;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+html[data-proto="clasificados"] .cl-sel select:hover {
+  background: var(--paper);
+}
+
+html[data-proto="clasificados"] .cl-sel > .i {
+  position: absolute;
+  right: 13px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+html[data-proto="clasificados"] .cl-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-family: var(--f-cond);
+  font-stretch: 87.5%;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+/* ── Pestañas: cabezales de sección invertidos ──────────────────────────── */
+html[data-proto="clasificados"] .cl-tabbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin-top: 26px;
+  border-bottom: 3px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-tabs {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+html[data-proto="clasificados"] .cl-tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 48px;
+  margin: 0;
+  padding: 13px 20px 10px;
+  border: 0;
+  border-top: 1px solid var(--ink);
+  background: transparent;
+  font-family: var(--f-cond);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: 1.4375rem;
+  line-height: 1;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-tab + .cl-tab {
+  border-left: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-tab__count {
+  font-stretch: 87.5%;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="clasificados"] .cl-tab:hover {
+  background: var(--tint);
+}
+
+html[data-proto="clasificados"] .cl-tab.is-active {
+  background: var(--inv);
+  color: var(--on-inv);
+  border-top-color: var(--inv);
+}
+
+html[data-proto="clasificados"] .cl-tab.is-active .cl-tab__count {
+  color: var(--on-inv-2);
+}
+
+html[data-proto="clasificados"] .cl-tab.is-active + .cl-tab {
+  border-left-color: var(--inv);
+}
+
+html[data-proto="clasificados"] .cl-count {
+  padding-bottom: 10px;
+  font-style: italic;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+
+/* ── Tabla de avisos ────────────────────────────────────────────────────── */
+html[data-proto="clasificados"] .cl-ads {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-variation-settings: "opsz" 10;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+html[data-proto="clasificados"] .cl-ads col.c-name { width: 25%; }
+html[data-proto="clasificados"] .cl-ads col.c-status { width: 296px; }
+html[data-proto="clasificados"] .cl-ads col.c-date { width: 158px; }
+html[data-proto="clasificados"] .cl-ads col.c-method { width: 15%; }
+html[data-proto="clasificados"] .cl-ads col.c-plat { width: 12%; }
+
+html[data-proto="clasificados"] .cl-ads th {
+  padding: 0;
+  text-align: left;
+  font-weight: inherit;
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-ads th + th,
+html[data-proto="clasificados"] .cl-ads td + td {
+  border-left: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-ads th > button,
+html[data-proto="clasificados"] .cl-ads th > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 42px;
+  margin: 0;
+  padding: 11px 14px 9px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: left;
+  white-space: nowrap;
+}
+
+html[data-proto="clasificados"] .cl-ads th > button {
+  cursor: pointer;
+}
+
+html[data-proto="clasificados"] .cl-ads th > button:hover {
+  background: var(--tint);
+  color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-ads th.is-active > button {
+  color: var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-ads th > button:focus-visible {
+  outline-offset: -3px;
+}
+
+html[data-proto="clasificados"] .i-sort {
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.25;
+}
+
+html[data-proto="clasificados"] .i-sort path {
+  opacity: 0.38;
+}
+
+html[data-proto="clasificados"] th[data-dir="asc"] .i-sort .up,
+html[data-proto="clasificados"] th[data-dir="desc"] .i-sort .dn {
+  opacity: 1;
+}
+
+html[data-proto="clasificados"] th[data-dir="asc"] .i-sort .dn,
+html[data-proto="clasificados"] th[data-dir="desc"] .i-sort .up {
+  opacity: 0;
+}
+
+html[data-proto="clasificados"] .cl-ads td {
+  padding: 15px 14px 16px;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-ads tbody tr:hover td {
+  background: var(--tint);
+}
+
+html[data-proto="clasificados"] .cl-name {
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1.3125rem;
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+html[data-proto="clasificados"] .cl-name:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+html[data-proto="clasificados"] .cl-web {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 5px;
+  font-size: 0.8125rem;
+  color: var(--ink-2);
+  text-decoration-color: var(--hair);
+  overflow-wrap: anywhere;
+}
+
+html[data-proto="clasificados"] .cl-web:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+
+html[data-proto="clasificados"] .cl-mark {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 3px 5px 2px;
+  border: 1px solid var(--ink);
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  vertical-align: 1px;
+  white-space: nowrap;
+}
+
+html[data-proto="clasificados"] .td-status .cl-mark {
+  display: table;
+  margin: 16px 0 0;
+}
+
+html[data-proto="clasificados"] .cl-st {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+html[data-proto="clasificados"] .cl-st--rejects {
+  font-weight: 650;
+}
+
+html[data-proto="clasificados"] .cl-st--unknown {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+html[data-proto="clasificados"] .td-date {
+  white-space: nowrap;
+}
+
+html[data-proto="clasificados"] .td-method,
+html[data-proto="clasificados"] .td-plat {
+  color: var(--ink-2);
+}
+
+html[data-proto="clasificados"] .cl-tag {
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--ink-2);
+}
+
+html[data-proto="clasificados"] .cl-tag + .cl-tag::before {
+  content: " · ";
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+html[data-proto="clasificados"] .cl-tag--more {
+  font-style: normal;
+  font-weight: 600;
+}
+
+html[data-proto="clasificados"] #stage[data-density="compact"] .cl-ads td {
+  padding-top: 8px;
+  padding-bottom: 9px;
+}
+
+html[data-proto="clasificados"] #stage[data-density="compact"] .cl-name {
+  font-size: 1.0625rem;
+}
+
+html[data-proto="clasificados"] #stage[data-density="compact"] .cl-web {
+  display: inline;
+  margin: 0 0 0 8px;
+}
+
+/* ── El bolígrafo ───────────────────────────────────────────────────────── */
+html[data-proto="clasificados"] .pen {
+  position: absolute;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--pen);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  mix-blend-mode: var(--pen-blend);
+}
+
+html[data-proto="clasificados"] .pen path {
+  stroke-dasharray: 100 200;
+  stroke-dashoffset: 101;
+}
+
+html[data-proto="clasificados"] .pen--circle,
+html[data-proto="clasificados"] .pen--folio {
+  left: -15px;
+  top: -10px;
+  width: calc(100% + 30px);
+  height: calc(100% + 20px);
+}
+
+html[data-proto="clasificados"] .pen--v0 {
+  transform: rotate(-1.1deg);
+}
+
+html[data-proto="clasificados"] .pen--v2 {
+  transform: rotate(0.9deg) scaleX(1.02);
+}
+
+html[data-proto="clasificados"] .pen--strike {
+  left: -7px;
+  top: 0;
+  width: calc(100% + 14px);
+  height: 100%;
+  stroke-width: 2.6;
+  mix-blend-mode: normal;
+}
+
+/* Lo que no acepta queda tachado; el círculo aparece con la pestaña Acepta o al
+   pasar por la fila. */
+html[data-proto="clasificados"] .pen--strike path,
+html[data-proto="clasificados"] .pen--folio path,
+html[data-proto="clasificados"] #stage[data-status="accepts"] .pen--circle path {
+  stroke-dashoffset: 0;
+}
+
+html[data-proto="clasificados"] .cl-ads tbody tr:hover .pen--circle path,
+html[data-proto="clasificados"] .cl-ads tbody tr:focus-within .pen--circle path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.6s var(--ease);
+}
+
+html[data-proto="clasificados"] .pen--folio path {
+  animation: cl-pen-draw 0.95s var(--ease) 0.5s both;
+}
+
+html[data-proto="clasificados"] .pen.is-drawing path {
+  animation: cl-pen-draw 0.75s var(--ease) var(--pen-delay, 0ms) both;
+}
+
+@keyframes cl-pen-draw {
+  from { stroke-dashoffset: 101; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* ── Vacío ──────────────────────────────────────────────────────────────── */
+html[data-proto="clasificados"] .cl-empty {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding: 44px 24px 40px;
+  border: 3px double var(--ink);
+  text-align: center;
+}
+
+html[data-proto="clasificados"] .cl-empty p {
+  margin: 0;
+  max-width: 18em;
+  font-family: var(--f-cond);
+  font-stretch: 62%;
+  font-weight: 900;
+  font-size: clamp(1.75rem, 1rem + 2.4vw, 2.75rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ── Contribuir y pie de imprenta ───────────────────────────────────────── */
+html[data-proto="clasificados"] .cl-contrib {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 56px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+html[data-proto="clasificados"] .cl-contrib a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+  padding: 16px 18px;
+  font-family: var(--f-cond);
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 1.0625rem;
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+html[data-proto="clasificados"] .cl-contrib a + a {
+  border-left: 1px solid var(--hair);
+}
+
+html[data-proto="clasificados"] .cl-contrib a .i {
+  width: 18px;
+  height: 18px;
+}
+
+html[data-proto="clasificados"] .cl-contrib a:hover {
+  background: var(--inv);
+  color: var(--on-inv);
+}
+
+html[data-proto="clasificados"] .cl-foot {
+  padding: 28px 0 56px;
+}
+
+html[data-proto="clasificados"] .cl-foot p {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+html[data-proto="clasificados"] .cl-foot a:hover {
+  color: var(--ink);
+  text-decoration-thickness: 2px;
+}
+
+/* ── Tableta: los avisos fluyen en dos columnas con filete central ──────── */
+@media (max-width: 1179px) {
+  html[data-proto="clasificados"] .cl-ads,
+  html[data-proto="clasificados"] .cl-ads thead,
+  html[data-proto="clasificados"] .cl-ads tbody {
+    display: block;
+  }
+
+  html[data-proto="clasificados"] .cl-ads colgroup {
+    display: none;
+  }
+
+  html[data-proto="clasificados"] .cl-ads thead tr {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  html[data-proto="clasificados"] .cl-ads thead tr::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-proto="clasificados"] .cl-ads th {
+    display: block;
+    flex: none;
+    border-bottom: 0;
+  }
+
+  html[data-proto="clasificados"] .cl-ads th.th-tags {
+    display: none;
+  }
+
+  html[data-proto="clasificados"] .cl-ads th > button {
+    min-height: 44px;
+  }
+
+  html[data-proto="clasificados"] .cl-ads tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    background: linear-gradient(var(--hair), var(--hair)) center / 1px 100% no-repeat;
+  }
+
+  html[data-proto="clasificados"] .cl-ads tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name date"
+      "status status"
+      "method plat"
+      "tags tags";
+    gap: 8px 16px;
+    padding: 18px 0 20px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  html[data-proto="clasificados"] .cl-ads td,
+  html[data-proto="clasificados"] .cl-ads td + td {
+    display: block;
+    padding: 0;
+    border: 0;
+  }
+
+  html[data-proto="clasificados"] .cl-ads tbody tr:hover td {
+    background: transparent;
+  }
+
+  html[data-proto="clasificados"] .cl-ads tbody tr:hover {
+    background: var(--tint);
+  }
+
+  html[data-proto="clasificados"] .td-name { grid-area: name; }
+  html[data-proto="clasificados"] .td-date { grid-area: date; text-align: right; }
+  html[data-proto="clasificados"] .td-status { grid-area: status; padding-top: 6px !important; padding-bottom: 4px !important; }
+  html[data-proto="clasificados"] .td-method { grid-area: method; }
+  html[data-proto="clasificados"] .td-plat { grid-area: plat; text-align: right; }
+  html[data-proto="clasificados"] .td-tags { grid-area: tags; }
+
+  html[data-proto="clasificados"] .td-method::before,
+  html[data-proto="clasificados"] .td-plat::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 1px;
+    font-family: var(--f-cond);
+    font-stretch: 75%;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  html[data-proto="clasificados"] .td-date {
+    font-weight: 600;
+  }
+
+  html[data-proto="clasificados"] .cl-name {
+    font-size: 1.4375rem;
+  }
+
+  html[data-proto="clasificados"] #stage[data-density="compact"] .cl-ads tbody tr {
+    padding: 10px 0 12px;
+    gap: 4px 16px;
+  }
+}
+
+/* ── Móvil ─────────────────────────────────────────────────────────────── */
+@media (max-width: 759px) {
+  html[data-proto="clasificados"] .cl-mast__in {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "brand set"
+      "nav gh";
+    gap: 0 8px;
+    min-height: 0;
+    padding-top: 6px;
+  }
+
+  html[data-proto="clasificados"] .cl-brand {
+    grid-area: brand;
+    align-self: center;
+    font-size: 1.5rem;
+  }
+
+  html[data-proto="clasificados"] .cl-tools {
+    display: contents;
+  }
+
+  html[data-proto="clasificados"] .cl-settings {
+    grid-area: set;
+    justify-self: end;
+  }
+
+  html[data-proto="clasificados"] .cl-gh {
+    grid-area: gh;
+    justify-self: end;
+    padding-right: 4px;
+  }
+
+  html[data-proto="clasificados"] .cl-nav {
+    grid-area: nav;
+    margin-left: -14px;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  html[data-proto="clasificados"] .cl-nav a,
+  html[data-proto="clasificados"] .cl-gh {
+    min-height: 46px;
+    font-size: 0.875rem;
+  }
+
+  html[data-proto="clasificados"] .cl-mast__in::after {
+    content: "";
+    grid-row: 2;
+    grid-column: 1 / -1;
+    align-self: start;
+    height: 1px;
+    margin-inline: calc(var(--gutter) * -1);
+    background: color-mix(in srgb, var(--on-mast) 22%, transparent);
+  }
+
+  html[data-proto="clasificados"] .cl-menu {
+    right: -4px;
+  }
+
+  html[data-proto="clasificados"] .cl-title {
+    font-size: clamp(2.125rem, 9.4vw, 3.5rem);
+    line-height: 0.93;
+  }
+
+  html[data-proto="clasificados"] .cl-folio {
+    justify-content: flex-start;
+    column-gap: 18px;
+    font-size: 0.8125rem;
+    letter-spacing: 0.06em;
+  }
+
+  html[data-proto="clasificados"] .cl-intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding-top: 18px;
+  }
+
+  html[data-proto="clasificados"] .cl-search__row {
+    flex-wrap: wrap;
+  }
+
+  html[data-proto="clasificados"] .cl-field {
+    flex-basis: 100%;
+  }
+
+  html[data-proto="clasificados"] .cl-search__row .cl-btn {
+    flex: 1 1 0;
+    min-height: 48px;
+  }
+
+  html[data-proto="clasificados"] .cl-filters.is-open {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-proto="clasificados"] .cl-sel,
+  html[data-proto="clasificados"] .cl-sel select {
+    width: 100%;
+  }
+
+  html[data-proto="clasificados"] .cl-tabbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 22px;
+  }
+
+  html[data-proto="clasificados"] .cl-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+
+  html[data-proto="clasificados"] .cl-tab {
+    justify-content: space-between;
+    padding: 13px 14px 11px;
+    border-top: 0;
+    font-size: 1.3125rem;
+  }
+
+  html[data-proto="clasificados"] .cl-tab + .cl-tab {
+    border-left: 0;
+  }
+
+  html[data-proto="clasificados"] .cl-tab:nth-child(even) {
+    border-left: 1px solid var(--hair);
+  }
+
+  html[data-proto="clasificados"] .cl-tab:nth-child(n + 3) {
+    border-top: 1px solid var(--hair);
+  }
+
+  html[data-proto="clasificados"] .cl-count {
+    grid-row: 2;
+    justify-self: end;
+    padding: 8px 0 10px;
+  }
+
+  html[data-proto="clasificados"] .cl-ads tbody {
+    grid-template-columns: minmax(0, 1fr);
+    background: none;
+  }
+
+  html[data-proto="clasificados"] .cl-contrib {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 40px;
+  }
+
+  html[data-proto="clasificados"] .cl-contrib a + a {
+    border-left: 0;
+    border-top: 1px solid var(--hair);
+  }
+}
+
+/* ── Sin movimiento: el bolígrafo ya pasó ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html[data-proto="clasificados"] .pen path,
+  html[data-proto="clasificados"] .pen.is-drawing path,
+  html[data-proto="clasificados"] .cl-ads tbody tr:hover .pen--circle path,
+  html[data-proto="clasificados"] .cl-ads tbody tr:focus-within .pen--circle path {
+    animation: none;
+    transition: none;
+  }
+
+  html[data-proto="clasificados"] .cl-iconbtn .i {
+    transition: none;
+  }
+}
