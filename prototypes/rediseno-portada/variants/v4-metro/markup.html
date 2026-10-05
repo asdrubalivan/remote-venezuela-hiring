@@ -1,1 +1,264 @@
-{% include "_reference.html" %}
+{#
+  PROTOTIPO — v4 Metro. La señalética del Metro de Caracas: bandas negras de
+  señal, letras blancas suizas, naranja de sistema. La tabla es una línea y cada
+  empresa una estación (punto del color de su Status; hueco si está desactualizada).
+  Mismos textos y ganchos data-rvh-* que _reference.html.
+#}
+<a class="m-skip" href="#main-content">Saltar al contenido</a>
+
+{# Pictogramas propios: retícula de 24, trazo uniforme de 2, puntas rectas. #}
+<svg class="m-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="metro-i-gear" viewBox="0 0 24 24">
+      <path d="M19.18 10.21 L21.90 10.61 L21.90 13.39 L19.18 13.79 L18.34 15.81 L19.99 18.02 L18.02 19.99 L15.81 18.34 L13.79 19.18 L13.39 21.90 L10.61 21.90 L10.21 19.18 L8.19 18.34 L5.98 19.99 L4.01 18.02 L5.66 15.81 L4.82 13.79 L2.10 13.39 L2.10 10.61 L4.82 10.21 L5.66 8.19 L4.01 5.98 L5.98 4.01 L8.19 5.66 L10.21 4.82 L10.61 2.10 L13.39 2.10 L13.79 4.82 L15.81 5.66 L18.02 4.01 L19.99 5.98 L18.34 8.19Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"/>
+      <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/>
+    </symbol>
+    <symbol id="metro-i-sun" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+        <circle cx="12" cy="12" r="4.2"/>
+        <path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>
+      </g>
+    </symbol>
+    <symbol id="metro-i-moon" viewBox="0 0 24 24">
+      <path d="M19.5 14.6A8 8 0 0 1 9.4 4.5a8 8 0 1 0 10.1 10.1Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"/>
+    </symbol>
+    <symbol id="metro-i-out" viewBox="0 0 24 24">
+      <path d="M7 17 17 7M8.5 7H17v8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+    </symbol>
+    <symbol id="metro-i-search" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+        <circle cx="10.5" cy="10.5" r="6.5"/>
+        <path d="M15.5 15.5 20.5 20.5"/>
+      </g>
+    </symbol>
+    <symbol id="metro-i-filter" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+        <path d="M3.5 7h4M12.5 7h8M3.5 17h10M18.5 17h2"/>
+        <circle cx="10" cy="7" r="2.5"/>
+        <circle cx="16" cy="17" r="2.5"/>
+      </g>
+    </symbol>
+    <symbol id="metro-i-clear" viewBox="0 0 24 24">
+      <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+    </symbol>
+    <symbol id="metro-i-info" viewBox="0 0 24 24">
+      <path d="M12 10.5v7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="square"/>
+      <circle cx="12" cy="6.6" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="metro-i-sort" viewBox="0 0 24 24">
+      <path style="opacity: var(--sort-up, 1)" d="M7.5 10 12 5.5l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+      <path style="opacity: var(--sort-down, 1)" d="M7.5 14 12 18.5l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+    </symbol>
+    <symbol id="metro-i-end" viewBox="0 0 48 64">
+      <g fill="none" stroke="currentColor" stroke-width="4">
+        <path d="M24 0v14" stroke-dasharray="4 5"/>
+        <path d="M24 26v38" stroke-dasharray="4 5"/>
+        <circle cx="24" cy="20" r="6"/>
+        <path d="M12 63h24" stroke-linecap="square"/>
+      </g>
+    </symbol>
+    <symbol id="metro-flag" viewBox="0 0 30 20">
+      <rect width="30" height="6.67" fill="#ffcc00"/>
+      <rect y="6.67" width="30" height="6.67" fill="#00247d"/>
+      <rect y="13.33" width="30" height="6.67" fill="#cf142b"/>
+      <g fill="#fff"><circle cx="10.68" cy="12.03" r=".62"/><circle cx="11.48" cy="10.64" r=".62"/><circle cx="12.70" cy="9.62" r=".62"/><circle cx="14.20" cy="9.07" r=".62"/><circle cx="15.80" cy="9.07" r=".62"/><circle cx="17.30" cy="9.62" r=".62"/><circle cx="18.52" cy="10.64" r=".62"/><circle cx="19.32" cy="12.03" r=".62"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<header role="banner" class="m-bar">
+  <div class="m-wrap m-bar-in">
+    <a class="m-brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
+      <svg class="m-brand-mark" viewBox="0 0 20 36" width="20" height="36" aria-hidden="true" focusable="false">
+        <rect x="7" y="0" width="6" height="36" fill="#f26a1b"/>
+        <circle cx="10" cy="18" r="6.5" fill="#fff" stroke="#111" stroke-width="3"/>
+      </svg>
+      <span class="m-brand-text">
+        <span class="m-brand-name">Remote Venezuela</span>
+        <span class="m-brand-sub"><svg class="m-flag" viewBox="0 0 30 20" role="img" aria-label="🇻🇪"><use href="#metro-flag"/></svg> Hiring</span>
+      </span>
+    </a>
+    <nav class="m-nav" aria-label="Navegación principal">
+      <a href="./" aria-current="page">Empresas</a>
+      <a href="../stats.html">Estadísticas</a>
+    </nav>
+    <div class="m-tools">
+      <div class="m-settings">
+        <button type="button" class="m-iconbtn" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">
+          <svg class="m-i" aria-hidden="true" focusable="false"><use href="#metro-i-gear"/></svg>
+        </button>
+        <div class="m-menu" data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+          <div class="m-menu-label" id="metro-lbl-tema">Tema</div>
+          <div class="m-seg" role="radiogroup" aria-label="Tema">
+            <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro">
+              <svg class="m-i" aria-hidden="true" focusable="false"><use href="#metro-i-sun"/></svg>
+            </button>
+            <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro">
+              <svg class="m-i" aria-hidden="true" focusable="false"><use href="#metro-i-moon"/></svg>
+            </button>
+          </div>
+          <div class="m-menu-label">Densidad de la tabla</div>
+          <div class="m-seg m-seg-text" role="radiogroup" aria-label="Densidad de la tabla">
+            <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+            <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+          </div>
+        </div>
+      </div>
+      <a class="m-gh" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub<svg class="m-i m-i-out" aria-hidden="true" focusable="false"><use href="#metro-i-out"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" class="m-main" tabindex="-1">
+  <header class="m-hero">
+    <div class="m-sign">
+      <div class="m-wrap">
+        <h1 class="m-title">Compatibilidad de Contratación Remota en <svg class="m-flag m-flag-title" viewBox="0 0 30 20" role="img" aria-label="🇻🇪"><use href="#metro-flag"/></svg>&nbsp;Venezuela</h1>
+      </div>
+    </div>
+    <div class="m-info">
+      <div class="m-wrap m-info-in">
+        <div class="m-about">
+          <p class="m-lede">Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+          <div class="m-summary" role="group" aria-label="Resumen">
+            <span><strong>{{ visible_count }}</strong> empresas</span>
+            <span><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
+            <span>actualizado <time datetime="{{ today.isoformat() }}">{{ format_date(today) }}</time></span>
+          </div>
+        </div>
+        <div class="m-note" role="note">
+          <span class="m-note-pict" aria-hidden="true"><svg class="m-i" focusable="false"><use href="#metro-i-info"/></svg></span>
+          <p>
+            No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+            La compatibilidad puede cambiar — siempre verifica directamente.
+            <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub<svg class="m-i m-i-out" aria-hidden="true" focusable="false"><use href="#metro-i-out"/></svg></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="m-wrap m-controls">
+    <div class="m-lines">
+      <div class="m-tabs" role="tablist" aria-label="Filtrar por estado">
+        {% for tab in status_tabs %}
+        <button type="button" role="tab" class="m-tab m-tab-{{ tab.value }}" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}">
+          <span class="m-bullet">{{ tab.count }}</span>
+          <span class="m-tab-label">{{ tab.label }}</span>
+        </button>
+        {% endfor %}
+      </div>
+      <span class="m-count" data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
+    </div>
+
+    <section class="m-search" role="search" aria-label="Filtrar empresas">
+      <div class="m-field">
+        <svg class="m-i m-field-i" aria-hidden="true" focusable="false"><use href="#metro-i-search"/></svg>
+        <input type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+      </div>
+
+      <button type="button" class="m-btn" data-rvh-filter-toggle aria-expanded="false" aria-controls="metro-filters">
+        <svg class="m-i" aria-hidden="true" focusable="false"><use href="#metro-i-filter"/></svg>
+        Filtros <span class="m-badge" data-rvh-filter-count hidden>0</span>
+      </button>
+
+      <button type="button" class="m-btn m-btn-quiet" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">
+        <svg class="m-i" aria-hidden="true" focusable="false"><use href="#metro-i-clear"/></svg>
+        Limpiar
+      </button>
+
+      <div class="m-filters" id="metro-filters" data-rvh-filter-panel>
+        <select data-rvh-filter="method" aria-label="Filtrar por verificación">
+          <option value="all">Verificación: Todas</option>
+          {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+        </select>
+        <select data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+          <option value="all">Plataforma: Todas</option>
+          {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+        </select>
+        <select data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+          <option value="all">Etiqueta: Todas</option>
+          {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+        </select>
+        <label class="m-check"><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+      </div>
+    </section>
+  </div>
+
+  <div class="m-wrap">
+    <div class="m-board" data-metro-board>
+      <div class="m-line" data-metro-line aria-hidden="true"></div>
+      <table class="m-table">
+        <colgroup>
+          <col class="m-col-name" />
+          <col class="m-col-status" />
+          <col class="m-col-date" />
+          <col class="m-col-method" />
+          <col class="m-col-platform" />
+          <col class="m-col-tags" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col" class="m-th-name" data-rvh-sort="name"><button type="button">Empresa<svg class="m-i m-sort" aria-hidden="true" focusable="false"><use href="#metro-i-sort"/></svg></button></th>
+            <th scope="col" data-rvh-sort="status"><button type="button">Estado<svg class="m-i m-sort" aria-hidden="true" focusable="false"><use href="#metro-i-sort"/></svg></button></th>
+            <th scope="col" class="m-th-date" data-rvh-sort="last_checked"><button type="button">Últ. verificación<svg class="m-i m-sort" aria-hidden="true" focusable="false"><use href="#metro-i-sort"/></svg></button></th>
+            <th scope="col" data-rvh-sort="verification_method"><button type="button">Verificación<svg class="m-i m-sort" aria-hidden="true" focusable="false"><use href="#metro-i-sort"/></svg></button></th>
+            <th scope="col" data-rvh-sort="hiring_platform"><button type="button">Plataforma<svg class="m-i m-sort" aria-hidden="true" focusable="false"><use href="#metro-i-sort"/></svg></button></th>
+            <th scope="col" class="m-th-tags"><span>Etiquetas</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for company in companies %}
+          {% set stale = company.is_stale() %}
+          <tr data-rvh-row class="m-row{% if stale %} is-stale{% endif %}"
+              data-status="{{ company.status.value }}"
+              data-method="{{ company.verification_method.value }}"
+              data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+              data-tags="{{ company.tags | join(',') }}"
+              data-archived="{{ '1' if company.archived else '0' }}"
+              data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+              data-name="{{ company.name }}"
+              data-last-checked="{{ company.last_checked.isoformat() }}">
+            <td class="m-c-name">
+              <span class="m-stop" aria-hidden="true"></span>
+              <a class="m-name" href="company/{{ company.id }}.html">{{ company.name }}</a>
+              {% if company.archived %}<span class="m-flagword">ARCHIVADA</span>{% endif %}
+              <a class="m-web" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
+            </td>
+            <td class="m-c-status"><span class="m-status">{{ status_labels[company.status.value] }}</span>{% if stale %} <span class="m-flagword m-stale">DESACT.</span>{% endif %}</td>
+            <td class="m-c-date"><time datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time></td>
+            <td class="m-c-method">{{ verification_labels[company.verification_method.value] }}</td>
+            <td class="m-c-platform">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
+            <td class="m-c-tags">
+              {% for tag in company.tags[:3] %}<span class="m-tag">{{ tag }}</span>{% endfor %}
+              {% if company.tags|length > 3 %}<span class="m-tag m-tag-more">+{{ company.tags|length - 3 }}</span>{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="m-empty" data-rvh-empty role="status" aria-live="polite" hidden>
+      <svg class="m-empty-pict" viewBox="0 0 48 64" width="36" height="48" aria-hidden="true" focusable="false"><use href="#metro-i-end"/></svg>
+      <p>Ninguna empresa coincide con los filtros.</p>
+      <button type="button" class="m-btn" data-rvh-clear>Limpiar filtros</button>
+    </div>
+  </div>
+
+  <div class="m-exits">
+    <div class="m-wrap m-exits-in">
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer"><svg class="m-i m-i-out" aria-hidden="true" focusable="false"><use href="#metro-i-out"/></svg>Agregar empresa vía GitHub Issues</a>
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"><svg class="m-i m-i-out" aria-hidden="true" focusable="false"><use href="#metro-i-out"/></svg>Enviar un pull request YAML</a>
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer"><svg class="m-i m-i-out" aria-hidden="true" focusable="false"><use href="#metro-i-out"/></svg>Reportar datos incorrectos</a>
+    </div>
+  </div>
+</main>
+
+<footer role="contentinfo" class="m-foot">
+  <p class="m-wrap">
+    Generado el <span class="m-num">{{ generated_at }}</span> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>
