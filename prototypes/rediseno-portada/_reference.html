@@ -81,17 +81,17 @@
       {{ tab.label }} <span>{{ tab.count }}</span>
     </button>
     {% endfor %}
-    <span data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
   </div>
+  <span data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
 
   <table>
     <thead>
       <tr>
-        <th scope="col" data-rvh-sort="name">Empresa</th>
-        <th scope="col" data-rvh-sort="status">Estado</th>
-        <th scope="col" data-rvh-sort="last_checked">Últ. verificación</th>
-        <th scope="col" data-rvh-sort="verification_method">Verificación</th>
-        <th scope="col" data-rvh-sort="hiring_platform">Plataforma</th>
+        <th scope="col" data-rvh-sort="name"><button type="button">Empresa</button></th>
+        <th scope="col" data-rvh-sort="status"><button type="button">Estado</button></th>
+        <th scope="col" data-rvh-sort="last_checked"><button type="button">Últ. verificación</button></th>
+        <th scope="col" data-rvh-sort="verification_method"><button type="button">Verificación</button></th>
+        <th scope="col" data-rvh-sort="hiring_platform"><button type="button">Plataforma</button></th>
         <th scope="col">Etiquetas</th>
       </tr>
     </thead>

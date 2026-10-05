@@ -7,12 +7,13 @@
 //   [data-rvh-search]         input de búsqueda
 //   [data-rvh-tab="all|accepts|rejects|unknown"]   pestañas de estado
 //   [data-rvh-sort="name|status|last_checked|verification_method|hiring_platform"]  cabeceras ordenables
+//                             (en el <th>, con un <button> dentro para el teclado; el clic sube al <th>)
 //   [data-rvh-filter="method|platform|tag"]        selects de filtro
 //   [data-rvh-archived]       checkbox "Mostrar archivadas"
 //   [data-rvh-filter-toggle] / [data-rvh-filter-panel]   botón "Filtros" y su panel (clase .is-open)
 //   [data-rvh-filter-count]   contador de filtros activos dentro del botón
 //   [data-rvh-clear]          botones que limpian filtros ([data-rvh-autohide] se oculta sin filtros)
-//   [data-rvh-count]          contador de resultados ("N empresas")
+//   [data-rvh-count]          contador de resultados ("N empresas"), fuera del tablist
 //   [data-rvh-empty]          estado vacío
 //   [data-rvh-settings-toggle] / [data-rvh-settings-menu]  ajustes de visualización
 //   [data-rvh-theme="light|dark"], [data-rvh-density="comfortable|compact"]
