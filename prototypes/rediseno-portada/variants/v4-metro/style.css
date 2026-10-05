@@ -220,11 +220,12 @@ html[data-proto="metro"] .m-sign {
 }
 html[data-proto="metro"] .m-title {
   margin: 0;
-  padding: 24px 0 28px;
-  font-size: clamp(1.75rem, 3.45vw, 3.6rem);
+  padding: 15px 0 19px;
+  font-size: clamp(1.75rem, 4.1vw, 4rem);
+  font-stretch: 80%;
   font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: -0.022em;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 html[data-proto="metro"] .m-flag-title { width: 1.08em; height: 0.72em; vertical-align: 0.02em; margin: 0 0.04em; }
@@ -466,18 +467,18 @@ html[data-proto="metro"] .m-table {
   font-size: 14px;
 }
 html[data-proto="metro"] .m-col-name { width: 25%; }
-html[data-proto="metro"] .m-col-status { width: 20%; }
-html[data-proto="metro"] .m-col-date { width: 10%; }
+html[data-proto="metro"] .m-col-status { width: 21.5%; }
+html[data-proto="metro"] .m-col-date { width: 9.5%; }
 html[data-proto="metro"] .m-col-method { width: 14%; }
 html[data-proto="metro"] .m-col-platform { width: 11%; }
-html[data-proto="metro"] .m-col-tags { width: 20%; }
+html[data-proto="metro"] .m-col-tags { width: 19%; }
 
 html[data-proto="metro"] .m-table th {
   position: sticky;
   top: 0;
   z-index: 3;
-  padding: 0;
-  background: var(--band);
+  padding: 0 0 4px;
+  background: linear-gradient(to top, var(--line) 4px, var(--band) 4px);
   color: var(--band-ink);
   font-size: 13px;
   font-weight: 600;
@@ -594,6 +595,8 @@ html[data-proto="metro"] .m-flagword {
 }
 html[data-proto="metro"] .m-stale { border-color: var(--ink); background: var(--ink); color: var(--ground); }
 html[data-proto="metro"] .m-status { color: var(--dot); font-weight: 650; line-height: var(--name-lh); }
+/* Placa de Status: el color de la línea con su signo (no depende solo del color). */
+html[data-proto="metro"] .m-pict { width: 18px; height: 18px; margin-right: 8px; vertical-align: -3px; color: var(--on-line); }
 html[data-proto="metro"] .m-c-date {
   padding-right: 24px !important;
   text-align: right;
@@ -680,7 +683,7 @@ html[data-proto="metro"] .m-num { font-variant-numeric: tabular-nums; }
     border-top: 1px solid var(--band-rule);
   }
   html[data-proto="metro"] .m-nav a { min-height: 48px; }
-  html[data-proto="metro"] .m-title { padding: 16px 0 20px; font-size: clamp(1.65rem, 7.4vw, 2.2rem); line-height: 1.08; }
+  html[data-proto="metro"] .m-title { padding: 14px 0 18px; font-size: clamp(1.75rem, 8.6vw, 2.6rem); line-height: 1.04; }
   html[data-proto="metro"] .m-info-in { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 16px 0 18px; }
   html[data-proto="metro"] .m-lede { margin-bottom: 8px; font-size: 15.5px; }
   html[data-proto="metro"] .m-summary { column-gap: 16px; font-size: 13.5px; }
@@ -691,10 +694,10 @@ html[data-proto="metro"] .m-num { font-variant-numeric: tabular-nums; }
   html[data-proto="metro"] .m-controls { padding-top: 14px; }
   html[data-proto="metro"] .m-lines { width: 100%; }
   html[data-proto="metro"] .m-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; width: 100%; }
-  html[data-proto="metro"] .m-tab { min-height: 44px; padding-block: 3px; }
+  html[data-proto="metro"] .m-tab { min-height: 44px; padding-block: 3px; padding-left: 0; }
   html[data-proto="metro"] .m-bullet { width: 32px; height: 32px; }
   html[data-proto="metro"] .m-lines { row-gap: 2px; min-height: 0; }
-  html[data-proto="metro"] .m-count { padding-left: 7px; border-left: 0; font-size: 13px; }
+  html[data-proto="metro"] .m-count { padding-left: 0; border-left: 0; font-size: 13px; }
   html[data-proto="metro"] .m-search { flex-basis: 100%; justify-content: flex-start; padding-top: 0; }
   html[data-proto="metro"] .m-field { flex: 1 1 100%; max-width: none; }
   html[data-proto="metro"] .m-field input { font-size: 16px; }
@@ -703,16 +706,22 @@ html[data-proto="metro"] .m-num { font-variant-numeric: tabular-nums; }
   html[data-proto="metro"] .m-table,
   html[data-proto="metro"] .m-table tbody { display: block; }
   html[data-proto="metro"] .m-table colgroup { display: none; }
-  html[data-proto="metro"] .m-table thead { display: block; }
+  html[data-proto="metro"] .m-table thead {
+    display: block;
+    margin-inline: calc(-1 * var(--gut-page));
+    padding-bottom: 4px;
+    background: linear-gradient(to top, var(--line) 4px, var(--band) 4px);
+  }
+  /* Banda de orden desplazable: se desvanece a la derecha para indicar que sigue. */
   html[data-proto="metro"] .m-table thead tr {
     display: flex;
     overflow-x: auto;
-    background: var(--band);
     scrollbar-width: none;
-    margin-inline: calc(-1 * var(--gut-page));
-    padding-inline: calc(var(--gut-page) - 12px);
+    padding: 0 56px 0 calc(var(--gut-page) - 12px);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent calc(100% - 16px));
+    mask-image: linear-gradient(to right, #000 calc(100% - 72px), transparent calc(100% - 16px));
   }
-  html[data-proto="metro"] .m-table th { position: static; flex: none; }
+  html[data-proto="metro"] .m-table th { position: static; flex: none; padding: 0; background: none; }
   html[data-proto="metro"] .m-table th > button { height: 46px; }
   html[data-proto="metro"] .m-table .m-th-name > button { padding-left: 12px; }
   html[data-proto="metro"] .m-table .m-th-date > button { padding-right: 12px; }

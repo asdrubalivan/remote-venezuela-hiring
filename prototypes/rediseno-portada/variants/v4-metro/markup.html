@@ -57,6 +57,20 @@
         <path d="M12 63h24" stroke-linecap="square"/>
       </g>
     </symbol>
+    <!-- Pictogramas de Status: placa del color de la línea con signo de trazo uniforme. -->
+    <symbol id="metro-p-accepts" viewBox="0 0 18 18">
+      <rect width="18" height="18" rx="2" style="fill: var(--dot)"/>
+      <path d="M4.6 9.4 7.6 12.4 13.4 5.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/>
+    </symbol>
+    <symbol id="metro-p-rejects" viewBox="0 0 18 18">
+      <rect width="18" height="18" rx="2" style="fill: var(--dot)"/>
+      <path d="M5.4 5.4l7.2 7.2M12.6 5.4l-7.2 7.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/>
+    </symbol>
+    <symbol id="metro-p-unknown" viewBox="0 0 18 18">
+      <rect width="18" height="18" rx="2" style="fill: var(--dot)"/>
+      <path d="M6.5 6.9a2.5 2.5 0 1 1 3.4 2.3c-.6.3-.9.7-.9 1.3v.7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/>
+      <circle cx="9" cy="13.6" r="1.2" fill="currentColor"/>
+    </symbol>
     <symbol id="metro-flag" viewBox="0 0 30 20">
       <rect width="30" height="6.67" fill="#ffcc00"/>
       <rect y="6.67" width="30" height="6.67" fill="#00247d"/>
@@ -225,7 +239,7 @@
               {% if company.archived %}<span class="m-flagword">ARCHIVADA</span>{% endif %}
               <a class="m-web" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
             </td>
-            <td class="m-c-status"><span class="m-status">{{ status_labels[company.status.value] }}</span>{% if stale %} <span class="m-flagword m-stale">DESACT.</span>{% endif %}</td>
+            <td class="m-c-status"><svg class="m-pict" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><use href="#metro-p-{{ company.status.value }}"/></svg><span class="m-status">{{ status_labels[company.status.value] }}</span>{% if stale %} <span class="m-flagword m-stale">DESACT.</span>{% endif %}</td>
             <td class="m-c-date"><time datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time></td>
             <td class="m-c-method">{{ verification_labels[company.verification_method.value] }}</td>
             <td class="m-c-platform">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
