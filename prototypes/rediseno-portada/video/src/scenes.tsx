@@ -11,6 +11,7 @@ type Shot = {
   mobileHeight: number;
   sigFrames: number;
   sigLeadFrames: number;
+  sigScroll: number;
   click: { x: number; y: number };
 };
 const manifest = manifestJson as Record<string, Shot>;
@@ -76,8 +77,13 @@ export const Segment: React.FC<{ v: VariantMeta }> = ({ v }) => {
   const base = `shots/v${v.n}`;
 
   // Escritorio: primero un recorrido por la página, luego la animación firma.
-  const maxScroll = Math.max(0, Math.min(620, shot.desktopHeight - 900));
-  const scrollY = interpolate(frame, [12, 118], [0, maxScroll], { ...clamp, easing: inOut });
+  // El recorrido termina exactamente donde empieza la toma de la firma, para que el fundido no salte.
+  const maxScroll = Math.max(0, shot.desktopHeight - 900);
+  const peak = shot.sigScroll >= 300 ? shot.sigScroll : Math.min(maxScroll, 520);
+  const scrollY =
+    shot.sigScroll >= 300
+      ? interpolate(frame, [12, 118], [0, shot.sigScroll], { ...clamp, easing: inOut })
+      : interpolate(frame, [12, 66, 118], [0, peak, shot.sigScroll], { ...clamp, easing: inOut });
   const sigOpacity = interpolate(frame, [116, 130], [0, 1], clamp);
   const CLICK = 150;
   const lead = shot.sigLeadFrames;

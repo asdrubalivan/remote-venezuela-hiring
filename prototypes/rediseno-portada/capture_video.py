@@ -34,8 +34,16 @@ FPS = 30
 SIG_MS = 1400
 LEAD_FRAMES = 8
 
-# Pestaña que dispara la firma de cada variante.
-SIG_TAB = {1: "accepts", 2: "rejects", 3: "rejects", 4: "accepts", 5: "accepts"}
+# Acción que dispara la firma de cada variante: (tipo, valor, bajar hasta las pestañas).
+SIG: dict[int, tuple[str, str, bool]] = {
+    1: ("tab", "accepts", True),
+    2: ("tab", "rejects", False),  # la banda de franjas vive arriba
+    3: ("tab", "rejects", True),
+    4: ("tab", "rejects", True),
+    5: ("letter", "M", True),  # el índice de letras
+}
+# Recorrido simulado del salto por letra (v5), en ms.
+JUMP_MS = 600
 
 
 def _settle(page: Page) -> None:
@@ -43,40 +51,70 @@ def _settle(page: Page) -> None:
     page.wait_for_timeout(600)
 
 
-def _signature(page: Page, n: int, out: Path) -> int:
+def _ease_out_expo(x: float) -> float:
+    return 1.0 if x >= 1 else 1 - 2 ** (-10 * x)
+
+
+def _signature(page: Page, n: int, out: Path) -> dict[str, object]:
     out.mkdir(parents=True, exist_ok=True)
-    page.evaluate(
-        """() => {
-          const tabs = document.querySelector('[role="tablist"]');
-          const y = tabs ? tabs.getBoundingClientRect().top + scrollY - 220 : 0;
-          window.scrollTo(0, Math.max(0, y));
-        }"""
-    )
+    kind, value, scroll_to_tabs = SIG[n]
+    if scroll_to_tabs:
+        page.evaluate(
+            """() => {
+              const tabs = document.querySelector('[role="tablist"]');
+              const y = tabs ? tabs.getBoundingClientRect().top + scrollY - 220 : 0;
+              window.scrollTo(0, Math.max(0, y));
+            }"""
+        )
     page.wait_for_timeout(500)
+    sig_scroll = page.evaluate("scrollY")
     for i in range(LEAD_FRAMES):
         page.screenshot(path=str(out / f"{i:03d}.jpg"), type="jpeg", quality=90)
-    tab = page.locator(f'[data-rvh-tab="{SIG_TAB[n]}"]').first
-    box = tab.bounding_box() or {"x": 720, "y": 450, "width": 0, "height": 0}
+
+    selector = f'[data-rvh-tab="{value}"]' if kind == "tab" else f'[data-guia-letter="{value}"]'
+    target = page.locator(selector).first
+    box = target.bounding_box() or {"x": 720, "y": 450, "width": 0, "height": 0}
     click = {"x": box["x"] + box["width"] / 2, "y": box["y"] + box["height"] / 2}
-    (out.parent / "click.json").write_text(json.dumps(click))
+
+    if kind == "letter":
+        # Salto instantáneo y sin temporizadores largos: el recorrido se dibuja a mano.
+        page.evaluate(
+            """() => {
+              const st = window.setTimeout.bind(window);
+              window.setTimeout = (fn, ms, ...a) => (ms >= 1000 ? 0 : st(fn, ms, ...a));
+              const orig = Element.prototype.scrollIntoView;
+              Element.prototype.scrollIntoView = function (o) {
+                orig.call(this, Object.assign({}, o, { behavior: "instant" }));
+              };
+            }"""
+        )
     cdp = page.context.new_cdp_session(page)
     cdp.send("Animation.enable")
     cdp.send("Animation.setPlaybackRate", {"playbackRate": 0})
-    tab.click()
+    target.click()
     page.wait_for_timeout(1500)
+    end_scroll = page.evaluate("scrollY")
     count = page.evaluate(
         "() => { const a = document.getAnimations(); a.forEach(x => x.pause()); return a.length; }"
     )
     frames = SIG_MS * FPS // 1000
     for f in range(frames):
         t = f * 1000 / FPS
+        anim_t = t
+        if kind == "letter":
+            k = _ease_out_expo(min(1.0, t / JUMP_MS))
+            page.evaluate(
+                "y => window.scrollTo({ top: y, behavior: 'instant' })",
+                sig_scroll + (end_scroll - sig_scroll) * k,
+            )
+            anim_t = max(0.0, t - JUMP_MS)
         page.evaluate(
             "t => document.getAnimations().forEach(a => { a.currentTime = t; })",
-            t,
+            anim_t,
         )
         page.screenshot(path=str(out / f"{LEAD_FRAMES + f:03d}.jpg"), type="jpeg", quality=90)
     print(f"[capture] v{n}: {count} animaciones, {LEAD_FRAMES + frames} cuadros")
-    return LEAD_FRAMES + frames
+    return {"sigFrames": LEAD_FRAMES + frames, "click": click, "sigScroll": sig_scroll}
 
 
 def _current_site(browser: Browser) -> None:
@@ -143,16 +181,15 @@ def main() -> None:
                 )
                 page.goto(url, wait_until="networkidle")
                 _settle(page)
-                frames = _signature(page, n, vdir / "sig")
+                sig = _signature(page, n, vdir / "sig")
                 page.close()
 
                 manifest[f"v{n}"] = {
                     "name": v["name"],
                     "desktopHeight": h,
                     "mobileHeight": mh,
-                    "sigFrames": frames,
                     "sigLeadFrames": LEAD_FRAMES,
-                    "click": json.loads((vdir / "click.json").read_text()),
+                    **sig,
                 }
             browser.close()
     finally:
