@@ -74,6 +74,16 @@
   <span class="rh-w rh-w--last" data-guia-last>{{ active_companies[-1].name if active_companies else "" }}</span>
 </div>
 
+{# Índice A–Z: el canto troquelado de la guía (fijo a la derecha en escritorio,
+   tira pegajosa bajo las palabras guía en el teléfono). #}
+<nav class="az" aria-label="A–Z">
+  <ol class="az-list">
+    {% for L in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+    <li>{% if L in present %}<a class="az-tab" href="#guia-{{ L }}" data-guia-letter="{{ L }}">{{ L }}</a>{% else %}<a class="az-tab" data-guia-letter="{{ L }}" aria-disabled="true">{{ L }}</a>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</nav>
+
 <main id="main-content" class="page">
   <header class="mast">
     <h1 class="mast-title">Compatibilidad de Contratación Remota en <span class="flag-wrap">{{ flag("flag flag--title") }}<span class="vh">🇻🇪</span></span> Venezuela</h1>
@@ -136,14 +146,6 @@
   </section>
 
   <div class="book">
-    {# Índice A–Z: el canto troquelado de la guía. #}
-    <nav class="az" aria-label="A–Z">
-      <ol class="az-list">
-        {% for L in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
-        <li>{% if L in present %}<a class="az-tab" href="#guia-{{ L }}" data-guia-letter="{{ L }}">{{ L }}</a>{% else %}<a class="az-tab" data-guia-letter="{{ L }}" aria-disabled="true">{{ L }}</a>{% endif %}</li>
-        {% endfor %}
-      </ol>
-    </nav>
 
     <table class="dir">
       <colgroup>
@@ -188,8 +190,8 @@
           <td class="c-method">{{ verification_labels[company.verification_method.value] }}</td>
           <td class="c-plat">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
           <td class="c-tags">
-            {%- for tag in company.tags[:3] %}<span class="t">{{ tag }}</span>{% endfor -%}
-            {%- if company.tags|length > 3 %}<span class="t t--more">+{{ company.tags|length - 3 }}</span>{% endif -%}
+            {%- for tag in company.tags[:2] %}<span class="t">{{ tag }}</span> {% endfor -%}
+            {%- if company.tags|length > 2 %} <span class="t t--more">+{{ company.tags|length - 2 }}</span>{% endif -%}
           </td>
         </tr>
         {% endfor %}
