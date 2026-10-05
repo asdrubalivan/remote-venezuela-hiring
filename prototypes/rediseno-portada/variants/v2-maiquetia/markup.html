@@ -1,11 +1,11 @@
 {#
   PROTOTIPO — v2 Piso de Maiquetía. Código descartable.
   Markup propio a partir de _reference.html: mismos textos y mismos ganchos data-rvh-*.
-  El piso (banda superior, franja del encabezado de la tabla) se compone de módulos
-  .mq-ind que comparten la retícula de 24 columnas del contenido; su color lo deciden
-  #stage[data-status] y #stage[data-mq-empty] (ver style.css y script.js).
+  El piso (banda superior, franja del encabezado de la tabla, pie) se compone de
+  elementos .mq-ind que repiten un mismo módulo de franjas y comparten la retícula de
+  24 columnas del contenido; su color lo deciden #stage[data-status] y
+  #stage[data-mq-empty] (ver style.css y script.js).
 #}
-{%- set floor_rhythms = ["r2", "r1", "r3", "r4", "r2", "r3", "r1", "r4", "r3", "r2"] -%}
 <svg class="mq-defs" aria-hidden="true" focusable="false" width="0" height="0">
   <defs>
     <symbol id="mq-flag" viewBox="0 0 180 120">
@@ -39,7 +39,7 @@
 <header class="mq-nav mq-frame" role="banner">
   <div class="mq-nav__in">
     <a class="mq-brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
-      <span class="mq-brand__tile" aria-hidden="true"></span>
+      <span class="mq-brand__tile mq-sw mq-sw--all" aria-hidden="true"></span>
       <span class="mq-brand__words">
         <span class="mq-brand__a">Remote Venezuela</span>
         <span class="mq-brand__b"><svg class="mq-flag" aria-hidden="true" focusable="false"><use href="#mq-flag" /></svg> Hiring</span>
@@ -72,10 +72,11 @@
   </div>
 </header>
 
-{# El piso visto desde arriba: un módulo por cada 3 columnas de la retícula + los dos márgenes. #}
+{# El piso visto desde arriba: una losa por cada 3 columnas de la retícula; las de los extremos
+   absorben los márgenes. Cada losa transiciona su color con su propio retardo (la ola). #}
 <div class="mq-floor mq-frame" aria-hidden="true">
-  {%- for r in floor_rhythms %}
-  <span class="mq-floor__m mq-ind mq-{{ r }}{% if loop.first %} mq-floor__m--start{% elif loop.last %} mq-floor__m--end{% endif %}" style="--i: {{ loop.index0 }}"></span>
+  {%- for i in range(8) %}
+  <span class="mq-floor__m mq-ind" style="--i: {{ i }}"></span>
   {%- endfor %}
 </div>
 
@@ -159,16 +160,16 @@
       </colgroup>
       <thead>
         <tr>
-          {%- set sortable = [("name", "Empresa", 1), ("status", "Estado", 3), ("last_checked", "Últ. verificación", 5), ("verification_method", "Verificación", 6), ("hiring_platform", "Plataforma", 7)] %}
+          {%- set sortable = [("name", "Empresa", 0), ("status", "Estado", 2), ("last_checked", "Últ. verificación", 4), ("verification_method", "Verificación", 5), ("hiring_platform", "Plataforma", 6)] %}
           {%- for key, label, i in sortable %}
           <th scope="col" data-rvh-sort="{{ key }}">
             <button type="button" class="mq-sort">{{ label }}<svg class="mq-sort__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="mq-sort__up" d="m8 10 4-4 4 4" /><path class="mq-sort__down" d="m8 14 4 4 4-4" /></svg></button>
-            <span class="mq-th__floor mq-ind mq-r1" style="--i: {{ i }}" aria-hidden="true"></span>
+            <span class="mq-th__floor mq-ind" style="--i: {{ i }}" aria-hidden="true"></span>
           </th>
           {%- endfor %}
           <th scope="col" class="mq-th--static">
             <span class="mq-th__text">Etiquetas</span>
-            <span class="mq-th__floor mq-ind mq-r1" style="--i: 8" aria-hidden="true"></span>
+            <span class="mq-th__floor mq-ind" style="--i: 7" aria-hidden="true"></span>
           </th>
         </tr>
       </thead>
@@ -217,7 +218,7 @@
 </main>
 
 <footer class="mq-foot mq-frame" role="contentinfo">
-  <span class="mq-foot__floor" aria-hidden="true"></span>
+  <span class="mq-foot__floor mq-ind" aria-hidden="true"></span>
   <p>
     Generado el {{ generated_at }} ·
     <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
