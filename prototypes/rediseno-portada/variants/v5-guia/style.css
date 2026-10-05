@@ -1,1 +1,1486 @@
-/* PROTOTIPO — v5-guia */
+/* PROTOTIPO — v5 Guía amarilla.
+   La guía telefónica de CANTV: papel amarillo de borde a borde, tinta negra,
+   letras enormes, nombres en negrita, puntos guía hasta el Status y el índice
+   A–Z troquelado en el canto. Todo acotado a html[data-proto="guia"]. */
+
+/* ── Tokens ─────────────────────────────────────────────────────────────── */
+html[data-proto="guia"] {
+  --paper: #f5cc1d;        /* amarillo de guía, cálido y profundo */
+  --paper-deep: #e9bf0c;   /* hover de fila, pestaña al pasar */
+  --paper-lift: #fbe27a;   /* campos de formulario */
+  --ink: #17140b;          /* tinta */
+  --ink-soft: #4a3d07;     /* tinta secundaria, teñida del amarillo (6.9:1) */
+  --band: var(--ink);
+  --band-fg: var(--paper);
+  --band-fg-strong: #fffbea;
+  --hair: color-mix(in srgb, var(--ink) 22%, transparent);
+  --f: "Archivo", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --gutter: 48px;
+  --az-w: 46px;            /* ancho visible de cada pestaña del canto */
+  --az-cell: clamp(18px, calc((100svh - 150px) / 26), 30px);
+  --rh-h: 38px;            /* cabecera con palabras guía */
+  --head-h: 36px;          /* encabezados de la tabla */
+  --sticky: calc(var(--rh-h) + var(--head-h));
+  color-scheme: light;
+  background: var(--paper);
+  color: var(--ink);
+  scrollbar-color: var(--ink) var(--paper-deep);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html[data-proto="guia"][data-theme="dark"] {
+  /* La guía de noche: tinta amarilla sobre papel negro. */
+  --paper: #14120b;
+  --paper-deep: #241f0f;
+  --paper-lift: #1e1a0e;
+  --ink: #f5cc1d;
+  --ink-soft: #cdb562;
+  --band-fg-strong: #000;
+  color-scheme: dark;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
+html[data-proto="guia"] body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f);
+  font-stretch: 87.5%;
+  font-size: 16px;
+  line-height: 1.4;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-proto="guia"] #stage *,
+html[data-proto="guia"] #stage *::before,
+html[data-proto="guia"] #stage *::after {
+  box-sizing: border-box;
+}
+
+html[data-proto="guia"] #stage [hidden] {
+  display: none !important;
+}
+
+html[data-proto="guia"] ::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+html[data-proto="guia"] #stage :focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+html[data-proto="guia"] #stage .band :focus-visible,
+html[data-proto="guia"] #stage .foot :focus-visible {
+  outline-color: var(--band-fg);
+}
+
+/* Reseteos de baja especificidad: los componentes los sobrescriben sin pelear. */
+html[data-proto="guia"] :where(#stage) a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1.5px;
+}
+
+html[data-proto="guia"] :where(#stage) :where(button, input, select) {
+  font: inherit;
+  color: inherit;
+}
+
+html[data-proto="guia"] :where(#stage) button {
+  cursor: pointer;
+}
+
+html[data-proto="guia"] .ico {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+html[data-proto="guia"] .ico--out {
+  width: 0.85em;
+  height: 0.85em;
+  stroke-width: 2.4;
+}
+
+html[data-proto="guia"] .vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+html[data-proto="guia"] .skip {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 800;
+  text-decoration: none;
+  border: 2px solid var(--ink);
+  transform: translateY(-200%);
+}
+
+html[data-proto="guia"] .skip:focus {
+  transform: none;
+}
+
+/* ── Banda negra superior ───────────────────────────────────────────────── */
+html[data-proto="guia"] .band {
+  position: relative;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 8px 32px;
+  min-height: 56px;
+  padding: 0 var(--gutter);
+  background: var(--band);
+  color: var(--band-fg);
+}
+
+html[data-proto="guia"] .brand {
+  display: grid;
+  gap: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+html[data-proto="guia"] .brand-a {
+  font-size: 12px;
+  font-stretch: 87.5%;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+html[data-proto="guia"] .brand-b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 21px;
+  font-stretch: 62.5%;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--band-fg-strong);
+}
+
+html[data-proto="guia"] .flag--brand {
+  width: 21px;
+  height: 14px;
+  color: var(--band-fg-strong);
+}
+
+html[data-proto="guia"] .band-nav {
+  display: flex;
+  align-self: stretch;
+}
+
+html[data-proto="guia"] .band-nav a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+html[data-proto="guia"] .band-nav a:hover {
+  text-decoration: underline;
+}
+
+html[data-proto="guia"] .band-nav a[aria-current="page"] {
+  color: var(--band-fg-strong);
+  box-shadow: inset 0 -4px 0 var(--band-fg);
+}
+
+html[data-proto="guia"] .band-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+html[data-proto="guia"] .band-gh {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 4px;
+  font-size: 15px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+html[data-proto="guia"] .band-gh:hover {
+  text-decoration: underline;
+}
+
+html[data-proto="guia"] .prefs {
+  position: relative;
+}
+
+html[data-proto="guia"] .icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--band-fg);
+}
+
+html[data-proto="guia"] .icon-btn:hover,
+html[data-proto="guia"] .icon-btn[aria-expanded="true"] {
+  border-color: var(--band-fg);
+}
+
+html[data-proto="guia"] .icon-btn .ico {
+  width: 20px;
+  height: 20px;
+}
+
+html[data-proto="guia"] .prefs-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 60;
+  display: grid;
+  gap: 8px;
+  width: 248px;
+  padding: 14px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  box-shadow: 0 14px 30px -10px rgb(0 0 0 / 0.5);
+}
+
+html[data-proto="guia"] .prefs-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-proto="guia"] .seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 6px;
+  border: 1.5px solid var(--ink);
+}
+
+html[data-proto="guia"] .seg button {
+  display: inline-grid;
+  place-items: center;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+html[data-proto="guia"] .seg button + button {
+  border-left: 1.5px solid var(--ink);
+}
+
+html[data-proto="guia"] .seg button:hover {
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .seg button[aria-checked="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── Palabras guía (cabecera de la página) ─────────────────────────────── */
+html[data-proto="guia"] .rh {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  height: var(--rh-h);
+  padding: 0 calc(var(--gutter) + var(--az-w) + 16px) 0 var(--gutter);
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  font-size: 18px;
+  font-stretch: 62.5%;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+html[data-proto="guia"] .rh-w {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* ── Página ─────────────────────────────────────────────────────────────── */
+html[data-proto="guia"] .page {
+  padding: 0 calc(var(--gutter) + var(--az-w) + 16px) 0 var(--gutter);
+}
+
+html[data-proto="guia"] .mast {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  column-gap: 56px;
+  align-items: end;
+  padding: 30px 0 26px;
+  border-bottom: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .mast-title {
+  grid-column: 1;
+  margin: 0;
+  font-size: clamp(2.6rem, 0.9rem + 4.1vw, 4.8rem);
+  font-stretch: 62.5%;
+  font-weight: 850;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+html[data-proto="guia"] .flag-wrap {
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .flag--title {
+  width: 0.84em;
+  height: 0.56em;
+  vertical-align: 0.04em;
+  color: var(--ink);
+}
+
+html[data-proto="guia"] .mast-lede {
+  grid-column: 1;
+  max-width: 54ch;
+  margin: 18px 0 0;
+  font-size: 19px;
+  font-stretch: 100%;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+
+html[data-proto="guia"] .mast-sum {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  margin-top: 14px;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="guia"] .mast-sum > span + span {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .mast-sum strong {
+  font-weight: 850;
+}
+
+/* Aviso legal: recuadro de filete doble, como un aviso de la guía. */
+html[data-proto="guia"] .aviso {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: end;
+  padding: 16px 18px 14px;
+  border: 5px double var(--ink);
+  font-size: 15px;
+  line-height: 1.38;
+}
+
+html[data-proto="guia"] .aviso p {
+  margin: 0 0 10px;
+}
+
+html[data-proto="guia"] .aviso-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 28px;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+/* ── Búsqueda, filtros, pestañas ───────────────────────────────────────── */
+html[data-proto="guia"] .tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0 16px;
+}
+
+html[data-proto="guia"] .q {
+  position: relative;
+  display: block;
+  flex: 0 1 360px;
+  min-width: 220px;
+}
+
+html[data-proto="guia"] .q input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px 0 40px;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper-lift);
+  font-size: 16px;
+  caret-color: var(--ink);
+  appearance: none;
+}
+
+html[data-proto="guia"] .q input::placeholder {
+  color: var(--ink-soft);
+  opacity: 1;
+}
+
+html[data-proto="guia"] .q input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6 6 18'/%3E%3C/svg%3E") center / contain no-repeat;
+  cursor: pointer;
+}
+
+html[data-proto="guia"] .q-ico {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+html[data-proto="guia"] .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .btn:hover {
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .btn[aria-expanded="true"],
+html[data-proto="guia"] .btn--ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+html[data-proto="guia"] .btn--ink:hover {
+  background: var(--ink);
+  text-decoration: underline;
+}
+
+html[data-proto="guia"] .btn--clear {
+  border-style: dashed;
+}
+
+html[data-proto="guia"] .badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="guia"] .btn[aria-expanded="true"] .badge {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+html[data-proto="guia"] .panel {
+  order: 10;
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 12px 0 2px;
+  border-top: 1px dashed var(--ink);
+}
+
+html[data-proto="guia"] .panel:not(.is-open) {
+  display: none;
+}
+
+html[data-proto="guia"] .sel {
+  position: relative;
+  display: inline-block;
+}
+
+html[data-proto="guia"] .sel select {
+  height: 44px;
+  padding: 0 38px 0 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper-lift);
+  font-size: 15px;
+  appearance: none;
+  cursor: pointer;
+}
+
+html[data-proto="guia"] .sel-ico {
+  position: absolute;
+  right: 11px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+html[data-proto="guia"] .chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 4px;
+  font-size: 15px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+html[data-proto="guia"] .chk input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+html[data-proto="guia"] .tabs {
+  display: flex;
+  margin-left: auto;
+  border: 1.5px solid var(--ink);
+}
+
+html[data-proto="guia"] .tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 41px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .tab + .tab {
+  border-left: 1.5px solid var(--ink);
+}
+
+html[data-proto="guia"] .tab:hover {
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .tab[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+html[data-proto="guia"] .tab[aria-selected="true"] .ico {
+  --paper: var(--ink);
+}
+
+html[data-proto="guia"] .tab .ico {
+  width: 16px;
+  height: 16px;
+}
+
+html[data-proto="guia"] .tab-n {
+  font-size: 13px;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="guia"] .count {
+  margin: 0;
+  min-width: 7.5em;
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── Índice A–Z: el canto troquelado ───────────────────────────────────── */
+html[data-proto="guia"] .az {
+  position: fixed;
+  right: 0;
+  top: calc(50% + 28px);
+  z-index: 35;
+  transform: translateY(-50%);
+}
+
+html[data-proto="guia"] .az-list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-proto="guia"] .az-tab {
+  display: flex;
+  align-items: center;
+  width: calc(var(--az-w) + 14px);
+  height: var(--az-cell);
+  padding-left: 13px;
+  border-radius: 5px 0 0 5px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: min(17px, calc(var(--az-cell) * 0.62));
+  font-stretch: 75%;
+  font-weight: 850;
+  line-height: 1;
+  text-decoration: none;
+  transform: translateX(14px);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s, color 0.15s;
+  cursor: pointer;
+}
+
+html[data-proto="guia"] .az-tab:hover {
+  transform: translateX(7px);
+}
+
+html[data-proto="guia"] .az-tab.is-active {
+  transform: translateX(0);
+  color: var(--band-fg-strong);
+  font-size: min(19px, calc(var(--az-cell) * 0.7));
+}
+
+html[data-proto="guia"] .az-tab[aria-disabled="true"] {
+  background: var(--paper);
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 40%, transparent);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ── Directorio ─────────────────────────────────────────────────────────── */
+html[data-proto="guia"] .book {
+  position: relative;
+}
+
+html[data-proto="guia"] .dir {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="guia"] .col-name { width: 27%; }
+html[data-proto="guia"] .col-st { width: 23%; }
+html[data-proto="guia"] .col-date { width: 11%; }
+html[data-proto="guia"] .col-method { width: 13%; }
+html[data-proto="guia"] .col-plat { width: 11%; }
+html[data-proto="guia"] .col-tags { width: 15%; }
+
+html[data-proto="guia"] .dir thead th {
+  position: sticky;
+  top: var(--rh-h);
+  z-index: 20;
+  height: var(--head-h);
+  padding: 0;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  font-weight: 700;
+  text-align: left;
+  vertical-align: middle;
+}
+
+html[data-proto="guia"] .dir thead th:nth-child(n + 3) {
+  border-left: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .sort,
+html[data-proto="guia"] .h-static {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  height: var(--head-h);
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  font-size: 12px;
+  font-stretch: 87.5%;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  line-height: 1.05;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+html[data-proto="guia"] .h-name .sort {
+  padding-left: 0;
+}
+
+html[data-proto="guia"] .sort:hover {
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .sort-ico {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.2;
+}
+
+html[data-proto="guia"] .sort-ico path {
+  opacity: 0.38;
+}
+
+html[data-proto="guia"] .dir th[aria-sort="ascending"] .sort,
+html[data-proto="guia"] .dir th[aria-sort="descending"] .sort {
+  font-weight: 900;
+  box-shadow: inset 0 -4px 0 var(--ink);
+}
+
+html[data-proto="guia"] .dir th[aria-sort="ascending"] .s-up,
+html[data-proto="guia"] .dir th[aria-sort="descending"] .s-dn {
+  opacity: 1;
+}
+
+html[data-proto="guia"] .dir th[aria-sort="ascending"] .s-dn,
+html[data-proto="guia"] .dir th[aria-sort="descending"] .s-up {
+  opacity: 0;
+}
+
+/* Encabezado de letra: la letra enorme y un filete grueso hasta el borde. */
+html[data-proto="guia"] .grp-letter {
+  padding: 20px 0 6px;
+  text-align: left;
+  scroll-margin-top: calc(var(--sticky) + 2px);
+}
+
+html[data-proto="guia"] .grp-glyph {
+  display: flex;
+  align-items: baseline;
+  font-size: 5.5rem;
+  font-stretch: 62.5%;
+  font-weight: 900;
+  line-height: 0.74;
+  letter-spacing: -0.02em;
+}
+
+html[data-proto="guia"] .grp-glyph::after {
+  content: "";
+  flex: 1;
+  height: 0;
+  margin-left: 14px;
+  border-bottom: 4px solid var(--ink);
+}
+
+html[data-proto="guia"] .grp-letter.is-hit .grp-glyph {
+  animation: guia-hit 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes guia-hit {
+  0%,
+  18% {
+    color: var(--paper);
+    background: linear-gradient(var(--ink), var(--ink)) 0 0 / 0.62em 100% no-repeat;
+  }
+  100% {
+    color: var(--ink);
+    background: linear-gradient(var(--ink), var(--ink)) 0 0 / 0.62em 0 no-repeat;
+  }
+}
+
+/* Filas: NOMBRE ········ Status │ fecha │ datos secundarios */
+html[data-proto="guia"] .row > td {
+  padding: 5px 10px 4px;
+  vertical-align: baseline;
+  overflow: hidden;
+}
+
+html[data-proto="guia"] #stage[data-density="compact"] .row > td {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+html[data-proto="guia"] #stage[data-density="compact"] .grp-letter {
+  padding-top: 16px;
+}
+
+html[data-proto="guia"] #stage[data-density="compact"] .grp-glyph {
+  font-size: 4.5rem;
+}
+
+html[data-proto="guia"] .row > td:first-child {
+  padding-left: 0;
+}
+
+html[data-proto="guia"] .row > td:nth-child(n + 3) {
+  border-left: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .grp > .row:last-child > td {
+  padding-bottom: 10px;
+}
+
+html[data-proto="guia"] .row:hover > td {
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .lead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Puntos guía: rellenan desde el nombre hasta el Status, alineados entre filas. */
+html[data-proto="guia"] .lead::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 18px;
+  height: 3px;
+  background-image: radial-gradient(circle at center, var(--ink) 0.95px, transparent 1.35px);
+  background-size: 6px 3px;
+  background-position: right bottom;
+  background-repeat: repeat-x;
+}
+
+html[data-proto="guia"] .name {
+  flex: 0 1 auto;
+  min-width: 0;
+  font-size: 17px;
+  font-stretch: 75%;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+html[data-proto="guia"] .name:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+
+html[data-proto="guia"] .web {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 13px;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .web:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+html[data-proto="guia"] .c-st {
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+html[data-proto="guia"] .st {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+html[data-proto="guia"] .st-ico {
+  align-self: center;
+  width: 16px;
+  height: 16px;
+}
+
+html[data-proto="guia"] .st--accepts {
+  font-weight: 550;
+}
+
+/* No acepta: caja invertida, como un aviso destacado. */
+html[data-proto="guia"] .st--rejects {
+  margin-left: -6px;
+  padding: 1px 9px 1px 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 800;
+}
+
+/* Desconocido: recuadro punteado; la duda se ve. */
+html[data-proto="guia"] .st--unknown {
+  margin-left: -6px;
+  padding: 0 8px 0 5px;
+  border: 1.5px dashed var(--ink);
+  font-weight: 650;
+}
+
+html[data-proto="guia"] .flag-txt {
+  display: inline-block;
+  padding: 1px 4px 0;
+  border: 1px solid var(--ink);
+  font-size: 11px;
+  font-stretch: 87.5%;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .flag-txt--stale {
+  margin-left: 4px;
+  border-style: dashed;
+}
+
+html[data-proto="guia"] .c-date {
+  font-size: 14px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+html[data-proto="guia"] .c-method,
+html[data-proto="guia"] .c-plat,
+html[data-proto="guia"] .c-tags {
+  color: var(--ink-soft);
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+html[data-proto="guia"] .c-tags {
+  font-size: 12.5px;
+}
+
+html[data-proto="guia"] .t + .t::before {
+  content: " · " / "";
+}
+
+html[data-proto="guia"] .t--more {
+  font-weight: 800;
+}
+
+/* ── Vacío ──────────────────────────────────────────────────────────────── */
+html[data-proto="guia"] .empty {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  max-width: 620px;
+  margin: 40px 0 24px;
+  padding: 28px 28px 30px;
+  border: 5px double var(--ink);
+}
+
+html[data-proto="guia"] .empty-txt {
+  margin: 0;
+  font-size: 34px;
+  font-stretch: 62.5%;
+  font-weight: 850;
+  line-height: 1;
+}
+
+html[data-proto="guia"] #stage:has(.empty:not([hidden])) .dir thead {
+  display: none;
+}
+
+/* ── Contribución y pie ────────────────────────────────────────────────── */
+html[data-proto="guia"] .contrib {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 48px;
+  border-top: 4px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .contrib a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 64px;
+  padding: 16px 18px;
+  font-size: 19px;
+  font-stretch: 75%;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+html[data-proto="guia"] .contrib a:first-child {
+  padding-left: 0;
+}
+
+html[data-proto="guia"] .contrib a + a {
+  border-left: 1px solid var(--ink);
+}
+
+html[data-proto="guia"] .contrib a:hover {
+  text-decoration: underline;
+  background: var(--paper-deep);
+}
+
+html[data-proto="guia"] .contrib .ico--out {
+  width: 18px;
+  height: 18px;
+}
+
+html[data-proto="guia"] .foot {
+  margin-top: 56px;
+  padding: 22px var(--gutter) 96px;
+  background: var(--band);
+  color: var(--band-fg);
+  font-size: 13px;
+}
+
+html[data-proto="guia"] .foot p {
+  margin: 0;
+}
+
+html[data-proto="guia"] .foot a {
+  font-weight: 700;
+}
+
+/* ── Tablet: la tabla se queda sin etiquetas para no apretar ───────────── */
+@media (max-width: 1180px) and (min-width: 761px) {
+  html[data-proto="guia"] .mast {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+    column-gap: 36px;
+  }
+
+  html[data-proto="guia"] .col-name { width: 28%; }
+  html[data-proto="guia"] .col-st { width: 30%; }
+  html[data-proto="guia"] .col-date { width: 12%; }
+  html[data-proto="guia"] .col-method { width: 16%; }
+  html[data-proto="guia"] .col-plat { width: 14%; }
+
+  html[data-proto="guia"] .col-tags,
+  html[data-proto="guia"] .h-tags,
+  html[data-proto="guia"] .c-tags {
+    display: none;
+  }
+}
+
+/* ── Móvil ──────────────────────────────────────────────────────────────── */
+@media (max-width: 760px) {
+  html[data-proto="guia"] {
+    --gutter: 16px;
+    --rh-h: 34px;
+    --sticky: calc(var(--rh-h) + 44px);
+  }
+
+  html[data-proto="guia"] .band {
+    flex-wrap: wrap;
+    gap: 0 8px;
+    padding: 6px var(--gutter) 0;
+  }
+
+  html[data-proto="guia"] .brand {
+    order: 1;
+    align-content: center;
+    min-height: 44px;
+  }
+
+  html[data-proto="guia"] .band-tools {
+    order: 2;
+  }
+
+  html[data-proto="guia"] .band-nav {
+    order: 3;
+    flex: 1 1 100%;
+    margin: 6px calc(-1 * var(--gutter)) 0;
+    padding: 0 calc(var(--gutter) - 12px);
+    border-top: 1px solid color-mix(in srgb, var(--band-fg) 30%, transparent);
+  }
+
+  html[data-proto="guia"] .band-nav a {
+    min-height: 44px;
+  }
+
+  html[data-proto="guia"] .icon-btn,
+  html[data-proto="guia"] .band-gh {
+    min-width: 44px;
+    height: 44px;
+    justify-content: center;
+  }
+
+  html[data-proto="guia"] .seg button {
+    min-height: 44px;
+  }
+
+  html[data-proto="guia"] .rh {
+    padding: 0 var(--gutter);
+    font-size: 16px;
+  }
+
+  html[data-proto="guia"] .page {
+    padding: 0 var(--gutter);
+  }
+
+  html[data-proto="guia"] .mast {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 22px 0 22px;
+  }
+
+  html[data-proto="guia"] .mast-title {
+    font-size: 2.9rem;
+    max-width: none;
+  }
+
+  html[data-proto="guia"] .mast-lede {
+    font-size: 17px;
+    margin-top: 14px;
+  }
+
+  html[data-proto="guia"] .mast-sum {
+    column-gap: 18px;
+  }
+
+  html[data-proto="guia"] .mast-sum > span + span {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  html[data-proto="guia"] .aviso {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: 18px;
+    font-size: 14.5px;
+  }
+
+  html[data-proto="guia"] .aviso-link {
+    min-height: 44px;
+  }
+
+  html[data-proto="guia"] .tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  html[data-proto="guia"] .q {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  html[data-proto="guia"] .btn--filters {
+    justify-self: start;
+  }
+
+  html[data-proto="guia"] .panel {
+    grid-column: 1 / -1;
+    order: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  html[data-proto="guia"] .sel select {
+    width: 100%;
+  }
+
+  html[data-proto="guia"] .tabs {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-left: 0;
+  }
+
+  html[data-proto="guia"] .tab {
+    height: 44px;
+  }
+
+  html[data-proto="guia"] .tab + .tab {
+    border-left: 0;
+  }
+
+  html[data-proto="guia"] .tab:nth-child(even) {
+    border-left: 1.5px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .tab:nth-child(n + 3) {
+    border-top: 1.5px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .count {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  /* El canto se vuelve una tira horizontal pegada arriba. */
+  html[data-proto="guia"] .az {
+    position: sticky;
+    top: var(--rh-h);
+    right: auto;
+    z-index: 25;
+    margin: 0 calc(-1 * var(--gutter));
+    transform: none;
+    background: var(--ink);
+  }
+
+  html[data-proto="guia"] .az-list {
+    display: flex;
+    gap: 0;
+    padding: 0 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  html[data-proto="guia"] .az-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-proto="guia"] .az-tab,
+  html[data-proto="guia"] .az-tab:hover {
+    flex: 0 0 auto;
+    justify-content: center;
+    width: 40px;
+    height: 44px;
+    padding: 0;
+    border-radius: 0;
+    font-size: 18px;
+    transform: none;
+  }
+
+  html[data-proto="guia"] .az-tab.is-active {
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: inset 0 -4px 0 var(--ink);
+  }
+
+  html[data-proto="guia"] .az-tab.is-active::after {
+    content: none;
+  }
+
+  html[data-proto="guia"] .az-tab[aria-disabled="true"] {
+    background: transparent;
+    color: color-mix(in srgb, var(--paper) 38%, transparent);
+    box-shadow: none;
+  }
+
+  /* La tabla se lee como listados de guía. */
+  html[data-proto="guia"] .dir,
+  html[data-proto="guia"] .dir thead,
+  html[data-proto="guia"] .dir tbody {
+    display: block;
+  }
+
+  html[data-proto="guia"] .dir colgroup {
+    display: none;
+  }
+
+  html[data-proto="guia"] .dir thead tr {
+    display: flex;
+    gap: 6px;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 10px var(--gutter);
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .dir thead th,
+  html[data-proto="guia"] .dir thead th:nth-child(n + 3) {
+    position: static;
+    flex: none;
+    height: auto;
+    border: 0;
+    background: transparent;
+  }
+
+  html[data-proto="guia"] .dir thead .h-tags {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  html[data-proto="guia"] .sort,
+  html[data-proto="guia"] .h-name .sort {
+    height: 44px;
+    padding: 0 10px;
+    border: 1.5px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .dir th[aria-sort="ascending"] .sort,
+  html[data-proto="guia"] .dir th[aria-sort="descending"] .sort {
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: none;
+  }
+
+  html[data-proto="guia"] .grp,
+  html[data-proto="guia"] .grp-head,
+  html[data-proto="guia"] .grp-letter {
+    display: block;
+  }
+
+  html[data-proto="guia"] .grp-letter {
+    padding: 22px 0 6px;
+  }
+
+  html[data-proto="guia"] .grp-glyph {
+    font-size: 4.6rem;
+  }
+
+  html[data-proto="guia"] .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 10px;
+    row-gap: 2px;
+    padding: 8px 0 7px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  html[data-proto="guia"] .row::before {
+    content: "";
+    order: 2;
+    flex: 0 0 100%;
+    height: 0;
+  }
+
+  html[data-proto="guia"] .row > td,
+  html[data-proto="guia"] .row > td:first-child,
+  html[data-proto="guia"] .row > td:nth-child(n + 3) {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+
+  html[data-proto="guia"] .row:hover > td {
+    background: none;
+  }
+
+  html[data-proto="guia"] .grp > .row:last-child > td {
+    padding-bottom: 0;
+  }
+
+  html[data-proto="guia"] .c-name {
+    order: 1;
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  html[data-proto="guia"] .c-st {
+    order: 1;
+    flex: 0 1 auto;
+    max-width: 64%;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  html[data-proto="guia"] .c-date,
+  html[data-proto="guia"] .c-method,
+  html[data-proto="guia"] .c-plat {
+    order: 3;
+    font-size: 13px;
+  }
+
+  html[data-proto="guia"] .row > td.c-method,
+  html[data-proto="guia"] .row > td.c-plat {
+    padding-left: 10px;
+    border-left: 1px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .c-date,
+  html[data-proto="guia"] .c-method,
+  html[data-proto="guia"] .c-plat,
+  html[data-proto="guia"] .c-tags {
+    line-height: 1.3;
+  }
+
+  html[data-proto="guia"] .c-tags {
+    order: 4;
+    flex: 1 1 100%;
+    font-size: 12.5px;
+  }
+
+  /* En el teléfono la línea es NOMBRE ······ Status; la web queda en la ficha. */
+  html[data-proto="guia"] .name {
+    min-width: auto;
+    font-size: 17px;
+  }
+
+  html[data-proto="guia"] .web {
+    display: none;
+  }
+
+  html[data-proto="guia"] .lead::after {
+    min-width: 14px;
+  }
+
+  html[data-proto="guia"] .st--rejects,
+  html[data-proto="guia"] .st--unknown {
+    margin-left: 0;
+  }
+
+  html[data-proto="guia"] .empty-txt {
+    font-size: 28px;
+  }
+
+  html[data-proto="guia"] .contrib {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html[data-proto="guia"] .contrib a,
+  html[data-proto="guia"] .contrib a:first-child {
+    padding: 14px 0;
+    font-size: 18px;
+  }
+
+  html[data-proto="guia"] .contrib a + a {
+    border-left: 0;
+    border-top: 1px solid var(--ink);
+  }
+
+  html[data-proto="guia"] .foot {
+    padding-bottom: 88px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-proto="guia"] #stage *,
+  html[data-proto="guia"] #stage *::before,
+  html[data-proto="guia"] #stage *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
