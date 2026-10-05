@@ -1,1 +1,219 @@
-{% include "_reference.html" %}
+{#
+  PROTOTIPO — v5 Guía amarilla. La portada como la guía telefónica de CANTV:
+  página amarilla de borde a borde, letras enormes, nombres en negrita, puntos
+  guía hasta el Status, palabras guía arriba e índice A–Z troquelado en el canto.
+  Mismos textos y ganchos data-rvh-* que _reference.html.
+#}
+{%- macro icon(name, cls="ico") -%}
+<svg class="{{ cls }}" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{%- if name == "gear" -%}
+<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+{%- elif name == "sun" -%}
+<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+{%- elif name == "moon" -%}
+<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>
+{%- elif name == "out" -%}
+<path d="M7 17 17 7M9 7h8v8"/>
+{%- elif name == "search" -%}
+<circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/>
+{%- elif name == "filter" -%}
+<path d="M4 6h16M7 12h10M10 18h4"/>
+{%- elif name == "chev" -%}
+<path d="m6 9 6 6 6-6"/>
+{%- elif name == "sort" -%}
+<path class="s-up" d="m8 10 4-4 4 4"/><path class="s-dn" d="m8 14 4 4 4-4"/>
+{%- elif name == "accepts" -%}
+<circle cx="12" cy="12" r="10" fill="currentColor" stroke="none"/><path d="m7.5 12.4 3 3 6-6.6" style="stroke: var(--paper)" stroke-width="2.6"/>
+{%- elif name == "rejects" -%}
+<circle cx="12" cy="12" r="9"/><path d="m8.6 8.6 6.8 6.8M15.4 8.6l-6.8 6.8"/>
+{%- elif name == "unknown" -%}
+<circle cx="12" cy="12" r="9" stroke-dasharray="3.2 2.6"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8 1c0 1.7-2.4 2.1-2.4 3.4"/><path d="M12 16.9v.2" stroke-width="2.6"/>
+{%- endif -%}
+</svg>
+{%- endmacro -%}
+{%- macro flag(cls="flag") -%}
+<svg class="{{ cls }}" viewBox="0 0 30 20" width="30" height="20" aria-hidden="true" focusable="false"><rect width="30" height="20" fill="#f7cf00"/><rect y="6.67" width="30" height="6.67" fill="#00247d"/><rect y="13.33" width="30" height="6.67" fill="#cf142b"/><g fill="#fff"><circle cx="9.2" cy="11.6" r=".75"/><circle cx="10.4" cy="9.7" r=".75"/><circle cx="12.2" cy="8.4" r=".75"/><circle cx="14.2" cy="7.95" r=".75"/><circle cx="15.8" cy="7.95" r=".75"/><circle cx="17.8" cy="8.4" r=".75"/><circle cx="19.6" cy="9.7" r=".75"/><circle cx="20.8" cy="11.6" r=".75"/></g><rect x=".5" y=".5" width="29" height="19" fill="none" stroke="currentColor" stroke-opacity=".55"/></svg>
+{%- endmacro -%}
+{%- set present = companies | map(attribute="name") | map("first") | map("upper") | unique | list -%}
+{%- set active_companies = companies | rejectattr("archived") | list -%}
+
+<a class="skip" href="#main-content">Saltar al contenido</a>
+
+<header class="band" role="banner">
+  <a class="brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
+    <span class="brand-a">Remote Venezuela</span>
+    <span class="brand-b">{{ flag("flag flag--brand") }}<span class="vh">🇻🇪</span> Hiring</span>
+  </a>
+  <nav class="band-nav" aria-label="Navegación principal">
+    <a href="./" aria-current="page">Empresas</a>
+    <a href="../stats.html">Estadísticas</a>
+  </nav>
+  <div class="band-tools">
+    <div class="prefs">
+      <button type="button" class="icon-btn" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">{{ icon("gear") }}</button>
+      <div class="prefs-menu" data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+        <div class="prefs-label">Tema</div>
+        <div class="seg" role="radiogroup" aria-label="Tema">
+          <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro">{{ icon("sun") }}</button>
+          <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro">{{ icon("moon") }}</button>
+        </div>
+        <div class="prefs-label">Densidad de la tabla</div>
+        <div class="seg" role="radiogroup" aria-label="Densidad de la tabla">
+          <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+          <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+        </div>
+      </div>
+    </div>
+    <a class="band-gh" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub</a>
+  </div>
+</header>
+
+{# Palabras guía: primera y última empresa visible en la "página" (script.js las actualiza). #}
+<div class="rh" aria-hidden="true" data-guia-rh>
+  <span class="rh-w" data-guia-first>{{ active_companies[0].name if active_companies else "" }}</span>
+  <span class="rh-w rh-w--last" data-guia-last>{{ active_companies[-1].name if active_companies else "" }}</span>
+</div>
+
+<main id="main-content" class="page">
+  <header class="mast">
+    <h1 class="mast-title">Compatibilidad de Contratación Remota en <span class="flag-wrap">{{ flag("flag flag--title") }}<span class="vh">🇻🇪</span></span> Venezuela</h1>
+    <p class="mast-lede">Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+    <div class="mast-sum" role="group" aria-label="Resumen">
+      <span><strong>{{ visible_count }}</strong> empresas</span>
+      <span><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
+      <span>actualizado <time datetime="{{ today.isoformat() }}">{{ format_date(today) }}</time></span>
+    </div>
+    <div class="aviso" role="note">
+      <p>No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+      La compatibilidad puede cambiar — siempre verifica directamente.</p>
+      <a class="aviso-link" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub {{ icon("out", "ico ico--out") }}</a>
+    </div>
+  </header>
+
+  <section class="tools" role="search" aria-label="Filtrar empresas">
+    <label class="q">
+      {{ icon("search", "ico q-ico") }}
+      <input type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+    </label>
+
+    <button type="button" class="btn btn--filters" data-rvh-filter-toggle aria-expanded="false" aria-controls="guia-filtros">
+      {{ icon("filter") }} Filtros <span class="badge" data-rvh-filter-count hidden>0</span>
+    </button>
+
+    <button type="button" class="btn btn--clear" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">Limpiar</button>
+
+    <div class="panel" id="guia-filtros" data-rvh-filter-panel>
+      <span class="sel">
+        <select data-rvh-filter="method" aria-label="Filtrar por verificación">
+          <option value="all">Verificación: Todas</option>
+          {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+        </select>{{ icon("chev", "ico sel-ico") }}
+      </span>
+      <span class="sel">
+        <select data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+          <option value="all">Plataforma: Todas</option>
+          {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+        </select>{{ icon("chev", "ico sel-ico") }}
+      </span>
+      <span class="sel">
+        <select data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+          <option value="all">Etiqueta: Todas</option>
+          {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+        </select>{{ icon("chev", "ico sel-ico") }}
+      </span>
+      <label class="chk"><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Filtrar por estado">
+      {% for tab in status_tabs %}
+      <button type="button" class="tab tab--{{ tab.value }}" role="tab" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}">
+        {% if tab.value != 'all' %}{{ icon(tab.value) }}{% endif %}{{ tab.label }} <span class="tab-n">{{ tab.count }}</span>
+      </button>
+      {% endfor %}
+    </div>
+
+    <p class="count"><span data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span></p>
+  </section>
+
+  <div class="book">
+    {# Índice A–Z: el canto troquelado de la guía. #}
+    <nav class="az" aria-label="A–Z">
+      <ol class="az-list">
+        {% for L in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+        <li>{% if L in present %}<a class="az-tab" href="#guia-{{ L }}" data-guia-letter="{{ L }}">{{ L }}</a>{% else %}<a class="az-tab" data-guia-letter="{{ L }}" aria-disabled="true">{{ L }}</a>{% endif %}</li>
+        {% endfor %}
+      </ol>
+    </nav>
+
+    <table class="dir">
+      <colgroup>
+        <col class="col-name" /><col class="col-st" /><col class="col-date" /><col class="col-method" /><col class="col-plat" /><col class="col-tags" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col" class="h-name" data-rvh-sort="name"><button type="button" class="sort">Empresa {{ icon("sort", "ico sort-ico") }}</button></th>
+          <th scope="col" class="h-st" data-rvh-sort="status"><button type="button" class="sort">Estado {{ icon("sort", "ico sort-ico") }}</button></th>
+          <th scope="col" class="h-date" data-rvh-sort="last_checked"><button type="button" class="sort">Últ. verificación {{ icon("sort", "ico sort-ico") }}</button></th>
+          <th scope="col" class="h-method" data-rvh-sort="verification_method"><button type="button" class="sort">Verificación {{ icon("sort", "ico sort-ico") }}</button></th>
+          <th scope="col" class="h-plat" data-rvh-sort="hiring_platform"><button type="button" class="sort">Plataforma {{ icon("sort", "ico sort-ico") }}</button></th>
+          <th scope="col" class="h-tags"><span class="h-static">Etiquetas</span></th>
+        </tr>
+      </thead>
+      {% for letter, items in companies | groupby("name.0") %}
+      {% set L = letter | upper %}
+      <tbody class="grp" data-rvh-group data-guia-group="{{ L }}">
+        <tr class="grp-head">
+          <th scope="rowgroup" colspan="6" class="grp-letter" id="guia-{{ L }}" tabindex="-1"><span class="grp-glyph">{{ L }}</span></th>
+        </tr>
+        {% for company in items %}
+        {% set stale = company.is_stale() %}
+        <tr class="row" data-rvh-row
+            data-status="{{ company.status.value }}"
+            data-method="{{ company.verification_method.value }}"
+            data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+            data-tags="{{ company.tags | join(',') }}"
+            data-archived="{{ '1' if company.archived else '0' }}"
+            data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+            data-name="{{ company.name }}"
+            data-last-checked="{{ company.last_checked.isoformat() }}">
+          <td class="c-name">
+            <div class="lead">
+              <a class="name" href="company/{{ company.id }}.html">{{ company.name }}</a>
+              {% if company.archived %}<span class="flag-txt">ARCHIVADA</span>{% endif %}
+              <a class="web" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
+            </div>
+          </td>
+          <td class="c-st"><span class="st st--{{ company.status.value }}">{{ icon(company.status.value, "ico st-ico") }}<span class="st-txt">{{ status_labels[company.status.value] }}</span></span>{% if stale %} <span class="flag-txt flag-txt--stale">DESACT.</span>{% endif %}</td>
+          <td class="c-date"><time datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time></td>
+          <td class="c-method">{{ verification_labels[company.verification_method.value] }}</td>
+          <td class="c-plat">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
+          <td class="c-tags">
+            {%- for tag in company.tags[:3] %}<span class="t">{{ tag }}</span>{% endfor -%}
+            {%- if company.tags|length > 3 %}<span class="t t--more">+{{ company.tags|length - 3 }}</span>{% endif -%}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% endfor %}
+    </table>
+
+    <div class="empty" data-rvh-empty role="status" aria-live="polite" hidden>
+      <p class="empty-txt">Ninguna empresa coincide con los filtros.</p>
+      <button type="button" class="btn btn--ink" data-rvh-clear>Limpiar filtros</button>
+    </div>
+  </div>
+
+  <div class="contrib">
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues {{ icon("out", "ico ico--out") }}</a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML {{ icon("out", "ico ico--out") }}</a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos {{ icon("out", "ico ico--out") }}</a>
+  </div>
+</main>
+
+<footer class="foot" role="contentinfo">
+  <p>
+    Generado el {{ generated_at }} ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>
