@@ -1,1 +1,1036 @@
-/* PROTOTIPO — v3-boleto */
+/* PROTOTIPO — v3 Boleto.
+   El talonario de un pasaje de la era jet: cartulina de cupón sobre la cartera azul de
+   la aerolínea, azul marino y rojo como colores oficiales, cifras en morado carbón.
+   Cada Empresa es un cupón (cuerpo | troquel | talón) y su Status va estampado.
+   Todo selector empieza por html[data-proto="boleto"]: las 5 variantes conviven en la misma página. */
+
+/* ---------- Fichas ---------- */
+html[data-proto="boleto"] {
+  --bo-navy: #0D1B3D;
+  --bo-wallet: #1E4886;
+  --bo-tray: #163A6F;
+  --bo-red: #D7262D;
+  --bo-red-hover: #B81D24;
+  --bo-red-ink: #B8141D;
+  --bo-blue-ink: #1C47A3;
+  --bo-carbon: #4B2E83;
+  --bo-stock: #FFFFFF;
+  --bo-stock-hover: #F4F6FC;
+  --bo-stub-bg: #F1ECFA;
+  --bo-slip: #E6DEF6;
+  --bo-ink: #0D1B3D;
+  --bo-ink-2: #44547F;
+  --bo-rule: #CFD5E4;
+  --bo-perf: #8C95B2;
+  --bo-tag-bg: #F3F5FA;
+  --bo-void: rgba(184, 20, 29, 0.085);
+  --bo-on: #FFFFFF;
+  --bo-on-2: #C9D5EE;
+  --bo-on-rule: rgba(255, 255, 255, 0.28);
+  --bo-dot: rgba(255, 255, 255, 0.075);
+  --bo-focus: #FFD23F;
+  --bo-pick-bg: #0D1B3D;
+  --bo-pick-fg: #FFFFFF;
+  --bo-sel-bg: #4B2E83;
+  --bo-sel-fg: #FFFFFF;
+  --bo-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D1B3D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --bo-menu-shadow: 0 14px 34px rgba(4, 10, 28, 0.38), 0 2px 6px rgba(4, 10, 28, 0.2);
+  --bo-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --bo-text: "Barlow", system-ui, sans-serif;
+  --bo-num: "Courier Prime", "Courier New", monospace;
+  color-scheme: light;
+  background: var(--bo-wallet);
+  scrollbar-color: #0D1B3D var(--bo-tray);
+  -webkit-text-size-adjust: 100%;
+}
+
+html[data-proto="boleto"][data-theme="dark"] {
+  --bo-navy: #050B1E;
+  --bo-wallet: #0B1633;
+  --bo-tray: #071026;
+  --bo-red-ink: #FF7B7B;
+  --bo-blue-ink: #93B4FF;
+  --bo-carbon: #C6B5F5;
+  --bo-stock: #15224A;
+  --bo-stock-hover: #1A2956;
+  --bo-stub-bg: #1E1B46;
+  --bo-slip: #24204F;
+  --bo-ink: #EEF1FA;
+  --bo-ink-2: #AEB9D8;
+  --bo-rule: #2D3C6B;
+  --bo-perf: #5A6B9E;
+  --bo-tag-bg: #1A2853;
+  --bo-void: rgba(255, 123, 123, 0.1);
+  --bo-on-2: #B4C2E2;
+  --bo-on-rule: rgba(255, 255, 255, 0.2);
+  --bo-dot: rgba(255, 255, 255, 0.04);
+  --bo-pick-bg: #93B4FF;
+  --bo-pick-fg: #0B1633;
+  --bo-sel-bg: #C6B5F5;
+  --bo-sel-fg: #0B1633;
+  --bo-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23EEF1FA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  color-scheme: dark;
+  scrollbar-color: #2D3C6B var(--bo-tray);
+}
+
+/* ---------- Superficies del navegador ---------- */
+html[data-proto="boleto"] body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bo-wallet);
+  background-image: radial-gradient(var(--bo-dot) 1px, transparent 1.6px);
+  background-size: 7px 7px;
+  color: var(--bo-on);
+  font: 400 1rem/1.5 var(--bo-text);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--bo-red);
+}
+html[data-proto="boleto"] ::selection { background: var(--bo-sel-bg); color: var(--bo-sel-fg); }
+html[data-proto="boleto"] #stage *,
+html[data-proto="boleto"] #stage *::before,
+html[data-proto="boleto"] #stage *::after { box-sizing: border-box; }
+html[data-proto="boleto"] #stage [hidden] { display: none !important; }
+html[data-proto="boleto"] #stage :focus-visible {
+  outline: 3px solid var(--bo-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--bo-navy);
+}
+html[data-proto="boleto"] #stage :focus:not(:focus-visible) { outline: none; }
+html[data-proto="boleto"] :where(#stage) :where(button, input, select) { font: inherit; color: inherit; }
+html[data-proto="boleto"] :where(#stage) :where(a) { color: inherit; }
+
+/* ---------- Iconos y piezas sueltas ---------- */
+html[data-proto="boleto"] .bo-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+html[data-proto="boleto"] .bo-ico { width: 20px; height: 20px; flex: none; }
+html[data-proto="boleto"] .bo-ico--ext { width: 0.95em; height: 0.95em; margin-left: 0.3em; vertical-align: -0.12em; }
+html[data-proto="boleto"] .bo-flag { width: 30px; height: 20px; flex: none; border-radius: 2px; }
+html[data-proto="boleto"] .bo-nw { white-space: nowrap; }
+html[data-proto="boleto"] .bo-num { font-family: var(--bo-num); font-variant-numeric: tabular-nums; }
+html[data-proto="boleto"] .bo-carbon { font-family: var(--bo-num); font-variant-numeric: tabular-nums; }
+html[data-proto="boleto"] .bo-lbl {
+  display: block;
+  font: 600 11.5px/1.2 var(--bo-display);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--bo-ink-2);
+}
+
+html[data-proto="boleto"] .bo-skip {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 4px;
+  background: var(--bo-focus);
+  color: #0D1B3D;
+  font: 700 15px/1 var(--bo-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+html[data-proto="boleto"] .bo-skip:focus { transform: none; }
+
+/* ---------- Cabecera de boleto ---------- */
+html[data-proto="boleto"] .bo-top {
+  position: relative;
+  z-index: 20;
+  background: var(--bo-navy);
+  color: #fff;
+  border-bottom: 4px solid var(--bo-red);
+}
+/* filete de librea: banda roja gruesa, aire, filete rojo fino */
+html[data-proto="boleto"] .bo-top::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+  height: 2px;
+  background: var(--bo-red);
+}
+html[data-proto="boleto"] .bo-top__in {
+  max-width: 1400px;
+  min-height: 64px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+html[data-proto="boleto"] .bo-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  color: #fff;
+  text-decoration: none;
+}
+html[data-proto="boleto"] .bo-brand__txt { display: grid; gap: 4px; line-height: 1; }
+html[data-proto="boleto"] .bo-brand__a {
+  font: 700 19px/1 var(--bo-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+html[data-proto="boleto"] .bo-brand__b {
+  font: 600 12px/1 var(--bo-display);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--bo-on-2);
+}
+html[data-proto="boleto"] .bo-nav { display: flex; align-self: stretch; gap: 4px; }
+html[data-proto="boleto"] .bo-nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  color: var(--bo-on-2);
+  font: 600 16px/1 var(--bo-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+html[data-proto="boleto"] .bo-nav a:hover,
+html[data-proto="boleto"] .bo-nav a[aria-current="page"] { color: #fff; }
+html[data-proto="boleto"] .bo-nav a[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 3px;
+  background: #fff;
+}
+html[data-proto="boleto"] .bo-tools {
+  position: relative;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+html[data-proto="boleto"] .bo-iconbtn {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-iconbtn:hover,
+html[data-proto="boleto"] .bo-iconbtn[aria-expanded="true"] {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+html[data-proto="boleto"] .bo-gh {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  color: #fff;
+  font: 600 15px/1 var(--bo-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-gh:hover { background: #fff; color: #0D1B3D; }
+
+html[data-proto="boleto"] .bo-menu {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  z-index: 30;
+  width: 264px;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 6px;
+  background: var(--bo-stock);
+  color: var(--bo-ink);
+  box-shadow: var(--bo-menu-shadow);
+}
+html[data-proto="boleto"] .bo-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 8px;
+  border: 1px solid var(--bo-rule);
+  border-radius: 5px;
+}
+html[data-proto="boleto"] .bo-seg button {
+  position: relative;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--bo-ink);
+  font: 600 15px/1 var(--bo-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+html[data-proto="boleto"] .bo-seg button:first-child { border-radius: 4px 0 0 4px; }
+html[data-proto="boleto"] .bo-seg button:last-child { border-radius: 0 4px 4px 0; border-left: 1px solid var(--bo-rule); }
+html[data-proto="boleto"] .bo-seg button:hover { background: var(--bo-tag-bg); }
+html[data-proto="boleto"] .bo-seg button[aria-checked="true"] { background: var(--bo-pick-bg); color: var(--bo-pick-fg); }
+html[data-proto="boleto"] .bo-seg button:focus-visible { z-index: 1; }
+
+/* ---------- Tapa del talonario ---------- */
+html[data-proto="boleto"] .bo-main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 3vw, 40px);
+}
+html[data-proto="boleto"] .bo-cover {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "title title"
+    "lede slip"
+    "terms terms";
+  column-gap: 48px;
+  row-gap: 20px;
+  align-items: center;
+  padding-top: 36px;
+}
+html[data-proto="boleto"] .bo-title {
+  grid-area: title;
+  max-width: 1120px;
+  margin: 0;
+  color: #fff;
+  font: 800 clamp(2.35rem, 1.05rem + 3.7vw, 4.6rem)/0.92 var(--bo-display);
+  letter-spacing: 0.004em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+html[data-proto="boleto"] .bo-flag--title {
+  width: 0.92em;
+  height: 0.62em;
+  margin-right: 0.04em;
+  vertical-align: 0.06em;
+  border-radius: 0.06em;
+}
+html[data-proto="boleto"] .bo-lede {
+  grid-area: lede;
+  max-width: 54ch;
+  margin: 0;
+  color: var(--bo-on-2);
+  font: 400 clamp(1.05rem, 0.96rem + 0.3vw, 1.22rem)/1.5 var(--bo-text);
+  text-wrap: pretty;
+}
+
+/* resumen: una papeleta de copia al carbón con muescas laterales */
+html[data-proto="boleto"] .bo-slip {
+  grid-area: slip;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  padding: 0 10px;
+  border-radius: 6px;
+  background-color: var(--bo-slip);
+  color: var(--bo-carbon);
+  -webkit-mask:
+    radial-gradient(circle 9px at 0 50%, #0000 96%, #000) ,
+    radial-gradient(circle 9px at 100% 50%, #0000 96%, #000);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle 9px at 0 50%, #0000 96%, #000) ,
+    radial-gradient(circle 9px at 100% 50%, #0000 96%, #000);
+  mask-composite: intersect;
+}
+html[data-proto="boleto"] .bo-slip__f {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 14px 20px 13px;
+}
+html[data-proto="boleto"] .bo-slip__f + .bo-slip__f {
+  background: radial-gradient(circle, currentColor 1px, transparent 1.5px) left 0 top 3px / 4px 6px repeat-y;
+}
+html[data-proto="boleto"] .bo-slip__f--date { flex-direction: column; justify-content: flex-start; }
+html[data-proto="boleto"] .bo-slip__l {
+  font: 600 11.5px/1.15 var(--bo-display);
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+html[data-proto="boleto"] .bo-slip__n {
+  font: 700 28px/1 var(--bo-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* condiciones del pasaje: letra pequeña */
+html[data-proto="boleto"] .bo-terms {
+  grid-area: terms;
+  padding-top: 12px;
+  border-top: 1px solid var(--bo-on-rule);
+  color: var(--bo-on-2);
+  font: 400 13.5px/1.55 var(--bo-text);
+}
+html[data-proto="boleto"] .bo-terms a {
+  margin-left: 0.3em;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+html[data-proto="boleto"] .bo-terms a:hover { text-decoration-color: var(--bo-focus); text-decoration-thickness: 2px; }
+
+/* ---------- Búsqueda y filtros ---------- */
+html[data-proto="boleto"] .bo-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+html[data-proto="boleto"] .bo-search { position: relative; flex: 1 1 320px; min-width: 0; }
+html[data-proto="boleto"] .bo-search .bo-ico {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  color: var(--bo-ink-2);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+html[data-proto="boleto"] .bo-search input,
+html[data-proto="boleto"] .bo-select {
+  height: 48px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-color: var(--bo-stock);
+  color: var(--bo-ink);
+  font: 500 16px/1 var(--bo-text);
+  -webkit-appearance: none;
+  appearance: none;
+  transition: border-color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-search input { width: 100%; padding: 0 16px 0 44px; }
+html[data-proto="boleto"] .bo-search input::placeholder { color: var(--bo-ink-2); opacity: 1; }
+html[data-proto="boleto"] .bo-search input::-webkit-search-cancel-button { cursor: pointer; }
+html[data-proto="boleto"] .bo-select {
+  max-width: 240px;
+  padding: 0 40px 0 14px;
+  background-image: var(--bo-chevron);
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  font-size: 15px;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+html[data-proto="boleto"] .bo-search input:hover,
+html[data-proto="boleto"] .bo-select:hover { border-color: var(--bo-ink-2); }
+html[data-proto="boleto"] .bo-filter-panel { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+html[data-proto="boleto"] .bo-btn.bo-filters-toggle { display: none; }
+html[data-proto="boleto"] .bo-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 6px;
+  color: #fff;
+  font: 500 15px/1 var(--bo-text);
+  cursor: pointer;
+}
+html[data-proto="boleto"] .bo-check input { width: 20px; height: 20px; margin: 0; accent-color: var(--bo-red); cursor: pointer; }
+
+html[data-proto="boleto"] .bo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font: 600 15px/1 var(--bo-display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-btn .bo-ico { width: 18px; height: 18px; }
+html[data-proto="boleto"] .bo-btn .bo-ico--ext { width: 1em; height: 1em; margin-left: 0; }
+html[data-proto="boleto"] .bo-btn--red { background: var(--bo-red); color: #fff; }
+html[data-proto="boleto"] .bo-btn--red:hover { background: var(--bo-red-hover); }
+html[data-proto="boleto"] .bo-btn--line { background: transparent; color: #fff; border-color: rgba(255, 255, 255, 0.6); }
+html[data-proto="boleto"] .bo-btn--line:hover,
+html[data-proto="boleto"] .bo-btn--line[aria-expanded="true"] { background: #fff; color: #0D1B3D; border-color: #fff; }
+html[data-proto="boleto"] .bo-btn--quiet { background: rgba(255, 255, 255, 0.12); color: #fff; }
+html[data-proto="boleto"] .bo-btn--quiet:hover { background: rgba(255, 255, 255, 0.22); }
+html[data-proto="boleto"] .bo-badge {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--bo-red);
+  color: #fff;
+  font: 700 13px/22px var(--bo-num);
+  letter-spacing: 0;
+  text-align: center;
+}
+
+/* ---------- Lengüetas de Status ---------- */
+html[data-proto="boleto"] .bo-tabsrow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+}
+html[data-proto="boleto"] .bo-tabs { display: flex; gap: 4px; }
+html[data-proto="boleto"] .bo-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  padding: 0 18px 0 20px;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--bo-on-2);
+  font: 600 17px/1 var(--bo-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.15s ease-out, color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-tab:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+html[data-proto="boleto"] .bo-tab.is-active {
+  background: var(--bo-tray);
+  color: #fff;
+  box-shadow: inset 0 3px 0 var(--bo-red);
+}
+html[data-proto="boleto"] .bo-tab.is-active:focus-visible { box-shadow: inset 0 3px 0 var(--bo-red), 0 0 0 2px var(--bo-navy); }
+html[data-proto="boleto"] .bo-tab__n {
+  min-width: 2.2em;
+  padding: 4px 6px 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  font: 700 15px/1 var(--bo-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-align: center;
+}
+html[data-proto="boleto"] .bo-tab.is-active .bo-tab__n { background: var(--bo-slip); color: var(--bo-carbon); }
+html[data-proto="boleto"] .bo-count {
+  padding-bottom: 15px;
+  color: var(--bo-on-2);
+  font: 600 15px/1 var(--bo-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---------- Bandeja y cupones ---------- */
+html[data-proto="boleto"] .bo-tray {
+  --bo-c-date: 176px;
+  --bo-c-status: 236px;
+  --bo-stub: calc(var(--bo-c-date) + var(--bo-c-status));
+  --bo-cols: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.45fr) var(--bo-c-date) var(--bo-c-status);
+  --bo-notch: 9px;
+  padding: 4px 16px 16px;
+  border-radius: 0 8px 8px 8px;
+  background: var(--bo-tray);
+  box-shadow: inset 0 14px 18px -14px rgba(2, 8, 24, 0.55);
+}
+html[data-proto="boleto"] .bo-table {
+  display: block;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+html[data-proto="boleto"] .bo-table thead { display: block; position: sticky; top: 0; z-index: 5; background: var(--bo-tray); }
+html[data-proto="boleto"] .bo-table tbody { display: grid; gap: 10px; }
+html[data-proto="boleto"] .bo-table th,
+html[data-proto="boleto"] .bo-table td { display: block; min-width: 0; padding: 0; text-align: left; font-weight: inherit; }
+html[data-proto="boleto"] .bo-head,
+html[data-proto="boleto"] .bo-coupon {
+  display: grid;
+  grid-template-columns: var(--bo-cols);
+  grid-template-areas: "name method platform tags date status";
+}
+html[data-proto="boleto"] .bo-c--name { grid-area: name; }
+html[data-proto="boleto"] .bo-c--method { grid-area: method; }
+html[data-proto="boleto"] .bo-c--platform { grid-area: platform; }
+html[data-proto="boleto"] .bo-c--tags { grid-area: tags; }
+html[data-proto="boleto"] .bo-c--date { grid-area: date; }
+html[data-proto="boleto"] .bo-c--status { grid-area: status; }
+
+/* fila de etiquetas ordenables sobre la lista */
+html[data-proto="boleto"] .bo-head { padding: 6px 0 6px; }
+html[data-proto="boleto"] .bo-head th { padding: 0 16px; }
+html[data-proto="boleto"] .bo-head .bo-c--name,
+html[data-proto="boleto"] .bo-head .bo-c--date { padding-left: 22px; }
+html[data-proto="boleto"] .bo-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--bo-on-2);
+  font: 600 12.5px/1 var(--bo-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease-out;
+}
+html[data-proto="boleto"] .bo-sort:hover { color: #fff; }
+html[data-proto="boleto"] .bo-sort--static { cursor: default; }
+html[data-proto="boleto"] .bo-sort--static:hover { color: var(--bo-on-2); }
+html[data-proto="boleto"] .bo-sorticon { width: 15px; height: 15px; opacity: 0.55; }
+html[data-proto="boleto"] th.is-active .bo-sort { color: #fff; }
+html[data-proto="boleto"] th.is-active .bo-sorticon { opacity: 1; }
+html[data-proto="boleto"] th[data-dir="asc"] .bo-sorticon__dn,
+html[data-proto="boleto"] th[data-dir="desc"] .bo-sorticon__up { opacity: 0.28; }
+
+/* el cupón: cartulina, troquel perforado con muescas, talón al carbón */
+html[data-proto="boleto"] .bo-coupon {
+  --bo-body: var(--bo-stock);
+  --bo-overprint: linear-gradient(transparent, transparent);
+  position: relative;
+  min-height: 98px;
+  border-radius: 6px;
+  color: var(--bo-ink);
+  background:
+    radial-gradient(circle, var(--bo-perf) 1.15px, transparent 1.65px) right calc(var(--bo-stub) - 3px) top 4px / 6px 7px repeat-y,
+    var(--bo-overprint) right top / var(--bo-stub) 100% no-repeat,
+    linear-gradient(to right, var(--bo-body) calc(100% - var(--bo-stub)), var(--bo-stub-bg) 0);
+  -webkit-mask:
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 0, #0000 96%, #000) ,
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 100%, #0000 96%, #000);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 0, #0000 96%, #000) ,
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 100%, #0000 96%, #000);
+  mask-composite: intersect;
+}
+html[data-proto="boleto"] .bo-coupon:hover { --bo-body: var(--bo-stock-hover); }
+/* nada desaparece, se anula: sobreimpresión roja en el talón de las no aceptantes */
+html[data-proto="boleto"] .bo-coupon--rejects {
+  --bo-overprint: repeating-linear-gradient(-55deg, var(--bo-void) 0 1.5px, transparent 1.5px 8px);
+}
+html[data-proto="boleto"] .bo-coupon td { padding: 15px 16px 14px; }
+html[data-proto="boleto"] .bo-coupon .bo-c--name { padding-left: 22px; }
+html[data-proto="boleto"] .bo-coupon .bo-c--method,
+html[data-proto="boleto"] .bo-coupon .bo-c--platform,
+html[data-proto="boleto"] .bo-coupon .bo-c--tags {
+  background: linear-gradient(var(--bo-rule), var(--bo-rule)) left top 16px / 1px calc(100% - 32px) no-repeat;
+}
+html[data-proto="boleto"] .bo-coupon .bo-lbl { margin-bottom: 7px; }
+html[data-proto="boleto"] .bo-name {
+  color: var(--bo-ink);
+  font: 700 25px/1.05 var(--bo-display);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+html[data-proto="boleto"] .bo-name:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--bo-red);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+html[data-proto="boleto"] .bo-site {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 7px;
+  color: var(--bo-ink-2);
+  font: 500 14px/1.25 var(--bo-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+html[data-proto="boleto"] .bo-site:hover { color: var(--bo-blue-ink); text-decoration: underline; text-underline-offset: 3px; }
+html[data-proto="boleto"] .bo-val { display: block; color: var(--bo-ink); font: 500 15.5px/1.3 var(--bo-text); }
+html[data-proto="boleto"] .bo-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+html[data-proto="boleto"] .bo-tag {
+  padding: 3px 7px;
+  border: 1px solid var(--bo-rule);
+  border-radius: 3px;
+  background: var(--bo-tag-bg);
+  color: var(--bo-ink-2);
+  font: 500 12.5px/1.25 var(--bo-text);
+  white-space: nowrap;
+}
+html[data-proto="boleto"] .bo-tag--more {
+  border-style: dashed;
+  background: transparent;
+  color: var(--bo-carbon);
+  font: 700 12.5px/1.25 var(--bo-num);
+}
+
+/* talón */
+html[data-proto="boleto"] .bo-coupon .bo-c--date { padding-left: 22px; }
+html[data-proto="boleto"] .bo-date {
+  display: block;
+  color: var(--bo-carbon);
+  font: 700 18px/1.2 var(--bo-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+html[data-proto="boleto"] .bo-coupon .bo-c--status {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  align-items: center;
+  padding-right: 20px;
+}
+html[data-proto="boleto"] .bo-coupon .bo-c--status .bo-lbl { justify-self: start; margin-bottom: 2px; }
+
+/* ---------- El sello ---------- */
+html[data-proto="boleto"] .bo-stamp {
+  display: inline-block;
+  transform: translateX(var(--bo-dx, 0px)) rotate(var(--bo-rot, -3deg));
+  transform-origin: 50% 50%;
+}
+html[data-proto="boleto"] .bo-stamp__ink {
+  display: block;
+  max-width: 12.6em;
+  padding: 6px 11px 5px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 2px var(--bo-stub-bg), inset 0 0 0 3px currentColor;
+  font: 700 15px/1.08 var(--bo-display);
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+  text-wrap: balance;
+  filter: url(#boleto-ink);
+}
+html[data-proto="boleto"] .bo-stamp--accepts { color: var(--bo-blue-ink); }
+html[data-proto="boleto"] .bo-stamp--rejects { color: var(--bo-red-ink); }
+html[data-proto="boleto"] .bo-stamp--rejects .bo-stamp__ink {
+  padding: 7px 12px 6px;
+  border-width: 3px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+html[data-proto="boleto"] .bo-stamp--unknown { color: var(--bo-carbon); }
+html[data-proto="boleto"] .bo-stamp--unknown .bo-stamp__ink { border-style: dashed; box-shadow: none; }
+
+/* sellos pequeños secundarios: DESACT. junto a la fecha, ARCHIVADA junto al nombre */
+html[data-proto="boleto"] .bo-mini { display: inline-block; transform: rotate(3.5deg); }
+html[data-proto="boleto"] .bo-mini--stale { display: block; width: fit-content; margin-top: 8px; color: var(--bo-carbon); }
+html[data-proto="boleto"] .bo-mini--archived { margin-left: 8px; vertical-align: 0.25em; color: var(--bo-ink-2); }
+html[data-proto="boleto"] .bo-mini__ink {
+  display: block;
+  padding: 3px 6px 2px;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  font: 700 11.5px/1 var(--bo-display);
+  letter-spacing: 0.14em;
+  filter: url(#boleto-ink);
+}
+
+/* el gesto: los sellos de los primeros cupones visibles se estampan una vez */
+html[data-proto="boleto"] .bo-coupon.is-stamping .bo-stamp {
+  animation: bo-estampar 300ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--bo-i, 0) * 40ms);
+}
+html[data-proto="boleto"] .bo-coupon.is-stamping .bo-mini--stale {
+  animation: bo-estampar-mini 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--bo-i, 0) * 40ms + 170ms);
+}
+@keyframes bo-estampar {
+  0% {
+    opacity: 0;
+    filter: blur(1.5px);
+    transform: translateX(var(--bo-dx, 0px)) rotate(calc(var(--bo-rot, -3deg) - 7deg)) scale(1.25);
+  }
+  45% { opacity: 1; }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(var(--bo-dx, 0px)) rotate(var(--bo-rot, -3deg)) scale(1);
+  }
+}
+@keyframes bo-estampar-mini {
+  0% { opacity: 0; transform: rotate(-4deg) scale(1.35); }
+  100% { opacity: 1; transform: rotate(3.5deg) scale(1); }
+}
+
+/* ---------- Estado vacío: un cupón en blanco, sin sello ---------- */
+html[data-proto="boleto"] .bo-empty {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--bo-stub);
+  min-height: 184px;
+  margin-top: 10px;
+  border-radius: 6px;
+  color: var(--bo-ink);
+  background:
+    radial-gradient(circle, var(--bo-perf) 1.15px, transparent 1.65px) right calc(var(--bo-stub) - 3px) top 4px / 6px 7px repeat-y,
+    linear-gradient(to right, var(--bo-stock) calc(100% - var(--bo-stub)), var(--bo-stub-bg) 0);
+  -webkit-mask:
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 0, #0000 96%, #000) ,
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 100%, #0000 96%, #000);
+  -webkit-mask-composite: source-in;
+  mask:
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 0, #0000 96%, #000) ,
+    radial-gradient(circle var(--bo-notch) at calc(100% - var(--bo-stub)) 100%, #0000 96%, #000);
+  mask-composite: intersect;
+}
+html[data-proto="boleto"] .bo-empty__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 18px;
+  padding: 28px 32px;
+}
+html[data-proto="boleto"] .bo-empty__body p {
+  margin: 0;
+  font: 700 clamp(1.4rem, 1rem + 1vw, 1.9rem)/1.08 var(--bo-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+html[data-proto="boleto"] .bo-empty__stub { display: grid; place-items: center; padding: 20px; }
+html[data-proto="boleto"] .bo-empty__mark {
+  width: min(172px, 100%);
+  height: 62px;
+  border: 2px dashed var(--bo-perf);
+  border-radius: 4px;
+  transform: rotate(-4deg);
+}
+
+/* ---------- Contribuir y pie ---------- */
+html[data-proto="boleto"] .bo-contrib { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+html[data-proto="boleto"] .bo-foot {
+  margin-top: 56px;
+  border-top: 4px solid var(--bo-red);
+  background: var(--bo-navy);
+  color: var(--bo-on-2);
+}
+html[data-proto="boleto"] .bo-foot p {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 22px clamp(16px, 3vw, 40px) 30px;
+  font: 400 14px/1.6 var(--bo-text);
+}
+html[data-proto="boleto"] .bo-foot a {
+  color: #fff;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+html[data-proto="boleto"] .bo-foot a:hover { text-decoration-color: var(--bo-focus); }
+
+/* ---------- Densidad compacta ---------- */
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-table tbody { gap: 6px; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-coupon { min-height: 0; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-coupon td { padding-top: 10px; padding-bottom: 10px; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-name { font-size: 20px; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-site { margin-top: 3px; font-size: 13px; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-tags {
+  flex-wrap: nowrap;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 82%, transparent);
+  mask-image: linear-gradient(to right, #000 82%, transparent);
+}
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-stamp__ink { padding: 4px 9px 3px; font-size: 12.5px; }
+html[data-proto="boleto"] #stage[data-density="compact"] .bo-stamp--rejects .bo-stamp__ink { font-size: 13px; }
+
+/* ---------- Escritorio angosto ---------- */
+@media (max-width: 1180px) {
+  html[data-proto="boleto"] .bo-tray {
+    --bo-c-date: 158px;
+    --bo-c-status: 208px;
+    --bo-cols: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr) var(--bo-c-date) var(--bo-c-status);
+  }
+  html[data-proto="boleto"] .bo-head { grid-template-areas: "name method platform date status"; }
+  html[data-proto="boleto"] .bo-head .bo-c--tags {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  html[data-proto="boleto"] .bo-coupon {
+    grid-template-areas:
+      "name method platform date status"
+      "tags tags tags date status";
+  }
+  html[data-proto="boleto"] .bo-coupon .bo-c--tags { padding-top: 0; padding-left: 22px; background: none; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--tags .bo-lbl { display: none; }
+  html[data-proto="boleto"] .bo-btn.bo-filters-toggle { display: inline-flex; }
+  html[data-proto="boleto"] .bo-filter-panel { display: none; flex-basis: 100%; }
+  html[data-proto="boleto"] .bo-filter-panel.is-open { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  html[data-proto="boleto"] .bo-filter-panel .bo-select { max-width: none; width: 100%; }
+}
+@media (min-width: 1181px) {
+  html[data-proto="boleto"] #stage[data-density="compact"] .bo-coupon .bo-lbl { display: none; }
+}
+
+/* ---------- Móvil: el cupón se vuelve talón de una columna ---------- */
+@media (max-width: 760px) {
+  html[data-proto="boleto"] .bo-top__in {
+    flex-wrap: wrap;
+    gap: 0 8px;
+    min-height: 0;
+    padding-top: 10px;
+  }
+  html[data-proto="boleto"] .bo-brand { order: 1; }
+  html[data-proto="boleto"] .bo-brand__a { font-size: 17px; }
+  html[data-proto="boleto"] .bo-brand__b { font-size: 11px; }
+  html[data-proto="boleto"] .bo-tools { order: 2; }
+  html[data-proto="boleto"] .bo-nav { order: 3; flex-basis: 100%; height: 46px; margin: 4px -14px 0; }
+  html[data-proto="boleto"] .bo-gh { padding: 0 12px; font-size: 14px; }
+  html[data-proto="boleto"] .bo-menu { right: -4px; width: min(280px, calc(100vw - 24px)); }
+
+  html[data-proto="boleto"] .bo-cover {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "lede" "slip" "terms";
+    row-gap: 16px;
+    padding-top: 32px;
+  }
+  html[data-proto="boleto"] .bo-title { font-size: clamp(2.1rem, 0.9rem + 6.6vw, 2.9rem); line-height: 0.94; }
+  html[data-proto="boleto"] .bo-lede { font-size: 1rem; }
+  html[data-proto="boleto"] .bo-slip { grid-template-columns: auto auto minmax(0, 1fr); padding: 0 6px; }
+  html[data-proto="boleto"] .bo-slip__f { padding: 12px 12px 11px; gap: 5px; }
+  html[data-proto="boleto"] .bo-slip__l { font-size: 10.5px; letter-spacing: 0.1em; }
+  html[data-proto="boleto"] .bo-slip__n { font-size: 22px; }
+  html[data-proto="boleto"] .bo-slip__f--date .bo-slip__n { font-size: 17px; }
+  html[data-proto="boleto"] .bo-terms { font-size: 13px; }
+
+  html[data-proto="boleto"] .bo-controls { margin-top: 26px; gap: 10px; }
+  html[data-proto="boleto"] .bo-search { flex-basis: 100%; }
+  html[data-proto="boleto"] .bo-filters-toggle { flex: 1 1 auto; }
+  html[data-proto="boleto"] .bo-filter-panel.is-open { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+
+  html[data-proto="boleto"] .bo-tabsrow {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+    margin: 26px -6px 0;
+  }
+  html[data-proto="boleto"] .bo-count { align-self: flex-end; padding: 0 6px; font-size: 14px; }
+  html[data-proto="boleto"] .bo-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; }
+  html[data-proto="boleto"] .bo-tab {
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    height: 60px;
+    padding: 0 4px;
+    border-radius: 6px 6px 0 0;
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+  }
+  html[data-proto="boleto"] .bo-tab__n { font-size: 13px; padding: 3px 5px 2px; }
+
+  html[data-proto="boleto"] .bo-tray {
+    --bo-stub: 124px;
+    --bo-cols: minmax(0, 1fr) minmax(0, 1fr) var(--bo-stub);
+    --bo-notch: 8px;
+    margin: 0 calc(-1 * clamp(16px, 3vw, 40px));
+    padding: 4px 10px 12px;
+    border-radius: 0;
+  }
+  html[data-proto="boleto"] .bo-table thead { position: static; }
+  html[data-proto="boleto"] .bo-head {
+    display: flex;
+    gap: 6px;
+    padding: 8px 0 10px;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+  html[data-proto="boleto"] .bo-head th,
+  html[data-proto="boleto"] .bo-head .bo-c--name,
+  html[data-proto="boleto"] .bo-head .bo-c--date { flex: none; padding: 0; }
+  html[data-proto="boleto"] .bo-head .bo-c--tags {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  html[data-proto="boleto"] .bo-sort {
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--bo-on-rule);
+    border-radius: 4px;
+  }
+  html[data-proto="boleto"] th.is-active .bo-sort { border-color: rgba(255, 255, 255, 0.7); }
+
+  html[data-proto="boleto"] .bo-coupon {
+    min-height: 0;
+    grid-template-areas:
+      "name name date"
+      "name name status"
+      "method platform status"
+      "tags tags status";
+    grid-template-rows: auto 1fr auto auto;
+  }
+  html[data-proto="boleto"] .bo-coupon td { padding: 12px 14px; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--name { padding: 14px 14px 10px 16px; }
+  html[data-proto="boleto"] .bo-name { font-size: 22px; }
+  html[data-proto="boleto"] .bo-site { font-size: 13.5px; margin-top: 5px; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--method,
+  html[data-proto="boleto"] .bo-coupon .bo-c--platform { padding-top: 10px; padding-bottom: 8px; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--method { padding-left: 16px; background: linear-gradient(var(--bo-rule), var(--bo-rule)) left 16px top 0 / calc(100% - 16px) 1px no-repeat; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--platform {
+    background:
+      linear-gradient(var(--bo-rule), var(--bo-rule)) left top / calc(100% - 14px) 1px no-repeat,
+      linear-gradient(var(--bo-rule), var(--bo-rule)) left top 10px / 1px calc(100% - 18px) no-repeat;
+  }
+  html[data-proto="boleto"] .bo-coupon .bo-c--tags { padding: 4px 14px 14px 16px; background: none; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--tags .bo-lbl { display: block; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--tags:has(> .bo-tags:empty) { display: none; }
+  html[data-proto="boleto"] .bo-coupon .bo-lbl { margin-bottom: 5px; font-size: 10.5px; letter-spacing: 0.1em; }
+  html[data-proto="boleto"] .bo-val { font-size: 14.5px; }
+  html[data-proto="boleto"] .bo-tag { font-size: 12px; padding: 2px 6px; }
+
+  html[data-proto="boleto"] .bo-coupon .bo-c--date { padding: 14px 10px 4px 14px; }
+  html[data-proto="boleto"] .bo-date { font-size: 15.5px; }
+  html[data-proto="boleto"] .bo-coupon .bo-c--status {
+    grid-template-rows: 1fr;
+    align-items: start;
+    padding: 4px 10px 14px 12px;
+  }
+  html[data-proto="boleto"] .bo-coupon .bo-c--status .bo-lbl { display: none; }
+  html[data-proto="boleto"] .bo-stamp__ink { max-width: 100%; padding: 5px 7px 4px; font-size: 13px; letter-spacing: 0.06em; }
+  html[data-proto="boleto"] .bo-stamp--rejects .bo-stamp__ink { padding: 6px 7px 5px; font-size: 13.5px; letter-spacing: 0.07em; }
+
+  html[data-proto="boleto"] .bo-empty { grid-template-columns: minmax(0, 1fr) var(--bo-stub); }
+  html[data-proto="boleto"] .bo-empty__body { padding: 22px 18px; }
+  html[data-proto="boleto"] .bo-empty__stub { padding: 12px; }
+
+  html[data-proto="boleto"] .bo-contrib { flex-direction: column; align-items: stretch; }
+  html[data-proto="boleto"] .bo-contrib .bo-btn { justify-content: space-between; text-align: left; line-height: 1.2; padding: 12px 18px; }
+}
+
+/* ---------- Movimiento reducido: sellos ya estampados, sin transiciones ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html[data-proto="boleto"] .bo-coupon.is-stamping .bo-stamp,
+  html[data-proto="boleto"] .bo-coupon.is-stamping .bo-mini--stale { animation: none; }
+  html[data-proto="boleto"] #stage *,
+  html[data-proto="boleto"] #stage *::before,
+  html[data-proto="boleto"] #stage *::after { transition: none !important; }
+}
