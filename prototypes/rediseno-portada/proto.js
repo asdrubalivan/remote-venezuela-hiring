@@ -30,6 +30,7 @@
   var current = 0;
   var cleanup = null;
   var state;
+  window.RVHProto.state = function () { return Object.assign({}, state); };
 
   function freshState() {
     return { status: "all", search: "", method: "all", platform: "all", tag: "all", archived: false, sort: "name", dir: "asc" };
@@ -81,6 +82,7 @@
       var on = t.getAttribute("data-rvh-tab") === state.status;
       t.classList.toggle("is-active", on);
       t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
     });
     var n = panelFilterCount();
     $$("[data-rvh-filter-count]").forEach(function (el) { el.textContent = String(n); el.hidden = n === 0; });
@@ -135,6 +137,18 @@
       t.addEventListener("click", function () {
         state.status = t.getAttribute("data-rvh-tab");
         apply();
+      });
+      // Teclado en el tablist: flechas, Inicio y Fin activan la pestaña vecina.
+      t.addEventListener("keydown", function (e) {
+        var tabs = $$("[data-rvh-tab]");
+        var i = tabs.indexOf(t);
+        var next = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+        if (next === undefined) return;
+        e.preventDefault();
+        e.stopPropagation();
+        var target = tabs[(next + tabs.length) % tabs.length];
+        target.focus();
+        target.click();
       });
     });
     $$("[data-rvh-sort]").forEach(function (h) {
@@ -216,7 +230,10 @@
     if (state.sort !== "name" || state.dir !== "asc") sortRows();
     apply();
     var hook = window.RVHProto.hooks[v.slug];
-    if (hook) cleanup = hook(stage) || null;
+    if (hook) {
+      cleanup = hook(stage) || null;
+      apply(); // el gancho también recibe el estado inicial vía "rvh:applied"
+    }
     var url = new URL(location.href);
     url.searchParams.set("v", String(v.n));
     history.replaceState(null, "", url);
@@ -233,6 +250,7 @@
   document.addEventListener("keydown", function (e) {
     var tag = (e.target.tagName || "").toLowerCase();
     if (tag === "input" || tag === "select" || tag === "textarea" || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest && e.target.closest('[role="tablist"]')) return;
     if (e.key === "ArrowRight") mount(current + 1);
     if (e.key === "ArrowLeft") mount(current - 1);
     if (/^[1-9]$/.test(e.key) && Number(e.key) <= VARIANTS.length) mount(Number(e.key) - 1);
@@ -251,5 +269,4 @@
   mount(Math.max(0, (Number(params.get("v")) || 1) - 1), initial);
 
   window.RVHProto.mount = function (n, init) { mount(n - 1, init); };
-  window.RVHProto.state = function () { return Object.assign({}, state); };
 })();
