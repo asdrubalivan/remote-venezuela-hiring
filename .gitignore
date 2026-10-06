@@ -35,3 +35,4 @@ pnpm-workspace.yaml
 # Prototipos descartables: salida generada y capturas
 prototypes/*/out/
 prototypes/*/shots/
+.impeccable/review/
