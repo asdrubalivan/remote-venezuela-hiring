@@ -31,3 +31,8 @@ pnpm-workspace.yaml
 .claude/
 !.claude/skills/
 !.claude/skills/**
+
+# Prototipos descartables: salida generada y capturas
+prototypes/*/out/
+prototypes/*/shots/
+.impeccable/review/

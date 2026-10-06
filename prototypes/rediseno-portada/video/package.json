@@ -1,0 +1,29 @@
+{
+  "name": "rvh-proto-video",
+  "private": true,
+  "description": "PROTOTIPO — video comparativo de las 5 variantes de la portada (Remotion).",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render Comparativa out/comparativa-x.mp4 --codec=h264 --crf=18",
+    "still": "remotion still Comparativa out/still.png --frame=60",
+    "srt": "node --experimental-strip-types --no-warnings srt.mts"
+  },
+  "dependencies": {
+    "@remotion/captions": "4.0.533",
+    "@remotion/cli": "4.0.533",
+    "@remotion/google-fonts": "4.0.533",
+    "@remotion/transitions": "4.0.533",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.533"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.8",
+    "typescript": "^5.7.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

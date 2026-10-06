@@ -1,0 +1,236 @@
+{#
+  PROTOTIPO — v1 Clasificados. La portada como la página dominical de Empleos:
+  papel gris, tinta negra, cabezales invertidos y un bolígrafo rojo que encierra
+  lo que sí acepta y tacha lo que no. Mismos textos y ganchos que _reference.html.
+#}
+{# Trazos de bolígrafo: tres círculos y dos tachados distintos para que no se repitan idénticos. #}
+{% set pen_circles = [
+  "M238 5C180 1 80 1 36 6C12 9 3 16 4 24C5 35 40 42 120 43C200 44 284 40 294 27C301 17 282 8 236 5C210 3 186 4 170 6",
+  "M30 40C10 34 4 22 18 14C40 3 150 1 236 3C280 4 298 12 295 22C292 34 250 42 160 43C80 44 22 42 10 31C5 24 14 15 40 10",
+  "M70 6C130 0 240 0 278 9C298 14 299 30 280 37C250 46 110 46 46 41C14 38 0 28 6 18C12 8 48 4 108 3C130 2 148 3 158 4",
+] %}
+{% set pen_strikes = [
+  "M3 31C60 29 140 27 200 25C240 24 274 21 297 16",
+  "M4 25C90 23 200 21 296 18M290 25C210 28 110 31 8 34",
+] %}
+{% macro ico(name, cls="") %}<svg class="i{{ ' ' ~ cls if cls }}" aria-hidden="true" focusable="false"><use href="#cl-i-{{ name }}"/></svg>{% endmacro %}
+{% macro sort_ico() %}<svg class="i i-sort" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="up" d="M7 10l5-5 5 5"/><path class="dn" d="M7 14l5 5 5-5"/></svg>{% endmacro %}
+
+<svg class="cl-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="cl-flag" viewBox="0 0 180 120">
+      <rect width="180" height="40" style="fill:var(--flag-1)"/>
+      <rect y="40" width="180" height="40" style="fill:var(--flag-2)"/>
+      <rect y="80" width="180" height="40" style="fill:var(--flag-3)"/>
+      <g style="fill:var(--flag-star)">
+        <polygon points="57.2,70.6 58.2,73.7 61.5,73.8 58.9,75.8 59.9,78.9 57.2,77.1 54.5,78.9 55.4,75.8 52.8,73.8 56.1,73.7"/>
+        <polygon points="62.6,59.2 63.7,62.3 67.0,62.4 64.4,64.4 65.3,67.5 62.6,65.7 59.9,67.5 60.9,64.4 58.3,62.4 61.6,62.3"/>
+        <polygon points="71.9,50.6 73.0,53.7 76.3,53.8 73.7,55.8 74.6,58.9 71.9,57.1 69.2,58.9 70.2,55.8 67.5,53.8 70.8,53.7"/>
+        <polygon points="83.7,46.0 84.8,49.1 88.1,49.2 85.4,51.2 86.4,54.3 83.7,52.4 81.0,54.3 81.9,51.2 79.3,49.2 82.6,49.1"/>
+        <polygon points="96.3,46.0 97.4,49.1 100.7,49.2 98.1,51.2 99.0,54.3 96.3,52.4 93.6,54.3 94.6,51.2 91.9,49.2 95.2,49.1"/>
+        <polygon points="108.1,50.6 109.2,53.7 112.5,53.8 109.8,55.8 110.8,58.9 108.1,57.1 105.4,58.9 106.3,55.8 103.7,53.8 107.0,53.7"/>
+        <polygon points="117.4,59.2 118.4,62.3 121.7,62.4 119.1,64.4 120.1,67.5 117.4,65.7 114.7,67.5 115.6,64.4 113.0,62.4 116.3,62.3"/>
+        <polygon points="122.8,70.6 123.9,73.7 127.2,73.8 124.6,75.8 125.5,78.9 122.8,77.1 120.1,78.9 121.1,75.8 118.5,73.8 121.8,73.7"/>
+      </g>
+      <rect x="1" y="1" width="178" height="118" style="fill:none;stroke:var(--flag-edge);stroke-width:2"/>
+    </symbol>
+    <symbol id="cl-i-gear" viewBox="0 0 24 24">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="cl-i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+    </symbol>
+    <symbol id="cl-i-moon" viewBox="0 0 24 24">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>
+    </symbol>
+    <symbol id="cl-i-ext" viewBox="0 0 24 24">
+      <path d="M7 17 17 7M8 7h9v9"/>
+    </symbol>
+    <symbol id="cl-i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="6.5"/>
+      <path d="m20 20-4.2-4.2"/>
+    </symbol>
+    <symbol id="cl-i-sliders" viewBox="0 0 24 24">
+      <path d="M3 6h10M17 6h4M3 12h3M10 12h11M3 18h12M19 18h2"/>
+      <circle cx="15" cy="6" r="2"/>
+      <circle cx="8" cy="12" r="2"/>
+      <circle cx="17" cy="18" r="2"/>
+    </symbol>
+    <symbol id="cl-i-x" viewBox="0 0 24 24">
+      <path d="M6 6l12 12M18 6 6 18"/>
+    </symbol>
+    <symbol id="cl-i-chev" viewBox="0 0 24 24">
+      <path d="m6 9 6 6 6-6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="cl-skip" href="#main-content">Saltar al contenido</a>
+
+<header class="cl-mast" role="banner">
+  <div class="cl-wrap cl-mast__in">
+    <a class="cl-brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
+      <span class="cl-brand__a">Remote Venezuela</span>
+      <span class="cl-brand__b"><svg class="cl-flag" viewBox="0 0 180 120" aria-hidden="true" focusable="false"><use href="#cl-flag"/></svg> Hiring</span>
+    </a>
+    <nav class="cl-nav" aria-label="Navegación principal">
+      <a href="./" aria-current="page">Empresas</a>
+      <a href="../stats.html">Estadísticas</a>
+    </nav>
+    <div class="cl-tools">
+      <div class="cl-settings">
+        <button type="button" class="cl-iconbtn" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">{{ ico("gear") }}</button>
+        <div class="cl-menu" data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+          <div class="cl-menu__label">Tema</div>
+          <div class="cl-seg" role="radiogroup" aria-label="Tema">
+            <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro">{{ ico("sun") }}</button>
+            <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro">{{ ico("moon") }}</button>
+          </div>
+          <div class="cl-menu__label">Densidad de la tabla</div>
+          <div class="cl-seg" role="radiogroup" aria-label="Densidad de la tabla">
+            <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+            <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+          </div>
+        </div>
+      </div>
+      <a class="cl-gh" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub{{ ico("ext") }}</a>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" class="cl-main">
+  <header class="cl-head cl-wrap">
+    <h1 class="cl-title">Compatibilidad de Contratación Remota en <svg class="cl-flag cl-flag--title" viewBox="0 0 180 120" role="img" aria-label="🇻🇪" focusable="false"><use href="#cl-flag"/></svg> Venezuela</h1>
+
+    <div class="cl-folio" role="group" aria-label="Resumen">
+      <span><strong>{{ visible_count }}</strong> empresas</span>
+      <span class="cl-folio__mark"><strong>{{ hero_accepts }}</strong> probablemente aceptan<svg class="pen pen--folio" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="100" d="{{ pen_circles[1] }}"/></svg></span>
+      <span>actualizado <time datetime="{{ today.isoformat() }}">{{ format_date(today) }}</time></span>
+    </div>
+
+    <div class="cl-intro">
+      <p class="cl-lede">Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+      <div class="cl-notice" role="note">
+        <strong class="cl-notice__head">No es asesoramiento legal ni una declaración oficial de ninguna empresa.</strong>
+        <span class="cl-notice__body">La compatibilidad puede cambiar — siempre verifica directamente.</span>
+        <a class="cl-notice__link" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub{{ ico("ext") }}</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="cl-search cl-wrap" role="search" aria-label="Filtrar empresas">
+    <div class="cl-search__row">
+      <div class="cl-field">
+        {{ ico("search") }}
+        <input type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+      </div>
+      <button type="button" class="cl-btn" data-rvh-filter-toggle aria-expanded="false" aria-controls="cl-filters">
+        {{ ico("sliders") }}<span>Filtros</span> <span class="cl-badge" data-rvh-filter-count hidden>0</span>
+      </button>
+      <button type="button" class="cl-btn cl-btn--quiet" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">{{ ico("x") }}<span>Limpiar</span></button>
+    </div>
+
+    <div class="cl-filters" id="cl-filters" data-rvh-filter-panel>
+      <span class="cl-sel">
+        <select data-rvh-filter="method" aria-label="Filtrar por verificación">
+          <option value="all">Verificación: Todas</option>
+          {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+        </select>{{ ico("chev") }}
+      </span>
+      <span class="cl-sel">
+        <select data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+          <option value="all">Plataforma: Todas</option>
+          {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+        </select>{{ ico("chev") }}
+      </span>
+      <span class="cl-sel">
+        <select data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+          <option value="all">Etiqueta: Todas</option>
+          {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+        </select>{{ ico("chev") }}
+      </span>
+      <label class="cl-check"><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+    </div>
+  </section>
+
+  <div class="cl-wrap">
+    <div class="cl-tabbar">
+      <div class="cl-tabs" role="tablist" aria-label="Filtrar por estado">
+        {% for tab in status_tabs %}
+        <button type="button" role="tab" class="cl-tab" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}" aria-controls="cl-table">
+          <span class="cl-tab__label">{{ tab.label }}</span> <span class="cl-tab__count">{{ tab.count }}</span>
+        </button>
+        {% endfor %}
+      </div>
+      <span class="cl-count" data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
+    </div>
+
+    <table class="cl-ads" id="cl-table">
+      <colgroup>
+        <col class="c-name" /><col class="c-status" /><col class="c-date" /><col class="c-method" /><col class="c-plat" /><col class="c-tags" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col" class="th-name" data-rvh-sort="name"><button type="button">Empresa{{ sort_ico() }}</button></th>
+          <th scope="col" class="th-status" data-rvh-sort="status"><button type="button">Estado{{ sort_ico() }}</button></th>
+          <th scope="col" class="th-date" data-rvh-sort="last_checked"><button type="button">Últ. verificación{{ sort_ico() }}</button></th>
+          <th scope="col" class="th-method" data-rvh-sort="verification_method"><button type="button">Verificación{{ sort_ico() }}</button></th>
+          <th scope="col" class="th-plat" data-rvh-sort="hiring_platform"><button type="button">Plataforma{{ sort_ico() }}</button></th>
+          <th scope="col" class="th-tags"><span>Etiquetas</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for company in companies %}
+        {% set stale = company.is_stale() %}
+        {% set st = company.status.value %}
+        <tr data-rvh-row
+            data-status="{{ st }}"
+            data-method="{{ company.verification_method.value }}"
+            data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+            data-tags="{{ company.tags | join(',') }}"
+            data-archived="{{ '1' if company.archived else '0' }}"
+            data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+            data-name="{{ company.name }}"
+            data-last-checked="{{ company.last_checked.isoformat() }}">
+          <td class="td-name">
+            <a class="cl-name" href="company/{{ company.id }}.html">{{ company.name }}</a>
+            {% if company.archived %}<span class="cl-mark">ARCHIVADA</span>{% endif %}
+            <a class="cl-web" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
+          </td>
+          <td class="td-status">
+            <span class="cl-st cl-st--{{ st }}">{{ status_labels[st] }}{% if st == 'accepts' %}<svg class="pen pen--circle pen--v{{ loop.index0 % 3 }}" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="100" d="{{ pen_circles[loop.index0 % 3] }}"/></svg>{% elif st == 'rejects' %}<svg class="pen pen--strike" viewBox="0 0 300 46" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="100" d="{{ pen_strikes[loop.index0 % 2] }}"/></svg>{% endif %}</span>{% if stale %} <span class="cl-mark">DESACT.</span>{% endif %}
+          </td>
+          <td class="td-date"><time datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time></td>
+          <td class="td-method" data-label="Verificación">{{ verification_labels[company.verification_method.value] }}</td>
+          <td class="td-plat" data-label="Plataforma">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
+          <td class="td-tags">
+            {% for tag in company.tags[:3] %}<span class="cl-tag">{{ tag }}</span>{% endfor %}
+            {% if company.tags|length > 3 %}<span class="cl-tag cl-tag--more">+{{ company.tags|length - 3 }}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="cl-empty" data-rvh-empty role="status" aria-live="polite" hidden>
+      <p>Ninguna empresa coincide con los filtros.</p>
+      <button type="button" class="cl-btn cl-btn--solid" data-rvh-clear>{{ ico("x") }}<span>Limpiar filtros</span></button>
+    </div>
+
+    <div class="cl-contrib">
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer"><span>Agregar empresa vía GitHub Issues</span>{{ ico("ext") }}</a>
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"><span>Enviar un pull request YAML</span>{{ ico("ext") }}</a>
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer"><span>Reportar datos incorrectos</span>{{ ico("ext") }}</a>
+    </div>
+  </div>
+</main>
+
+<footer class="cl-foot" role="contentinfo">
+  <p class="cl-wrap">
+    Generado el {{ generated_at }} ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>

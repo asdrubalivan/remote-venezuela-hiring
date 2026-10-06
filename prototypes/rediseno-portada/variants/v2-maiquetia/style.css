@@ -1,0 +1,1499 @@
+/* PROTOTIPO — v2 Piso de Maiquetía. Código descartable.
+ *
+ * Mundo: blanco de suelo y franjas paralelas finas en cian, magenta, amarillo y negro.
+ * Unidad base 4px: franjas, filas de la tabla y espaciados son múltiplos de ella.
+ * Retícula: 24 columnas; cada módulo del piso ocupa 3, y las columnas de la tabla
+ * caen sobre los mismos cortes, así que las costuras del piso y de la tabla coinciden.
+ * Gesto firma: inducción cromática. Los módulos .mq-ind pintan sus franjas con cuatro
+ * colores registrados (@property); al cambiar de pestaña transicionan en ola.
+ * TODO selector va acotado bajo html[data-proto="maiquetia"].
+ */
+
+@property --mq-c1 { syntax: "<color>"; inherits: true; initial-value: #00a3e0; }
+@property --mq-c2 { syntax: "<color>"; inherits: true; initial-value: #e5007d; }
+@property --mq-c3 { syntax: "<color>"; inherits: true; initial-value: #ffd400; }
+@property --mq-c4 { syntax: "<color>"; inherits: true; initial-value: #0f0f12; }
+
+/* ---------- Tokens ---------- */
+
+html[data-proto="maiquetia"] {
+  --mq-ground: #ffffff;
+  --mq-ink: #0f0f12;
+  --mq-ink-2: #4a4a54;
+  --mq-ink-3: #62626d;
+  --mq-hair: #dddde3;
+  --mq-hover: #f3f4f6;
+  --mq-tag: #efeff3;
+  --mq-note: #fff3b8;
+  --mq-cyan: #00a3e0;
+  --mq-mag: #e5007d;
+  --mq-yel: #ffd400;
+  --mq-gray: #a4a4ad;
+  --mq-focus: #e5007d;
+  --mq-k: #0f0f12;
+  --mq-w: #ffffff;
+
+  --mq-u: 4px;
+  --mq-gut: clamp(16px, 4vw, 56px);
+  --mq-max: 1328px;
+  --mq-col: calc(var(--mq-max) / 24);
+  --mq-tracks: [full-start] minmax(var(--mq-gut), 1fr) [c-start] repeat(24, minmax(0, var(--mq-col))) [c-end] minmax(var(--mq-gut), 1fr) [full-end];
+
+  --mq-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --mq-dur: 380ms;
+  --mq-stagger: 30ms;
+  --mq-n: 7;
+
+  --mq-display: "Red Hat Display", "Helvetica Neue", Arial, sans-serif;
+  --mq-text: "Red Hat Text", "Helvetica Neue", Arial, sans-serif;
+
+  color-scheme: light;
+  background: var(--mq-ground);
+  scrollbar-color: var(--mq-ink) var(--mq-ground);
+  scroll-padding-top: 56px;
+}
+
+html[data-proto="maiquetia"][data-theme="dark"] {
+  --mq-ground: #0d0d10;
+  --mq-ink: #f1f1f3;
+  --mq-ink-2: #b0b0ba;
+  --mq-ink-3: #9a9aa5;
+  --mq-hair: #2b2b33;
+  --mq-hover: #17171c;
+  --mq-tag: #1e1e25;
+  --mq-note: #231e06;
+  --mq-focus: #ff4fa7;
+  --mq-k: #f1f1f3;
+  --mq-w: #0d0d10;
+  color-scheme: dark;
+}
+
+/* ---------- Superficies del navegador ---------- */
+
+html[data-proto="maiquetia"] body {
+  margin: 0;
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 400 16px/1.5 var(--mq-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html[data-proto="maiquetia"] #stage *,
+html[data-proto="maiquetia"] #stage *::before,
+html[data-proto="maiquetia"] #stage *::after {
+  box-sizing: border-box;
+}
+
+html[data-proto="maiquetia"] ::selection {
+  background: var(--mq-yel);
+  color: #0f0f12;
+}
+
+html[data-proto="maiquetia"] #stage input,
+html[data-proto="maiquetia"] #stage select {
+  caret-color: var(--mq-mag);
+  accent-color: var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] #stage :focus-visible {
+  outline: 3px solid var(--mq-focus);
+  outline-offset: 2px;
+}
+
+html[data-proto="maiquetia"] #stage [hidden] {
+  display: none !important;
+}
+
+html[data-proto="maiquetia"] #stage a {
+  color: inherit;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+html[data-proto="maiquetia"] .mq-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+html[data-proto="maiquetia"] .mq-ico {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-proto="maiquetia"] .mq-ico--sm {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.12em;
+}
+
+html[data-proto="maiquetia"] .mq-flag {
+  display: inline-block;
+  width: 1.2em;
+  height: 0.8em;
+  vertical-align: -0.04em;
+}
+
+/* ---------- Retícula ---------- */
+
+html[data-proto="maiquetia"] .mq-frame {
+  display: grid;
+  grid-template-columns: var(--mq-tracks);
+}
+
+html[data-proto="maiquetia"] .mq-frame > * {
+  grid-column: c-start / c-end;
+}
+
+/* ---------- Patrones del piso ----------
+ * Un solo módulo de franjas verticales con paradas duras (sin degradado suave), que se
+ * repite como en el piso real. Ninguna franja baja de 4px (≈3,5px tras el ajuste de
+ * `round`) para que el video reescalado y comprimido no haga moiré.
+ * Módulo de 48px: negro 4 · suelo 4 · c1 8 · c4 4 · c2 8 · suelo 4 · c3 8 · c4 4 · suelo 4.
+ * Paradas en % para que `background-repeat: round` escale el módulo y cada losa de la
+ * retícula contenga un número entero de módulos (sin astillas en las costuras).
+ * --mq-k y --mq-w son la línea negra y el suelo; --mq-c1..c4, los colores de cada estado. */
+
+html[data-proto="maiquetia"] .mq-ind {
+  --mq-c1: var(--mq-cyan);
+  --mq-c2: var(--mq-mag);
+  --mq-c3: var(--mq-yel);
+  --mq-c4: var(--mq-w);
+  background-color: var(--mq-w);
+  background-image: linear-gradient(90deg,
+    var(--mq-k) 0 8.3333%, var(--mq-w) 8.3333% 16.6667%,
+    var(--mq-c1) 16.6667% 33.3333%, var(--mq-c4) 33.3333% 41.6667%,
+    var(--mq-c2) 41.6667% 58.3333%, var(--mq-w) 58.3333% 66.6667%,
+    var(--mq-c3) 66.6667% 83.3333%, var(--mq-c4) 83.3333% 91.6667%,
+    var(--mq-w) 91.6667% 100%);
+  background-size: 48px 100%;
+  background-repeat: round;
+  background-position: var(--mq-phase, 0px) 0;
+  transition-property: --mq-c1, --mq-c2, --mq-c3, --mq-c4;
+  transition-duration: var(--mq-dur);
+  transition-timing-function: var(--mq-ease);
+  transition-delay: calc(var(--i, 0) * var(--mq-stagger));
+}
+
+html[data-proto="maiquetia"] #stage[data-mq-dir="rtl"] .mq-ind {
+  transition-delay: calc((var(--mq-n) - var(--i, 0)) * var(--mq-stagger));
+}
+
+/* Inducción por estado: domina el color del Status filtrado y las franjas finas c4
+ * se pegan a las anchas (cian + amarillo se ve verde; magenta + negro, más oscuro). */
+html[data-proto="maiquetia"] #stage[data-status="accepts"] .mq-ind {
+  --mq-c1: var(--mq-cyan);
+  --mq-c2: var(--mq-cyan);
+  --mq-c3: var(--mq-cyan);
+  --mq-c4: var(--mq-yel);
+}
+
+html[data-proto="maiquetia"] #stage[data-status="rejects"] .mq-ind {
+  --mq-c1: var(--mq-mag);
+  --mq-c2: var(--mq-mag);
+  --mq-c3: var(--mq-mag);
+  --mq-c4: var(--mq-k);
+}
+
+html[data-proto="maiquetia"] #stage[data-status="unknown"] .mq-ind {
+  --mq-c1: var(--mq-yel);
+  --mq-c2: var(--mq-yel);
+  --mq-c3: var(--mq-yel);
+  --mq-c4: var(--mq-gray);
+}
+
+/* Piso apagado: sin resultados, o antes del encendido inicial. */
+html[data-proto="maiquetia"] #stage[data-mq-empty="1"] .mq-ind,
+html[data-proto="maiquetia"] #stage[data-mq-boot="1"] .mq-ind {
+  --mq-c1: var(--mq-w);
+  --mq-c2: var(--mq-w);
+  --mq-c3: var(--mq-w);
+  --mq-c4: var(--mq-w);
+}
+
+/* Trozos de piso fijos por Status: muestras de fila, pestañas, resumen y marca.
+ * Franjas de 4px mínimo; `round` encaja un número entero de módulos en cada muestra. */
+html[data-proto="maiquetia"] .mq-sw {
+  display: inline-block;
+  flex: none;
+  width: 32px;
+  height: 16px;
+  background-color: var(--mq-w);
+  background-size: var(--mq-sw-p, 16px) 100%;
+  background-repeat: round;
+}
+
+html[data-proto="maiquetia"] .mq-sw--all {
+  --mq-sw-p: 16px;
+  background-image: linear-gradient(90deg,
+    var(--mq-cyan) 0 25%, var(--mq-mag) 25% 50%,
+    var(--mq-yel) 50% 75%, var(--mq-k) 75% 100%);
+}
+
+html[data-proto="maiquetia"] .mq-sw--accepts {
+  --mq-sw-p: 12px;
+  background-image: linear-gradient(90deg,
+    var(--mq-cyan) 0 66.6667%, var(--mq-yel) 66.6667% 100%);
+}
+
+html[data-proto="maiquetia"] .mq-sw--rejects {
+  --mq-sw-p: 12px;
+  background-image: linear-gradient(90deg,
+    var(--mq-mag) 0 66.6667%, var(--mq-k) 66.6667% 100%);
+}
+
+html[data-proto="maiquetia"] .mq-sw--unknown {
+  --mq-sw-p: 16px;
+  background-image: linear-gradient(90deg,
+    var(--mq-yel) 0 25%, var(--mq-w) 25% 50%,
+    var(--mq-gray) 50% 75%, var(--mq-w) 75% 100%);
+}
+
+/* ---------- Skip link ---------- */
+
+html[data-proto="maiquetia"] .mq-skip {
+  position: absolute;
+  left: 16px;
+  top: -80px;
+  z-index: 50;
+  padding: 12px 16px;
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+html[data-proto="maiquetia"] .mq-skip:focus {
+  top: 12px;
+}
+
+/* ---------- Navegación ---------- */
+
+html[data-proto="maiquetia"] .mq-nav__in {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  min-height: 72px;
+}
+
+html[data-proto="maiquetia"] .mq-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  text-decoration: none;
+}
+
+html[data-proto="maiquetia"] .mq-brand__tile {
+  width: 28px;
+  height: 28px;
+}
+
+html[data-proto="maiquetia"] .mq-brand__words {
+  display: grid;
+  font-family: var(--mq-display);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+html[data-proto="maiquetia"] .mq-brand__b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+html[data-proto="maiquetia"] .mq-brand__b .mq-flag {
+  width: 18px;
+  height: 12px;
+}
+
+html[data-proto="maiquetia"] .mq-nav__links {
+  display: flex;
+  gap: 28px;
+}
+
+html[data-proto="maiquetia"] .mq-nav__links a,
+html[data-proto="maiquetia"] .mq-gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  background-image: linear-gradient(var(--mq-ink), var(--mq-ink));
+  background-repeat: no-repeat;
+  background-position: 0 calc(100% - 8px);
+  background-size: 0 2px;
+  transition: background-size 220ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-nav__links a[aria-current="page"],
+html[data-proto="maiquetia"] .mq-nav__links a:hover,
+html[data-proto="maiquetia"] .mq-gh:hover {
+  background-size: 100% 2px;
+}
+
+html[data-proto="maiquetia"] .mq-nav__tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+html[data-proto="maiquetia"] .mq-settings {
+  position: relative;
+}
+
+html[data-proto="maiquetia"] .mq-iconbtn {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--mq-hair);
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  cursor: pointer;
+  transition: border-color 160ms var(--mq-ease), background-color 160ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-iconbtn:hover,
+html[data-proto="maiquetia"] .mq-iconbtn[aria-expanded="true"] {
+  border-color: var(--mq-ink);
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 30;
+  display: grid;
+  gap: 8px;
+  width: 260px;
+  padding: 16px;
+  background: var(--mq-ground);
+  border: 1px solid var(--mq-ink);
+  box-shadow: 0 16px 40px -12px rgba(15, 15, 18, 0.28);
+}
+
+html[data-proto="maiquetia"] .mq-menu__label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mq-ink-2);
+}
+
+html[data-proto="maiquetia"] .mq-menu__label + .mq-seg {
+  margin-bottom: 8px;
+}
+
+html[data-proto="maiquetia"] .mq-seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-seg button {
+  display: inline-grid;
+  place-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 600 14px/1 var(--mq-text);
+  cursor: pointer;
+}
+
+html[data-proto="maiquetia"] .mq-seg button + button {
+  border-left: 1px solid var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-seg button:hover {
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-seg button[aria-checked="true"] {
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+}
+
+/* ---------- El piso ---------- */
+
+html[data-proto="maiquetia"] .mq-floor {
+  height: 160px;
+}
+
+html[data-proto="maiquetia"] .mq-floor > .mq-floor__m {
+  grid-column: span 3;
+}
+
+html[data-proto="maiquetia"] .mq-floor > .mq-floor__m:first-child {
+  grid-column: full-start / span 4;
+}
+
+html[data-proto="maiquetia"] .mq-floor > .mq-floor__m:last-child {
+  grid-column: span 4 / full-end;
+}
+
+/* ---------- Encabezado ---------- */
+
+html[data-proto="maiquetia"] .mq-head {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+  padding: 44px 0 36px;
+}
+
+html[data-proto="maiquetia"] .mq-title {
+  grid-column: 1 / span 13;
+  margin: 0;
+  font-family: var(--mq-display);
+  font-weight: 800;
+  font-size: clamp(2.125rem, 0.95rem + 3.6vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+html[data-proto="maiquetia"] .mq-flag--title {
+  width: 0.96em;
+  height: 0.64em;
+  margin: 0 0.02em;
+  vertical-align: 0;
+}
+
+html[data-proto="maiquetia"] .mq-side {
+  grid-column: 15 / span 10;
+  display: grid;
+  gap: 16px;
+  padding-top: 6px;
+}
+
+html[data-proto="maiquetia"] .mq-lede {
+  margin: 0;
+  max-width: 48ch;
+  font-size: 18px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+html[data-proto="maiquetia"] .mq-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 15px;
+  color: var(--mq-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="maiquetia"] .mq-summary__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+html[data-proto="maiquetia"] .mq-summary__item .mq-sw {
+  width: 20px;
+  height: 12px;
+}
+
+html[data-proto="maiquetia"] .mq-summary strong {
+  font-family: var(--mq-display);
+  font-weight: 800;
+  color: var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-note {
+  padding: 12px 16px;
+  background: var(--mq-note);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-note a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+html[data-proto="maiquetia"] .mq-note a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---------- Búsqueda y filtros ---------- */
+
+html[data-proto="maiquetia"] .mq-search {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+html[data-proto="maiquetia"] .mq-field {
+  position: relative;
+  grid-column: 1 / span 9;
+}
+
+html[data-proto="maiquetia"] .mq-field__ico {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--mq-ink);
+  pointer-events: none;
+}
+
+html[data-proto="maiquetia"] .mq-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px 0 44px;
+  border: 1px solid var(--mq-ink);
+  border-radius: 0;
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 500 16px/1 var(--mq-text);
+}
+
+html[data-proto="maiquetia"] .mq-input::placeholder {
+  color: var(--mq-ink-3);
+  opacity: 1;
+}
+
+html[data-proto="maiquetia"] .mq-input:hover {
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-input:focus-visible {
+  outline-offset: 0;
+}
+
+html[data-proto="maiquetia"] .mq-search .mq-filters-toggle {
+  display: none;
+}
+
+html[data-proto="maiquetia"] .mq-filters {
+  grid-column: 10 / span 15;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 8px;
+  padding-left: 12px;
+}
+
+html[data-proto="maiquetia"] .mq-select {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+html[data-proto="maiquetia"] .mq-select select {
+  appearance: none;
+  width: 100%;
+  height: 48px;
+  padding: 0 36px 0 12px;
+  border: 1px solid var(--mq-hair);
+  border-radius: 0;
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 500 14px/1 var(--mq-text);
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+html[data-proto="maiquetia"] .mq-select select:hover {
+  border-color: var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-select__ico {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+html[data-proto="maiquetia"] .mq-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 4px 0 8px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+html[data-proto="maiquetia"] .mq-check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+
+html[data-proto="maiquetia"] .mq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--mq-ink);
+  border-radius: 0;
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 600 15px/1 var(--mq-text);
+  cursor: pointer;
+  transition: background-color 160ms var(--mq-ease), color 160ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-btn:hover {
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-btn--solid {
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+}
+
+html[data-proto="maiquetia"] .mq-btn--solid:hover {
+  background: var(--mq-ink-2);
+}
+
+html[data-proto="maiquetia"] .mq-btn--quiet {
+  min-height: 40px;
+  padding: 0 12px;
+  border-color: var(--mq-hair);
+  font-size: 14px;
+}
+
+html[data-proto="maiquetia"] .mq-btn--quiet:hover {
+  border-color: var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Pestañas de Status ---------- */
+
+html[data-proto="maiquetia"] .mq-tabsrow {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: center;
+  border-top: 1px solid var(--mq-ink);
+}
+
+html[data-proto="maiquetia"] .mq-tabs {
+  grid-column: 1 / span 12;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+html[data-proto="maiquetia"] .mq-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 64px;
+  padding: 16px 12px 0;
+  border: 0;
+  border-right: 1px solid var(--mq-hair);
+  background: var(--mq-ground);
+  color: var(--mq-ink);
+  font: 700 15px/1.1 var(--mq-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 200ms var(--mq-ease), color 200ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-tab:focus-visible {
+  outline-offset: -3px;
+}
+
+html[data-proto="maiquetia"] .mq-tab__floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 14px;
+  background-color: var(--mq-w);
+  background-size: var(--mq-sw-p, 16px) 100%;
+  background-repeat: round;
+  filter: grayscale(1) contrast(0.7);
+  opacity: 0.7;
+  transform: scaleY(0.43);
+  transform-origin: top;
+  transition: transform 320ms var(--mq-ease), filter 320ms var(--mq-ease), opacity 320ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-tab__n {
+  margin-left: auto;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--mq-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="maiquetia"] .mq-tab:hover {
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-tab:hover .mq-tab__floor {
+  filter: none;
+  opacity: 1;
+}
+
+html[data-proto="maiquetia"] .mq-tab[aria-selected="true"] {
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+}
+
+html[data-proto="maiquetia"] .mq-tab[aria-selected="true"] .mq-tab__n {
+  color: var(--mq-ground);
+}
+
+html[data-proto="maiquetia"] .mq-tab[aria-selected="true"] .mq-tab__floor {
+  transform: none;
+  filter: none;
+  opacity: 1;
+}
+
+html[data-proto="maiquetia"] .mq-results {
+  grid-column: 13 / span 12;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+html[data-proto="maiquetia"] .mq-count {
+  font-size: 15px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Tabla ---------- */
+
+html[data-proto="maiquetia"] .mq-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+/* Anchos en columnas de la retícula de 24: 5 + 6 + 3 + 3 + 3 + 4. */
+html[data-proto="maiquetia"] .mq-col-3 { width: 12.5%; }
+html[data-proto="maiquetia"] .mq-col-4 { width: 16.6667%; }
+html[data-proto="maiquetia"] .mq-col-5 { width: 20.8333%; }
+html[data-proto="maiquetia"] .mq-col-6 { width: 25%; }
+
+html[data-proto="maiquetia"] .mq-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 48px;
+  padding: 0;
+  background: var(--mq-ground);
+  border-top: 1px solid var(--mq-ink);
+  text-align: left;
+  vertical-align: middle;
+}
+
+html[data-proto="maiquetia"] .mq-th__floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+}
+
+html[data-proto="maiquetia"] .mq-sort,
+html[data-proto="maiquetia"] .mq-th__text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: var(--mq-ink);
+  font: 700 13px/1 var(--mq-text);
+  white-space: nowrap;
+  text-align: left;
+}
+
+html[data-proto="maiquetia"] .mq-sort {
+  cursor: pointer;
+}
+
+html[data-proto="maiquetia"] .mq-sort:hover {
+  background: var(--mq-hover);
+}
+
+html[data-proto="maiquetia"] .mq-sort:focus-visible {
+  outline-offset: -3px;
+}
+
+html[data-proto="maiquetia"] .mq-sort__ico {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-proto="maiquetia"] .mq-sort__up,
+html[data-proto="maiquetia"] .mq-sort__down {
+  opacity: 0.35;
+  transition: opacity 160ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] th[data-dir="asc"] .mq-sort__up,
+html[data-proto="maiquetia"] th[data-dir="desc"] .mq-sort__down {
+  opacity: 1;
+}
+
+html[data-proto="maiquetia"] th[data-dir="asc"] .mq-sort__down,
+html[data-proto="maiquetia"] th[data-dir="desc"] .mq-sort__up {
+  opacity: 0;
+}
+
+html[data-proto="maiquetia"] .mq-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--mq-hair);
+  vertical-align: middle;
+}
+
+html[data-proto="maiquetia"] .mq-row {
+  transition: background-color 120ms var(--mq-ease);
+}
+
+@media (hover: hover) {
+  html[data-proto="maiquetia"] .mq-row:hover {
+    background: var(--mq-hover);
+  }
+}
+
+html[data-proto="maiquetia"] .mq-name {
+  font-family: var(--mq-display);
+  font-weight: 700;
+  font-size: 16.5px;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+
+html[data-proto="maiquetia"] .mq-name:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--mq-mag);
+}
+
+html[data-proto="maiquetia"] .mq-site {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  overflow: clip;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--mq-ink-2) !important;
+  text-decoration: none;
+}
+
+html[data-proto="maiquetia"] .mq-site:hover {
+  color: var(--mq-ink) !important;
+  text-decoration: underline;
+}
+
+html[data-proto="maiquetia"] .mq-c-status {
+  line-height: 1.3;
+}
+
+html[data-proto="maiquetia"] .mq-st {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  vertical-align: middle;
+}
+
+html[data-proto="maiquetia"] .mq-st__label {
+  font-weight: 600;
+}
+
+html[data-proto="maiquetia"] .mq-chip {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 3px 6px 2px;
+  border: 1px solid var(--mq-ink);
+  font: 700 11px/1 var(--mq-text);
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+html[data-proto="maiquetia"] .mq-c-status .mq-chip {
+  display: block;
+  width: fit-content;
+  margin: 4px 0 0 42px;
+}
+
+html[data-proto="maiquetia"] .mq-chip--solid {
+  background: var(--mq-ink);
+  color: var(--mq-ground);
+}
+
+html[data-proto="maiquetia"] .mq-c-date {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+html[data-proto="maiquetia"] .mq-c-meta {
+  color: var(--mq-ink-2);
+}
+
+html[data-proto="maiquetia"] .mq-c-tags {
+  line-height: 1.75;
+}
+
+html[data-proto="maiquetia"] .mq-table td:last-child {
+  padding-right: 0;
+}
+
+html[data-proto="maiquetia"] .mq-tag {
+  display: inline-block;
+  margin: 0 3px 0 0;
+  padding: 1px 5px;
+  background: var(--mq-tag);
+  color: var(--mq-ink-2);
+  font-size: 12px;
+  line-height: 1.3;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+html[data-proto="maiquetia"] .mq-tag--more {
+  background: none;
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="maiquetia"] #stage[data-density="compact"] .mq-table td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+html[data-proto="maiquetia"] #stage[data-density="compact"] .mq-site {
+  display: none;
+}
+
+html[data-proto="maiquetia"] #stage[data-density="compact"] .mq-name {
+  font-size: 15px;
+}
+
+/* ---------- Vacío ---------- */
+
+html[data-proto="maiquetia"] .mq-empty {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  padding: 40px 0 48px;
+  border-bottom: 1px solid var(--mq-hair);
+}
+
+html[data-proto="maiquetia"] .mq-empty__floor {
+  width: 100%;
+  height: 24px;
+  background-color: var(--mq-w);
+  background-image: linear-gradient(90deg, var(--mq-k) 0 25%, var(--mq-w) 25% 100%);
+  background-size: 16px 100%;
+  background-repeat: round;
+  opacity: 0.35;
+}
+
+html[data-proto="maiquetia"] .mq-empty p {
+  margin: 0;
+  font-family: var(--mq-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ---------- Contribuir ---------- */
+
+html[data-proto="maiquetia"] .mq-contrib {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 40px;
+  padding: 32px 0 40px;
+}
+
+html[data-proto="maiquetia"] .mq-contrib a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-family: var(--mq-display);
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: underline;
+  text-decoration-color: var(--mq-hair);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 160ms var(--mq-ease);
+}
+
+html[data-proto="maiquetia"] .mq-contrib a:hover {
+  text-decoration-color: var(--mq-mag);
+}
+
+/* ---------- Pie ---------- */
+
+html[data-proto="maiquetia"] .mq-foot {
+  padding-bottom: 96px;
+}
+
+html[data-proto="maiquetia"] .mq-foot__floor {
+  grid-column: full-start / full-end;
+  height: 24px;
+}
+
+html[data-proto="maiquetia"] .mq-foot p {
+  margin: 0;
+  padding-top: 20px;
+  font-size: 13px;
+  color: var(--mq-ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-proto="maiquetia"] .mq-foot a:hover {
+  color: var(--mq-ink);
+}
+
+/* ---------- Intermedio ---------- */
+
+@media (max-width: 1100px) {
+  html[data-proto="maiquetia"] .mq-floor {
+    height: 128px;
+  }
+
+  html[data-proto="maiquetia"] .mq-title {
+    grid-column: 1 / -1;
+  }
+
+  html[data-proto="maiquetia"] .mq-side {
+    grid-column: 1 / span 18;
+    padding-top: 20px;
+  }
+
+  html[data-proto="maiquetia"] .mq-field {
+    grid-column: 1 / -1;
+  }
+
+  html[data-proto="maiquetia"] .mq-filters {
+    grid-column: 1 / -1;
+    padding: 8px 0 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-tabs {
+    grid-column: 1 / span 16;
+  }
+
+  html[data-proto="maiquetia"] .mq-results {
+    grid-column: 17 / span 8;
+  }
+}
+
+/* ---------- Móvil ---------- */
+
+@media (max-width: 760px) {
+  html[data-proto="maiquetia"] {
+    --mq-stagger: 60ms;
+    --mq-n: 3;
+    scroll-padding-top: 16px;
+  }
+
+  html[data-proto="maiquetia"] .mq-nav__in {
+    flex-wrap: wrap;
+    gap: 0 12px;
+    min-height: 0;
+    padding: 6px 0 2px;
+  }
+
+  html[data-proto="maiquetia"] .mq-brand {
+    order: 1;
+  }
+
+  html[data-proto="maiquetia"] .mq-nav__tools {
+    order: 2;
+    gap: 8px;
+  }
+
+  html[data-proto="maiquetia"] .mq-nav__links {
+    order: 3;
+    flex: 1 1 100%;
+    gap: 24px;
+  }
+
+  html[data-proto="maiquetia"] .mq-gh {
+    padding: 0 4px;
+  }
+
+  html[data-proto="maiquetia"] .mq-menu {
+    width: min(280px, calc(100vw - 32px));
+  }
+
+  html[data-proto="maiquetia"] .mq-floor {
+    height: 80px;
+  }
+
+  html[data-proto="maiquetia"] .mq-floor > .mq-floor__m {
+    grid-column: span 6;
+  }
+
+  html[data-proto="maiquetia"] .mq-floor > .mq-floor__m:first-child {
+    grid-column: full-start / span 7;
+  }
+
+  html[data-proto="maiquetia"] .mq-floor > .mq-floor__m:nth-child(4) {
+    grid-column: span 7 / full-end;
+  }
+
+  html[data-proto="maiquetia"] .mq-floor > .mq-floor__m:nth-child(n+5) {
+    display: none;
+  }
+
+  html[data-proto="maiquetia"] .mq-head {
+    padding: 28px 0 24px;
+  }
+
+  html[data-proto="maiquetia"] .mq-title {
+    font-size: 34px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  html[data-proto="maiquetia"] .mq-side {
+    grid-column: 1 / -1;
+    gap: 14px;
+    padding-top: 16px;
+  }
+
+  html[data-proto="maiquetia"] .mq-lede {
+    font-size: 16px;
+  }
+
+  html[data-proto="maiquetia"] .mq-summary {
+    gap: 4px 16px;
+    font-size: 14px;
+  }
+
+  html[data-proto="maiquetia"] .mq-note {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  html[data-proto="maiquetia"] .mq-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 16px;
+  }
+
+  html[data-proto="maiquetia"] .mq-field {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-field__ico {
+    left: 12px;
+  }
+
+  html[data-proto="maiquetia"] .mq-input {
+    padding: 0 8px 0 40px;
+    font-weight: 400;
+  }
+
+  html[data-proto="maiquetia"] .mq-filters-toggle .mq-ico {
+    display: none;
+  }
+
+  html[data-proto="maiquetia"] .mq-search .mq-filters-toggle {
+    display: inline-flex;
+    gap: 6px;
+    min-height: 48px;
+    padding: 0 12px;
+  }
+
+  html[data-proto="maiquetia"] .mq-filters {
+    display: none;
+    flex: 1 1 100%;
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-filters.is-open {
+    display: grid;
+  }
+
+  html[data-proto="maiquetia"] .mq-tabsrow {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-tabs {
+    flex: 1 1 100%;
+    grid-template-columns: repeat(4, auto);
+    border-top: 1px solid var(--mq-ink);
+    border-bottom: 1px solid var(--mq-ink);
+  }
+
+  html[data-proto="maiquetia"] .mq-tab {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 2px;
+    min-height: 60px;
+    padding: 14px 8px 6px;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+  }
+
+  html[data-proto="maiquetia"] .mq-tab:last-child {
+    border-right: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-tab__n {
+    margin-left: 0;
+    font-size: 13px;
+  }
+
+  html[data-proto="maiquetia"] .mq-tab__floor {
+    height: 10px;
+    transform: scaleY(0.6);
+  }
+
+  html[data-proto="maiquetia"] .mq-results {
+    flex: 1 1 100%;
+    justify-content: space-between;
+    min-height: 44px;
+  }
+
+  html[data-proto="maiquetia"] .mq-count {
+    font-size: 14px;
+  }
+
+  /* Tabla reflujada: cada fila apilada, la respuesta arriba. */
+  html[data-proto="maiquetia"] .mq-table,
+  html[data-proto="maiquetia"] .mq-table thead,
+  html[data-proto="maiquetia"] .mq-table tbody {
+    display: block;
+  }
+
+  html[data-proto="maiquetia"] .mq-table colgroup {
+    display: none;
+  }
+
+  html[data-proto="maiquetia"] .mq-table thead tr {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 4px 0 10px;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+    mask-image: linear-gradient(to right, #000 85%, transparent);
+  }
+
+  html[data-proto="maiquetia"] .mq-table thead th {
+    position: static;
+    flex: none;
+    height: auto;
+    border: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-table thead .mq-th--static,
+  html[data-proto="maiquetia"] .mq-th__floor {
+    display: none;
+  }
+
+  html[data-proto="maiquetia"] .mq-sort {
+    height: 44px;
+    padding: 0 8px 0 12px;
+    border: 1px solid var(--mq-hair);
+  }
+
+  html[data-proto="maiquetia"] th[aria-sort="ascending"] .mq-sort,
+  html[data-proto="maiquetia"] th[aria-sort="descending"] .mq-sort {
+    border-color: var(--mq-ink);
+  }
+
+  html[data-proto="maiquetia"] .mq-table tbody {
+    border-top: 1px solid var(--mq-ink);
+  }
+
+  /* Fila apilada: nombre y fecha arriba, Status completo debajo, luego metadatos. */
+  html[data-proto="maiquetia"] .mq-row {
+    display: grid;
+    grid-template-columns: 32px auto minmax(0, 1fr) auto;
+    align-items: center;
+    row-gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--mq-hair);
+  }
+
+  html[data-proto="maiquetia"] .mq-table td {
+    display: block;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-name {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 10px;
+    padding-right: 12px !important;
+  }
+
+  html[data-proto="maiquetia"] .mq-name {
+    font-size: 18px;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-name .mq-chip {
+    margin-left: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-site {
+    display: inline-block;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-date {
+    grid-column: 4;
+    grid-row: 1;
+    align-self: start;
+    padding-top: 3px !important;
+    font-size: 14px;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-status {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+  }
+
+  html[data-proto="maiquetia"] .mq-st {
+    gap: 8px;
+  }
+
+  html[data-proto="maiquetia"] .mq-st .mq-sw {
+    width: 24px;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-status .mq-chip {
+    display: inline-block;
+    margin: 0;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-method,
+  html[data-proto="maiquetia"] .mq-c-platform {
+    grid-row: 3;
+    font-size: 13px;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-method {
+    grid-column: 2;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-platform {
+    grid-column: 3 / -1;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-platform::before {
+    content: "·";
+    margin: 0 8px;
+    color: var(--mq-ink-3);
+  }
+
+  html[data-proto="maiquetia"] .mq-c-tags {
+    grid-column: 2 / -1;
+    grid-row: 4;
+    line-height: 1.6;
+  }
+
+  html[data-proto="maiquetia"] .mq-c-tags:not(:has(.mq-tag)) {
+    display: none !important;
+  }
+
+  html[data-proto="maiquetia"] #stage[data-density="compact"] .mq-row {
+    padding: 8px 0;
+    row-gap: 2px;
+  }
+
+  html[data-proto="maiquetia"] #stage[data-density="compact"] .mq-c-tags {
+    display: none;
+  }
+
+  html[data-proto="maiquetia"] .mq-contrib {
+    flex-direction: column;
+    gap: 4px;
+    padding: 24px 0 32px;
+  }
+
+  html[data-proto="maiquetia"] .mq-contrib a {
+    font-size: 16px;
+  }
+}
+
+/* ---------- Movimiento reducido ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-proto="maiquetia"] #stage *,
+  html[data-proto="maiquetia"] #stage *::before,
+  html[data-proto="maiquetia"] #stage *::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    animation: none !important;
+  }
+}

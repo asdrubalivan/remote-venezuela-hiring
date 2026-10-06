@@ -1,0 +1,227 @@
+{#
+  PROTOTIPO — v2 Piso de Maiquetía. Código descartable.
+  Markup propio a partir de _reference.html: mismos textos y mismos ganchos data-rvh-*.
+  El piso (banda superior, franja del encabezado de la tabla, pie) se compone de
+  elementos .mq-ind que repiten un mismo módulo de franjas y comparten la retícula de
+  24 columnas del contenido; su color lo deciden #stage[data-status] y
+  #stage[data-mq-empty] (ver style.css y script.js).
+#}
+<svg class="mq-defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    <symbol id="mq-flag" viewBox="0 0 180 120">
+      <rect width="180" height="40" fill="#ffcc00" />
+      <rect y="40" width="180" height="40" fill="#00247d" />
+      <rect y="80" width="180" height="40" fill="#cf142b" />
+      <g fill="#ffffff">
+        <path transform="translate(61.8 74.7)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(67 65.7)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(75 59)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(84.8 55.5)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(95.2 55.5)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(105 59)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(113 65.7)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+        <path transform="translate(118.2 74.7)" d="M0-5L1.12-1.55 4.76-1.55 1.82.59 2.94 4.05 0 1.91-2.94 4.05-1.82.59-4.76-1.55-1.12-1.55Z" />
+      </g>
+    </symbol>
+    <symbol id="mq-i-settings" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></symbol>
+    <symbol id="mq-i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" /><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" /></symbol>
+    <symbol id="mq-i-moon" viewBox="0 0 24 24"><path d="M19.5 14.6A7.5 7.5 0 0 1 9.4 4.5a7.5 7.5 0 1 0 10.1 10.1Z" /></symbol>
+    <symbol id="mq-i-out" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" /></symbol>
+    <symbol id="mq-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" /></symbol>
+    <symbol id="mq-i-filter" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4" /></symbol>
+    <symbol id="mq-i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" /></symbol>
+    <symbol id="mq-i-down" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5" /></symbol>
+  </defs>
+</svg>
+
+<a class="mq-skip" href="#main-content">Saltar al contenido</a>
+
+<header class="mq-nav mq-frame" role="banner">
+  <div class="mq-nav__in">
+    <a class="mq-brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
+      <span class="mq-brand__tile mq-sw mq-sw--all" aria-hidden="true"></span>
+      <span class="mq-brand__words">
+        <span class="mq-brand__a">Remote Venezuela</span>
+        <span class="mq-brand__b"><svg class="mq-flag" aria-hidden="true" focusable="false"><use href="#mq-flag" /></svg> Hiring</span>
+      </span>
+    </a>
+    <nav class="mq-nav__links" aria-label="Navegación principal">
+      <a href="./" aria-current="page">Empresas</a>
+      <a href="../stats.html">Estadísticas</a>
+    </nav>
+    <div class="mq-nav__tools">
+      <div class="mq-settings">
+        <button type="button" class="mq-iconbtn" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">
+          <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-settings" /></svg>
+        </button>
+        <div class="mq-menu" data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+          <div class="mq-menu__label">Tema</div>
+          <div class="mq-seg" role="radiogroup" aria-label="Tema">
+            <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro"><svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-sun" /></svg></button>
+            <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro"><svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-moon" /></svg></button>
+          </div>
+          <div class="mq-menu__label">Densidad de la tabla</div>
+          <div class="mq-seg" role="radiogroup" aria-label="Densidad de la tabla">
+            <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+            <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+          </div>
+        </div>
+      </div>
+      <a class="mq-gh" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub <svg class="mq-ico mq-ico--sm" aria-hidden="true" focusable="false"><use href="#mq-i-out" /></svg></a>
+    </div>
+  </div>
+</header>
+
+{# El piso visto desde arriba: una losa por cada 3 columnas de la retícula; las de los extremos
+   absorben los márgenes. Cada losa transiciona su color con su propio retardo (la ola). #}
+<div class="mq-floor mq-frame" aria-hidden="true">
+  {%- for i in range(8) %}
+  <span class="mq-floor__m mq-ind" style="--i: {{ i }}"></span>
+  {%- endfor %}
+</div>
+
+<main id="main-content" class="mq-main mq-frame">
+  <header class="mq-head">
+    <h1 class="mq-title">Compatibilidad de Contratación Remota en <svg class="mq-flag mq-flag--title" role="img" aria-label="bandera de Venezuela" focusable="false"><use href="#mq-flag" /></svg> Venezuela</h1>
+    <div class="mq-side">
+      <p class="mq-lede">Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+      <div class="mq-summary" aria-label="Resumen">
+        <span class="mq-summary__item"><span class="mq-sw mq-sw--all" aria-hidden="true"></span><strong>{{ visible_count }}</strong> empresas</span>
+        <span class="mq-summary__item"><span class="mq-sw mq-sw--accepts" aria-hidden="true"></span><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
+        <span class="mq-summary__item mq-summary__date">actualizado {{ format_date(today) }}</span>
+      </div>
+      <div class="mq-note" role="note">
+        No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+        La compatibilidad puede cambiar — siempre verifica directamente.
+        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub <svg class="mq-ico mq-ico--sm" aria-hidden="true" focusable="false"><use href="#mq-i-out" /></svg></a>
+      </div>
+    </div>
+  </header>
+
+  <section class="mq-search" role="search" aria-label="Filtrar empresas">
+    <div class="mq-field">
+      <svg class="mq-ico mq-field__ico" aria-hidden="true" focusable="false"><use href="#mq-i-search" /></svg>
+      <input class="mq-input" type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+    </div>
+
+    <button type="button" class="mq-btn mq-filters-toggle" data-rvh-filter-toggle aria-expanded="false" aria-controls="mq-filter-panel">
+      <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-filter" /></svg>
+      Filtros <span class="mq-badge" data-rvh-filter-count hidden>0</span>
+    </button>
+
+    <div class="mq-filters" id="mq-filter-panel" data-rvh-filter-panel>
+      <span class="mq-select">
+        <select data-rvh-filter="method" aria-label="Filtrar por verificación">
+          <option value="all">Verificación: Todas</option>
+          {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+        </select>
+        <svg class="mq-ico mq-select__ico" aria-hidden="true" focusable="false"><use href="#mq-i-down" /></svg>
+      </span>
+      <span class="mq-select">
+        <select data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+          <option value="all">Plataforma: Todas</option>
+          {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+        </select>
+        <svg class="mq-ico mq-select__ico" aria-hidden="true" focusable="false"><use href="#mq-i-down" /></svg>
+      </span>
+      <span class="mq-select">
+        <select data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+          <option value="all">Etiqueta: Todas</option>
+          {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+        </select>
+        <svg class="mq-ico mq-select__ico" aria-hidden="true" focusable="false"><use href="#mq-i-down" /></svg>
+      </span>
+      <label class="mq-check"><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+    </div>
+  </section>
+
+  <div class="mq-tabsrow">
+    <div class="mq-tabs" role="tablist" aria-label="Filtrar por estado">
+      {% for tab in status_tabs %}
+      <button type="button" role="tab" class="mq-tab" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}" aria-controls="mq-table">
+        <span class="mq-tab__floor mq-sw--{{ tab.value }}" aria-hidden="true"></span>
+        <span class="mq-tab__label">{{ tab.label }}</span> <span class="mq-tab__n">{{ tab.count }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <div class="mq-results">
+      <span class="mq-count" data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
+      <button type="button" class="mq-btn mq-btn--quiet" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">
+        <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-x" /></svg>
+        Limpiar
+      </button>
+    </div>
+  </div>
+
+  <div class="mq-tablewrap">
+    <table class="mq-table" id="mq-table">
+      <colgroup>
+        <col class="mq-col-5" /><col class="mq-col-6" /><col class="mq-col-3" /><col class="mq-col-3" /><col class="mq-col-3" /><col class="mq-col-4" />
+      </colgroup>
+      <thead>
+        <tr>
+          {%- set sortable = [("name", "Empresa", 0), ("status", "Estado", 2), ("last_checked", "Últ. verificación", 4), ("verification_method", "Verificación", 5), ("hiring_platform", "Plataforma", 6)] %}
+          {%- for key, label, i in sortable %}
+          <th scope="col" data-rvh-sort="{{ key }}">
+            <button type="button" class="mq-sort">{{ label }}<svg class="mq-sort__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="mq-sort__up" d="m8 10 4-4 4 4" /><path class="mq-sort__down" d="m8 14 4 4 4-4" /></svg></button>
+            <span class="mq-th__floor mq-ind" style="--i: {{ i }}" aria-hidden="true"></span>
+          </th>
+          {%- endfor %}
+          <th scope="col" class="mq-th--static">
+            <span class="mq-th__text">Etiquetas</span>
+            <span class="mq-th__floor mq-ind" style="--i: 7" aria-hidden="true"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for company in companies %}
+        {% set stale = company.is_stale() %}
+        <tr class="mq-row" data-rvh-row
+            data-status="{{ company.status.value }}"
+            data-method="{{ company.verification_method.value }}"
+            data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+            data-tags="{{ company.tags | join(',') }}"
+            data-archived="{{ '1' if company.archived else '0' }}"
+            data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+            data-name="{{ company.name }}"
+            data-last-checked="{{ company.last_checked.isoformat() }}">
+          <td class="mq-c-name">
+            <a class="mq-name" href="company/{{ company.id }}.html">{{ company.name }}</a>
+            {% if company.archived %}<span class="mq-chip mq-chip--solid">ARCHIVADA</span>{% endif %}
+            <a class="mq-site" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}</a>
+          </td>
+          <td class="mq-c-status"><span class="mq-st"><span class="mq-sw mq-sw--{{ company.status.value }}" aria-hidden="true"></span><span class="mq-st__label">{{ status_labels[company.status.value] }}</span></span>{% if stale %} <span class="mq-chip">DESACT.</span>{% endif %}</td>
+          <td class="mq-c-date"><time datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time></td>
+          <td class="mq-c-meta mq-c-method">{{ verification_labels[company.verification_method.value] }}</td>
+          <td class="mq-c-meta mq-c-platform">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</td>
+          <td class="mq-c-tags">
+            {% for tag in company.tags[:3] %}<span class="mq-tag">{{ tag }}</span>{% endfor %}
+            {% if company.tags|length > 3 %}<span class="mq-tag mq-tag--more">+{{ company.tags|length - 3 }}</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mq-empty" data-rvh-empty role="status" aria-live="polite" hidden>
+    <span class="mq-empty__floor" aria-hidden="true"></span>
+    <p>Ninguna empresa coincide con los filtros.</p>
+    <button type="button" class="mq-btn mq-btn--solid" data-rvh-clear>Limpiar filtros</button>
+  </div>
+
+  <div class="mq-contrib">
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-out" /></svg></a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-out" /></svg></a>
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos <svg class="mq-ico" aria-hidden="true" focusable="false"><use href="#mq-i-out" /></svg></a>
+  </div>
+</main>
+
+<footer class="mq-foot mq-frame" role="contentinfo">
+  <span class="mq-foot__floor mq-ind" aria-hidden="true"></span>
+  <p>
+    Generado el {{ generated_at }} ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>

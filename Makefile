@@ -1,4 +1,4 @@
-.PHONY: setup install install-hooks test lint validate build serve
+.PHONY: setup install install-hooks test lint validate build serve proto
 
 setup: install install-hooks
 
@@ -32,3 +32,6 @@ update-readme:  ## Actualiza la tabla de empresas en README.md
 
 serve: build
 	cd site && python -m http.server 8080
+
+proto:  ## PROTOTIPO: construye y sirve las 5 variantes de la portada
+	.venv/bin/python prototypes/rediseno-portada/build.py --serve

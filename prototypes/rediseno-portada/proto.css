@@ -1,0 +1,41 @@
+/* PROTOTIPO — estilos de la barra flotante (fuera de cualquier variante). */
+.proto-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  max-width: calc(100vw - 24px);
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.92);
+  color: #f2f2f2;
+  font: 500 12px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+}
+.proto-bar[hidden] { display: none; }
+.proto-bar button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: inherit;
+  font: inherit;
+}
+.proto-bar button:hover { background: rgba(255, 255, 255, 0.12); }
+.proto-bar button:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
+.proto-bar-picks { display: flex; gap: 2px; }
+.proto-bar-pick[aria-current="true"] { background: #f2f2f2; color: #141416; font-weight: 700; }
+.proto-bar-label { display: grid; gap: 1px; padding: 0 6px; min-width: 0; }
+.proto-bar-label strong { white-space: nowrap; }
+.proto-bar-label span { color: #a8a8ad; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+@media (max-width: 520px) {
+  .proto-bar-label span { display: none; }
+}

@@ -1,0 +1,241 @@
+{#
+  PROTOTIPO — v3 Boleto. El talonario de un pasaje de la era jet: cada Empresa es
+  un cupón (cuerpo | troquel | talón) y su Status se estampa como un sello.
+  Los textos son los de _reference.html, al pie de la letra; los ganchos data-rvh-*
+  son los del contrato de proto.js. Las clases bo-* solo existen en esta variante.
+#}
+<svg class="bo-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    {# Tinta de sello: borde irregular (desplazamiento) + poros donde no agarró la tinta. #}
+    <filter id="boleto-ink" x="-6%" y="-12%" width="112%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="aspero" />
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="11" result="grano" />
+      <feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -14 9.6" result="poros" />
+      <feComposite in="aspero" in2="poros" operator="in" />
+    </filter>
+    {# Bandera de Venezuela: amarillo, azul con el arco de 8 estrellas, rojo. #}
+    <symbol id="boleto-flag" viewBox="0 0 30 20">
+      <rect width="30" height="20" rx="2" fill="#CF142B" />
+      <path d="M2 0h26a2 2 0 0 1 2 2v11.34H0V2a2 2 0 0 1 2-2Z" fill="#00247D" />
+      <path d="M2 0h26a2 2 0 0 1 2 2v4.67H0V2a2 2 0 0 1 2-2Z" fill="#FFCC00" />
+      <g fill="#fff">
+        <circle cx="10.02" cy="12.3" r=".62" /><circle cx="10.94" cy="10.7" r=".62" />
+        <circle cx="12.35" cy="9.55" r=".62" /><circle cx="14.08" cy="8.95" r=".62" />
+        <circle cx="15.92" cy="8.95" r=".62" /><circle cx="17.65" cy="9.55" r=".62" />
+        <circle cx="19.06" cy="10.7" r=".62" /><circle cx="19.98" cy="12.3" r=".62" />
+      </g>
+    </symbol>
+    {# Iconos de trazo 1.75, extremos redondeados. #}
+    <symbol id="boleto-i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z" />
+      <circle cx="12" cy="12" r="3" />
+    </symbol>
+    <symbol id="boleto-i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </symbol>
+    <symbol id="boleto-i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </symbol>
+    <symbol id="boleto-i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7" /><path d="m20.5 20.5-4.35-4.35" />
+    </symbol>
+    <symbol id="boleto-i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 6h10M17 6h4M3 12h3M10 12h11M3 18h12M19 18h2" />
+      <circle cx="15" cy="6" r="2" /><circle cx="8" cy="12" r="2" /><circle cx="17" cy="18" r="2" />
+    </symbol>
+    <symbol id="boleto-i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17 17 7M8 7h9v9" />
+    </symbol>
+    <symbol id="boleto-i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 6l12 12M18 6 6 18" />
+    </symbol>
+  </defs>
+</svg>
+
+<a class="bo-skip" href="#main-content">Saltar al contenido</a>
+
+<header class="bo-top" role="banner">
+  <div class="bo-top__in">
+    <a class="bo-brand" href="./" aria-label="Remote Venezuela Hiring — inicio">
+      <svg class="bo-flag" aria-hidden="true" focusable="false"><use href="#boleto-flag" /></svg>
+      <span class="bo-brand__txt">
+        <span class="bo-brand__a">Remote Venezuela</span>
+        <span class="bo-brand__b">Hiring</span>
+      </span>
+    </a>
+    <nav class="bo-nav" aria-label="Navegación principal">
+      <a href="./" aria-current="page">Empresas</a>
+      <a href="../stats.html">Estadísticas</a>
+    </nav>
+    <div class="bo-tools">
+      <button type="button" class="bo-iconbtn" data-rvh-settings-toggle aria-haspopup="true" aria-expanded="false" aria-label="Ajustes de visualización">
+        <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-gear" /></svg>
+      </button>
+      <div class="bo-menu" data-rvh-settings-menu role="group" aria-label="Ajustes de visualización" hidden>
+        <div class="bo-lbl">Tema</div>
+        <div class="bo-seg" role="radiogroup" aria-label="Tema">
+          <button type="button" role="radio" data-rvh-theme="light" aria-checked="true" aria-label="Tema claro">
+            <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-sun" /></svg>
+          </button>
+          <button type="button" role="radio" data-rvh-theme="dark" aria-checked="false" aria-label="Tema oscuro">
+            <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-moon" /></svg>
+          </button>
+        </div>
+        <div class="bo-lbl">Densidad de la tabla</div>
+        <div class="bo-seg" role="radiogroup" aria-label="Densidad de la tabla">
+          <button type="button" role="radio" data-rvh-density="comfortable" aria-checked="true">Cómoda</button>
+          <button type="button" role="radio" data-rvh-density="compact" aria-checked="false">Compacta</button>
+        </div>
+      </div>
+      <a class="bo-gh" href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main id="main-content" class="bo-main">
+  <header class="bo-cover">
+    <h1 class="bo-title">Compatibilidad de Contratación Remota en <span class="bo-nw"><svg class="bo-flag bo-flag--title" aria-hidden="true" focusable="false"><use href="#boleto-flag" /></svg> Venezuela</span></h1>
+    <p class="bo-lede">Base de datos pública, mantenida por la comunidad, de empresas que pueden aceptar candidatos remotos desde Venezuela.</p>
+    <div class="bo-slip" role="group" aria-label="Resumen">
+      <span class="bo-slip__f"><strong class="bo-slip__n">{{ visible_count }}</strong> <span class="bo-slip__l">empresas</span></span>
+      <span class="bo-slip__f"><strong class="bo-slip__n">{{ hero_accepts }}</strong> <span class="bo-slip__l">probablemente aceptan</span></span>
+      <span class="bo-slip__f bo-slip__f--date"><span class="bo-slip__l">actualizado</span> <span class="bo-slip__n">{{ format_date(today) }}</span></span>
+    </div>
+    <div class="bo-terms" role="note">
+      No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+      La compatibilidad puede cambiar — siempre verifica directamente.
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub<svg class="bo-ico bo-ico--ext" aria-hidden="true" focusable="false"><use href="#boleto-i-ext" /></svg></a>
+    </div>
+  </header>
+
+  <section class="bo-controls" role="search" aria-label="Filtrar empresas">
+    <div class="bo-search">
+      <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-search" /></svg>
+      <input type="search" data-rvh-search placeholder="Buscar empresas, etiquetas..." autocomplete="off" aria-label="Buscar empresas" />
+    </div>
+
+    <button type="button" class="bo-btn bo-btn--line bo-filters-toggle" data-rvh-filter-toggle aria-expanded="false" aria-controls="bo-filter-panel">
+      <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-sliders" /></svg>
+      Filtros <span class="bo-badge" data-rvh-filter-count hidden>0</span>
+    </button>
+
+    <div class="bo-filter-panel" id="bo-filter-panel" data-rvh-filter-panel>
+      <select class="bo-select" data-rvh-filter="method" aria-label="Filtrar por verificación">
+        <option value="all">Verificación: Todas</option>
+        {% for value in verification_options %}<option value="{{ value }}">{{ verification_labels[value] }}</option>{% endfor %}
+      </select>
+      <select class="bo-select" data-rvh-filter="platform" aria-label="Filtrar por plataforma">
+        <option value="all">Plataforma: Todas</option>
+        {% for value in platform_options %}<option value="{{ value }}">{{ platform_labels[value] }}</option>{% endfor %}
+      </select>
+      <select class="bo-select" data-rvh-filter="tag" aria-label="Filtrar por etiqueta">
+        <option value="all">Etiqueta: Todas</option>
+        {% for tag in tag_options %}<option value="{{ tag }}">{{ tag }}</option>{% endfor %}
+      </select>
+      <label class="bo-check"><input type="checkbox" data-rvh-archived /> Mostrar archivadas</label>
+    </div>
+
+    <button type="button" class="bo-btn bo-btn--quiet" data-rvh-clear data-rvh-autohide hidden aria-label="Limpiar todos los filtros">
+      <svg class="bo-ico" aria-hidden="true" focusable="false"><use href="#boleto-i-x" /></svg>
+      Limpiar
+    </button>
+  </section>
+
+  <div class="bo-tabsrow">
+    <div class="bo-tabs" role="tablist" aria-label="Filtrar por estado">
+      {% for tab in status_tabs %}
+      <button type="button" role="tab" class="bo-tab bo-tab--{{ tab.value }}" data-rvh-tab="{{ tab.value }}" aria-selected="{{ 'true' if tab.value == 'all' else 'false' }}">
+        <span class="bo-tab__l">{{ tab.label }}</span> <span class="bo-tab__n">{{ tab.count }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <span class="bo-count" data-rvh-count aria-live="polite">{{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}</span>
+  </div>
+
+  <div class="bo-tray">
+    <table class="bo-table" role="table">
+      <thead role="rowgroup">
+        <tr class="bo-head" role="row">
+          {%- set sort_icon -%}
+          <svg class="bo-sorticon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="bo-sorticon__up" d="m8 10 4-4 4 4" /><path class="bo-sorticon__dn" d="m8 14 4 4 4-4" /></svg>
+          {%- endset %}
+          <th scope="col" role="columnheader" class="bo-c bo-c--name" data-rvh-sort="name"><button type="button" class="bo-sort">Empresa{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="bo-c bo-c--method" data-rvh-sort="verification_method"><button type="button" class="bo-sort">Verificación{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="bo-c bo-c--platform" data-rvh-sort="hiring_platform"><button type="button" class="bo-sort">Plataforma{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="bo-c bo-c--tags"><span class="bo-sort bo-sort--static">Etiquetas</span></th>
+          <th scope="col" role="columnheader" class="bo-c bo-c--date" data-rvh-sort="last_checked"><button type="button" class="bo-sort">Últ. verificación{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="bo-c bo-c--status" data-rvh-sort="status"><button type="button" class="bo-sort">Estado{{ sort_icon }}</button></th>
+        </tr>
+      </thead>
+      <tbody role="rowgroup">
+        {% for company in companies %}
+        {% set stale = company.is_stale() %}
+        {% set domain = company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') %}
+        <tr class="bo-coupon bo-coupon--{{ company.status.value }}{% if stale %} is-stale{% endif %}" role="row"
+            style="--bo-rot: {{ ((((loop.index * 37) % 9) - 6) * 0.55) | round(2) }}deg; --bo-dx: {{ ((loop.index * 53) % 7) - 3 }}px"
+            data-rvh-row
+            data-status="{{ company.status.value }}"
+            data-method="{{ company.verification_method.value }}"
+            data-platform="{{ company.hiring_platform.value if company.hiring_platform else 'unknown' }}"
+            data-tags="{{ company.tags | join(',') }}"
+            data-archived="{{ '1' if company.archived else '0' }}"
+            data-search="{{ company.name | lower }} {{ company.tags | join(' ') | lower }} {{ (company.notes or '') | lower }}"
+            data-name="{{ company.name }}"
+            data-last-checked="{{ company.last_checked.isoformat() }}">
+          <td class="bo-c bo-c--name" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Empresa</span>
+            <a class="bo-name" href="company/{{ company.id }}.html">{{ company.name }}</a>
+            {% if company.archived %}<span class="bo-mini bo-mini--archived"><span class="bo-mini__ink">ARCHIVADA</span></span>{% endif %}
+            <a class="bo-site" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ domain }}<svg class="bo-ico bo-ico--ext" aria-hidden="true" focusable="false"><use href="#boleto-i-ext" /></svg></a>
+          </td>
+          <td class="bo-c bo-c--method" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Verificación</span>
+            <span class="bo-val">{{ verification_labels[company.verification_method.value] }}</span>
+          </td>
+          <td class="bo-c bo-c--platform" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Plataforma</span>
+            <span class="bo-val">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</span>
+          </td>
+          <td class="bo-c bo-c--tags" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Etiquetas</span>
+            <span class="bo-tags">{% for tag in company.tags[:3] %}<span class="bo-tag">{{ tag }}</span>{% endfor %}{% if company.tags|length > 3 %}<span class="bo-tag bo-tag--more">+{{ company.tags|length - 3 }}</span>{% endif %}</span>
+          </td>
+          <td class="bo-c bo-c--date" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Últ. verificación</span>
+            <time class="bo-date" datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time>
+            {% if stale %}<span class="bo-mini bo-mini--stale"><span class="bo-mini__ink">DESACT.</span></span>{% endif %}
+          </td>
+          <td class="bo-c bo-c--status" role="cell">
+            <span class="bo-lbl" aria-hidden="true">Estado</span>
+            <span class="bo-stamp bo-stamp--{{ company.status.value }}"><span class="bo-stamp__ink">{{ status_labels[company.status.value] }}</span></span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="bo-empty" data-rvh-empty role="status" aria-live="polite" hidden>
+      <div class="bo-empty__body">
+        <p>Ninguna empresa coincide con los filtros.</p>
+        <button type="button" class="bo-btn bo-btn--red" data-rvh-clear>Limpiar filtros</button>
+      </div>
+      <div class="bo-empty__stub" aria-hidden="true"><span class="bo-empty__mark"></span></div>
+    </div>
+  </div>
+
+  <div class="bo-contrib">
+    <a class="bo-btn bo-btn--red" href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues<svg class="bo-ico bo-ico--ext" aria-hidden="true" focusable="false"><use href="#boleto-i-ext" /></svg></a>
+    <a class="bo-btn bo-btn--line" href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML<svg class="bo-ico bo-ico--ext" aria-hidden="true" focusable="false"><use href="#boleto-i-ext" /></svg></a>
+    <a class="bo-btn bo-btn--line" href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos<svg class="bo-ico bo-ico--ext" aria-hidden="true" focusable="false"><use href="#boleto-i-ext" /></svg></a>
+  </div>
+</main>
+
+<footer class="bo-foot" role="contentinfo">
+  <p>
+    Generado el <span class="bo-carbon">{{ generated_at }}</span> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+  </p>
+</footer>
