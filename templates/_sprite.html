@@ -1,0 +1,52 @@
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    {# Tinta de sello: borde irregular (desplazamiento) + poros donde no agarró la tinta. #}
+    <filter id="ink" x="-6%" y="-12%" width="112%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="aspero" />
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="11" result="grano" />
+      <feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -14 9.6" result="poros" />
+      <feComposite in="aspero" in2="poros" operator="in" />
+    </filter>
+    {# Bandera de Venezuela: amarillo, azul con el arco de 8 estrellas, rojo. #}
+    <symbol id="i-flag" viewBox="0 0 30 20">
+      <rect width="30" height="20" rx="2" fill="#CF142B" />
+      <path d="M2 0h26a2 2 0 0 1 2 2v11.34H0V2a2 2 0 0 1 2-2Z" fill="#00247D" />
+      <path d="M2 0h26a2 2 0 0 1 2 2v4.67H0V2a2 2 0 0 1 2-2Z" fill="#FFCC00" />
+      <g fill="#fff">
+        <circle cx="10.02" cy="12.3" r=".62" /><circle cx="10.94" cy="10.7" r=".62" />
+        <circle cx="12.35" cy="9.55" r=".62" /><circle cx="14.08" cy="8.95" r=".62" />
+        <circle cx="15.92" cy="8.95" r=".62" /><circle cx="17.65" cy="9.55" r=".62" />
+        <circle cx="19.06" cy="10.7" r=".62" /><circle cx="19.98" cy="12.3" r=".62" />
+      </g>
+    </symbol>
+    {# Iconos de trazo 1.75, extremos redondeados. #}
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z" />
+      <circle cx="12" cy="12" r="3" />
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+    </symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7" /><path d="m20.5 20.5-4.35-4.35" />
+    </symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 6h10M17 6h4M3 12h3M10 12h11M3 18h12M19 18h2" />
+      <circle cx="15" cy="6" r="2" /><circle cx="8" cy="12" r="2" /><circle cx="17" cy="18" r="2" />
+    </symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17 17 7M8 7h9v9" />
+    </symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 6l12 12M18 6 6 18" />
+    </symbol>
+    <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M11 18l-6-6 6-6" />
+    </symbol>
+  </defs>
+</svg>

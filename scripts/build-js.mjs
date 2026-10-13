@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Compiles src/ts/{filter,theme,webmcp}.ts → static/{filter,theme,webmcp}.js as IIFE
+// Compiles src/ts/{filter,stamps,theme,webmcp}.ts → static/{filter,stamps,theme,webmcp}.js as IIFE
 // bundles (vanilla, no runtime dependencies). Run by `pnpm run build:js`
 // and invoked from the Python build pipeline.
 
@@ -14,6 +14,7 @@ const root = resolve(here, "..");
 const baseOptions = {
   entryPoints: [
     resolve(root, "src/ts/filter.ts"),
+    resolve(root, "src/ts/stamps.ts"),
     resolve(root, "src/ts/theme.ts"),
     resolve(root, "src/ts/webmcp.ts"),
   ],
@@ -35,5 +36,5 @@ if (watch) {
   console.log("[build-js] watching src/ts/*.ts …");
 } else {
   await build(baseOptions);
-  console.log("[build-js] compiled static/filter.js + static/theme.js + static/webmcp.js");
+  console.log("[build-js] compiled static/filter.js + static/stamps.js + static/theme.js + static/webmcp.js");
 }

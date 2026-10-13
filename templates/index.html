@@ -2,37 +2,39 @@
 {% set current_page = "index" %}
 
 {% block content %}
-<div class="page page-index">
-  <header class="hero">
-    <h1 class="hero-title">
-      Compatibilidad de Contratación Remota en 🇻🇪 Venezuela
-    </h1>
+<header class="cover">
+  <div class="cover-inner">
+    <h1 class="hero-title">Compatibilidad de Contratación Remota en <span class="nowrap"><svg class="flag flag-title" aria-hidden="true" focusable="false"><use href="#i-flag" /></svg> Venezuela</span></h1>
     <p class="hero-lede">
       Base de datos pública, mantenida por la comunidad, de empresas que pueden
       aceptar candidatos remotos desde Venezuela.
     </p>
-    <div class="hero-stats" aria-label="Resumen">
-      <span class="hero-stat"><strong>{{ visible_count }}</strong> empresas</span>
-      <span class="hero-stat hero-stat-accepts"><strong>{{ hero_accepts }}</strong> probablemente aceptan</span>
-      <span class="hero-stat">actualizado {{ format_date(today) }}</span>
-    </div>
-    <div class="callout callout-notice" role="note">
-      <svg class="callout-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
-      <span>
-        No es asesoramiento legal ni una declaración oficial de ninguna empresa.
-        La compatibilidad puede cambiar — siempre verifica directamente.
-        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer" class="callout-link">Contribuir en GitHub ↗</a>
-      </span>
-    </div>
-  </header>
+    <dl class="slip" aria-label="Resumen">
+      <div class="slip-field">
+        <dt class="slip-label">empresas</dt>
+        <dd class="slip-value">{{ visible_count }}</dd>
+      </div>
+      <div class="slip-field">
+        <dt class="slip-label">probablemente aceptan</dt>
+        <dd class="slip-value">{{ hero_accepts }}</dd>
+      </div>
+      <div class="slip-field">
+        <dt class="slip-label">actualizado</dt>
+        <dd class="slip-value slip-value-date">{{ format_date(today) }}</dd>
+      </div>
+    </dl>
+    <p class="terms" role="note">
+      No es asesoramiento legal ni una declaración oficial de ninguna empresa.
+      La compatibilidad puede cambiar — siempre verifica directamente.
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
+    </p>
+  </div>
+</header>
 
+<div class="page page-index">
   <section class="toolbar" role="search" aria-label="Filtrar empresas">
     <div class="search-field">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
+      <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-search" /></svg>
       <input
         type="search"
         id="company-search"
@@ -43,10 +45,8 @@
       />
     </div>
 
-    <button type="button" id="filter-toggle" class="filter-toggle" aria-expanded="false" aria-controls="filter-panel">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/>
-      </svg>
+    <button type="button" id="filter-toggle" class="btn btn-line filter-toggle" aria-expanded="false" aria-controls="filter-panel">
+      <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-sliders" /></svg>
       Filtros
       <span class="filter-toggle-count" id="filter-toggle-count" hidden>0</span>
     </button>
@@ -79,63 +79,59 @@
       </label>
     </div>
 
-    <button type="button" id="clear-filters" class="btn-ghost is-hidden" aria-label="Limpiar todos los filtros">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-      </svg>
+    <button type="button" id="clear-filters" class="btn btn-quiet" aria-label="Limpiar todos los filtros" hidden>
+      <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-x" /></svg>
       Limpiar
     </button>
   </section>
 
   <div class="filter-chips" id="filter-chips" aria-label="Filtros activos"></div>
 
-  <section class="status-tabs" role="tablist" aria-label="Filtrar por estado">
-    {% for tab in status_tabs %}
-    <button
-      type="button"
-      role="tab"
-      class="status-tab{% if tab.value == 'all' %} is-active{% endif %}"
-      data-status="{{ tab.value }}"
-      aria-selected="{% if tab.value == 'all' %}true{% else %}false{% endif %}"
-    >
-      {% if tab.value != 'all' %}<span class="status-dot status-dot-{{ tab.value }}"></span>{% endif %}
-      {{ tab.label }}
-      <span class="status-tab-count" data-count="{{ tab.value }}">{{ tab.count }}</span>
-    </button>
-    {% endfor %}
-
-    <span class="status-tab-results" id="results-counter" aria-live="polite">
+  <div class="tabsrow">
+    <div class="status-tabs" role="tablist" aria-label="Filtrar por estado">
+      {% for tab in status_tabs %}
+      <button
+        type="button"
+        role="tab"
+        id="status-tab-{{ tab.value }}"
+        class="status-tab{% if tab.value == 'all' %} is-active{% endif %}"
+        data-status="{{ tab.value }}"
+        aria-controls="company-tray"
+        aria-selected="{% if tab.value == 'all' %}true{% else %}false{% endif %}"
+        tabindex="{% if tab.value == 'all' %}0{% else %}-1{% endif %}"
+      >
+        <span class="status-tab-label">{{ tab.label }}</span>
+        <span class="status-tab-count" data-count="{{ tab.value }}">{{ tab.count }}</span>
+      </button>
+      {% endfor %}
+    </div>
+    <span class="results-counter" id="results-counter" aria-live="polite">
       {{ visible_count }} empresa{% if visible_count != 1 %}s{% endif %}
     </span>
-  </section>
+  </div>
 
-  <div class="table-card">
-    <table class="company-table" id="company-table">
-      <thead>
-        <tr>
-          <th scope="col" class="sort-th is-active" data-sort="name" data-dir="asc" style="min-width:200px">
-            <span>Empresa <span class="sort-arrow">▲</span></span>
-          </th>
-          <th scope="col" class="sort-th" data-sort="status" style="min-width:200px">
-            <span>Estado <span class="sort-arrow">⇅</span></span>
-          </th>
-          <th scope="col" class="sort-th" data-sort="last_checked" style="min-width:130px">
-            <span>Últ. verificación <span class="sort-arrow">⇅</span></span>
-          </th>
-          <th scope="col" class="sort-th hide-mobile" data-sort="verification_method" style="min-width:160px">
-            <span>Verificación <span class="sort-arrow">⇅</span></span>
-          </th>
-          <th scope="col" class="sort-th hide-mobile" data-sort="hiring_platform" style="min-width:120px">
-            <span>Plataforma <span class="sort-arrow">⇅</span></span>
-          </th>
-          <th scope="col" class="th-static hide-mobile" style="min-width:150px">Etiquetas</th>
+  <div class="tray" id="company-tray" role="tabpanel" aria-labelledby="status-tab-all">
+    <table class="company-table" id="company-table" role="table">
+      <thead role="rowgroup">
+        {%- set sort_icon -%}
+        <svg class="sort-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path class="sort-up" d="m8 10 4-4 4 4" /><path class="sort-dn" d="m8 14 4 4 4-4" /></svg>
+        {%- endset %}
+        <tr class="coupon-head" role="row">
+          <th scope="col" role="columnheader" class="sort-th col-name is-active" data-sort="name" data-dir="asc" aria-sort="ascending"><button type="button" class="sort-btn">Empresa{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="sort-th col-method" data-sort="verification_method" aria-sort="none"><button type="button" class="sort-btn">Verificación{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="sort-th col-platform" data-sort="hiring_platform" aria-sort="none"><button type="button" class="sort-btn">Plataforma{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="col-tags"><span class="sort-btn sort-static">Etiquetas</span></th>
+          <th scope="col" role="columnheader" class="sort-th col-date" data-sort="last_checked" aria-sort="none"><button type="button" class="sort-btn">Últ. verificación{{ sort_icon }}</button></th>
+          <th scope="col" role="columnheader" class="sort-th col-status" data-sort="status" aria-sort="none"><button type="button" class="sort-btn">Estado{{ sort_icon }}</button></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody role="rowgroup">
         {% for company in companies %}
         {% set stale = company.is_stale() %}
         <tr
-          class="company-row{% if company.archived %} is-archived{% endif %}"
+          class="company-row coupon coupon-{{ company.status.value }}{% if company.archived %} is-archived{% endif %}{% if stale %} is-stale{% endif %}"
+          role="row"
+          style="--rot: {{ ((((loop.index * 37) % 9) - 6) * 0.55) | round(2) }}deg; --dx: {{ ((loop.index * 53) % 7) - 3 }}px"
           data-id="{{ company.id }}"
           data-status="{{ company.status.value }}"
           data-method="{{ company.verification_method.value }}"
@@ -146,77 +142,56 @@
           data-name="{{ company.name }}"
           data-last-checked="{{ company.last_checked.isoformat() }}"
         >
-          <td class="cell-name">
-            <a class="company-link" href="company/{{ company.id }}.html">
-              {{ company.name }}
-            </a>
-            {% if company.archived %}
-            <span class="mini-tag mini-tag-archived">ARCHIVADA</span>
-            {% endif %}
-            <a class="cell-domain"
-               href="{{ website_with_utm(company.website_str()) }}"
-               target="_blank"
-               rel="noopener noreferrer nofollow">
-              {{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}
-            </a>
+          <td class="col-name" role="cell">
+            <span class="cell-label" aria-hidden="true">Empresa</span>
+            <a class="company-link" href="company/{{ company.id }}.html">{{ company.name }}</a>
+            {% if company.archived %}<span class="mini-stamp mini-stamp-archived"><span class="mini-stamp-ink">ARCHIVADA</span></span>{% endif %}
+            <a class="cell-domain" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
           </td>
-
-          <td data-label="Estado">
-            <span class="status-badge status-{{ company.status.value }}">
-              <span class="status-badge-dot"></span>
-              {{ status_labels[company.status.value] }}
-              {% if stale %}
-              <span class="stale-marker">DESACT.</span>
-              {% endif %}
-            </span>
+          <td class="col-method" role="cell">
+            <span class="cell-label" aria-hidden="true">Verificación</span>
+            <span class="cell-value">{{ verification_labels[company.verification_method.value] }}</span>
           </td>
-
-          <td class="cell-date{% if stale %} is-stale{% endif %}" data-label="Últ. verificación">
-            {{ format_date(company.last_checked) }}
+          <td class="col-platform" role="cell">
+            <span class="cell-label" aria-hidden="true">Plataforma</span>
+            <span class="cell-value">{{ platform_labels[company.hiring_platform.value] if company.hiring_platform else platform_labels['unknown'] }}</span>
           </td>
-
-          <td class="hide-mobile cell-muted" data-label="Verificación">
-            {{ verification_labels[company.verification_method.value] }}
+          <td class="col-tags" role="cell">
+            <span class="cell-label" aria-hidden="true">Etiquetas</span>
+            <span class="tag-list">{% for tag in company.tags[:3] %}<span class="tag-badge">{{ tag }}</span>{% endfor %}{% if company.tags|length > 3 %}<span class="tag-badge tag-more">+{{ company.tags|length - 3 }}</span>{% endif %}</span>
           </td>
-
-          <td class="hide-mobile cell-muted" data-label="Plataforma">
-            {% if company.hiring_platform %}
-              {{ platform_labels[company.hiring_platform.value] }}
-            {% else %}
-              {{ platform_labels['unknown'] }}
-            {% endif %}
+          <td class="col-date" role="cell">
+            <span class="cell-label" aria-hidden="true">Últ. verificación</span>
+            <time class="cell-date" datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time>
+            {% if stale %}<span class="mini-stamp stale-marker"><span class="mini-stamp-ink">DESACT.</span></span>{% endif %}
           </td>
-
-          <td class="hide-mobile" data-label="Etiquetas">
-            <div class="tag-list">
-              {% for tag in company.tags[:3] %}
-              <span class="tag-badge">{{ tag }}</span>
-              {% endfor %}
-              {% if company.tags|length > 3 %}
-              <span class="tag-more">+{{ company.tags|length - 3 }}</span>
-              {% endif %}
-            </div>
+          <td class="col-status" role="cell">
+            <span class="cell-label" aria-hidden="true">Estado</span>
+            <span class="stamp status-{{ company.status.value }}"><span class="stamp-ink">{{ status_labels[company.status.value] }}</span></span>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
-    <div class="empty-state" id="empty-state" hidden role="status" aria-live="polite">
-      <div class="empty-dash">—</div>
-      <p>Ninguna empresa coincide con los filtros.</p>
-      <button type="button" id="empty-clear" class="btn-ghost">Limpiar filtros</button>
+    <div class="empty-state" id="empty-state" role="status" aria-live="polite" hidden>
+      <div class="empty-body">
+        <p>Ninguna empresa coincide con los filtros.</p>
+        <button type="button" id="empty-clear" class="btn btn-red">Limpiar filtros</button>
+      </div>
+      <div class="empty-stub" aria-hidden="true"><span class="empty-mark"></span></div>
     </div>
   </div>
 
   <div class="page-footer-links">
-    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues ↗</a>
-    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML ↗</a>
-    <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos ↗</a>
+    <a class="btn btn-red" href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
+    <a class="btn btn-line" href="https://github.com/asdrubalivan/remote-venezuela-hiring/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">Enviar un pull request YAML<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
+    <a class="btn btn-line" href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues" target="_blank" rel="noopener noreferrer">Reportar datos incorrectos<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
   </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="{{ static_prefix|default('static') }}/filter.js" defer></script>
+<script src="{{ static_prefix|default('static') }}/stamps.js" defer></script>
 {% endblock %}

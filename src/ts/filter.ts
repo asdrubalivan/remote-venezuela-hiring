@@ -66,15 +66,14 @@ import {
   const filterToggle    = document.getElementById("filter-toggle");
   const filterPanel     = document.getElementById("filter-panel");
   const filterToggleCnt = document.getElementById("filter-toggle-count");
+  const tabPanel        = document.getElementById("company-tray");
 
-  // Status-tab labels, read once (text node minus dot and count badge).
+  // Status-tab labels, read once from each tab's label span.
   const statusLabels: Record<string, string> = {};
   for (const tab of statusTabs) {
     const key = String(tab.dataset["status"]);
-    const clone = tab.cloneNode(true) as HTMLElement;
-    clone.querySelector(".status-tab-count")?.remove();
-    clone.querySelector(".status-dot")?.remove();
-    statusLabels[key] = (clone.textContent ?? "").trim();
+    const label = tab.querySelector(".status-tab-label");
+    statusLabels[key] = (label?.textContent ?? "").trim();
   }
 
   function optionLabel(sel: HTMLSelectElement | null, value: string): string {
@@ -159,6 +158,18 @@ import {
   }
 
   // ── Active-filter chips ──────────────────────────────────────────────
+  const SVG_NS = "http://www.w3.org/2000/svg";
+
+  function spriteIcon(id: string): SVGSVGElement {
+    const svg = document.createElementNS(SVG_NS, "svg");
+    svg.setAttribute("class", "ico");
+    svg.setAttribute("focusable", "false");
+    const use = document.createElementNS(SVG_NS, "use");
+    use.setAttribute("href", "#" + id);
+    svg.appendChild(use);
+    return svg;
+  }
+
   type ChipKind = "search" | "status" | "method" | "platform" | "tag";
 
   function renderChips(s: FilterState): void {
@@ -188,7 +199,7 @@ import {
       const x = document.createElement("span");
       x.className = "filter-chip-x";
       x.setAttribute("aria-hidden", "true");
-      x.textContent = "✕";
+      x.appendChild(spriteIcon("i-x"));
       btn.append(text, x);
       chipsEl.appendChild(btn);
     }
@@ -241,6 +252,8 @@ import {
       const isActive = state.status === key;
       tab.classList.toggle("is-active", isActive);
       tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      tab.tabIndex = isActive ? 0 : -1;
+      if (isActive && tab.id) tabPanel?.setAttribute("aria-labelledby", tab.id);
       const countEl = tab.querySelector(".status-tab-count");
       if (countEl) countEl.textContent = String(counts[key] ?? 0);
     }
@@ -256,7 +269,7 @@ import {
       }
     }
 
-    clearBtn?.classList.toggle("is-hidden", !hasActiveFilters(state));
+    if (clearBtn) clearBtn.hidden = !hasActiveFilters(state);
 
     if (emptyState && (table as HTMLElement)) {
       if (visible.length === 0) {
@@ -269,14 +282,13 @@ import {
     }
 
     for (const th of sortHeaders) {
-      const arrow = th.querySelector(".sort-arrow");
       if (th.dataset["sort"] === state.sortBy) {
         th.classList.add("is-active");
-        if (arrow) arrow.textContent = state.sortDir === "asc" ? "▲" : "▼";
+        th.dataset["dir"] = state.sortDir;
         th.setAttribute("aria-sort", state.sortDir === "asc" ? "ascending" : "descending");
       } else {
         th.classList.remove("is-active");
-        if (arrow) arrow.textContent = "⇅";
+        delete th.dataset["dir"];
         th.setAttribute("aria-sort", "none");
       }
     }
@@ -321,12 +333,30 @@ import {
     dispatch({ type: "ARCHIVED", value: archivedCheck.checked });
   });
 
-  for (const tab of statusTabs) {
+  // Tablist keyboard model: arrows, Home and End move to and activate a tab.
+  const TAB_KEYS: Record<string, (i: number, n: number) => number> = {
+    ArrowRight: (i, n) => (i + 1) % n,
+    ArrowDown:  (i, n) => (i + 1) % n,
+    ArrowLeft:  (i, n) => (i - 1 + n) % n,
+    ArrowUp:    (i, n) => (i - 1 + n) % n,
+    Home:       () => 0,
+    End:        (_i, n) => n - 1,
+  };
+
+  statusTabs.forEach((tab, i) => {
     tab.addEventListener("click", () => {
       const raw = String(tab.dataset["status"]);
       if (isStatus(raw)) dispatch({ type: "STATUS", value: raw });
     });
-  }
+    tab.addEventListener("keydown", (e) => {
+      const move = TAB_KEYS[e.key];
+      if (!move) return;
+      e.preventDefault();
+      const next = statusTabs[move(i, statusTabs.length)];
+      next?.focus();
+      next?.click();
+    });
+  });
   for (const th of sortHeaders) {
     th.addEventListener("click", () => {
       const raw = String(th.dataset["sort"]);

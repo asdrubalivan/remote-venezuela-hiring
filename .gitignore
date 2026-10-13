@@ -16,6 +16,8 @@ build/
 node_modules/
 static/filter.js
 static/filter.js.map
+static/stamps.js
+static/stamps.js.map
 static/theme.js
 static/theme.js.map
 static/webmcp.js
@@ -31,3 +33,6 @@ pnpm-workspace.yaml
 .claude/
 !.claude/skills/
 !.claude/skills/**
+
+# Capturas de revisión de diseño (impeccable)
+.impeccable/review/
