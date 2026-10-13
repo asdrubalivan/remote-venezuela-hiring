@@ -6,9 +6,9 @@
   <title>{% block title %}Compatibilidad de Contratación Remota en Venezuela{% endblock %}</title>
   <meta name="description" content="Base de datos pública, mantenida por la comunidad, sobre empresas que podrían admitir candidatos remotos basados en Venezuela." />
   <meta name="color-scheme" content="light dark" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta name="theme-color" content="#0D1B3D" />
+  <link rel="preload" href="{{ static_prefix|default('static') }}/fonts/barlowcondensed-800-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="{{ static_prefix|default('static') }}/fonts/barlow-400-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="{{ static_prefix|default('static') }}/main.css" />
   <script>
     // Apply persisted display prefs before paint to avoid a flash / reflow.
@@ -28,31 +28,26 @@
   </script>
 </head>
 <body>
+  {% include "_sprite.html" %}
   <a class="skip-link" href="#main-content">Saltar al contenido</a>
 
   {% include "_nav.html" %}
 
-  <main id="main-content" role="main">
+  <main id="main-content">
     <noscript>
-      <div class="page">
-        <p class="noscript-notice">
-          La búsqueda y los filtros requieren JavaScript. Sin él la tabla se muestra completa.
-        </p>
-      </div>
+      <p class="noscript-notice">
+        La búsqueda y los filtros requieren JavaScript. Sin él la tabla se muestra completa.
+      </p>
     </noscript>
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="footer-inner">
-      <p>
-        Generado el {{ generated_at }} ·
-        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
-        <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">
-          Contribuye con una entrada
-        </a>
-      </p>
-    </div>
+  <footer class="site-footer">
+    <p class="footer-inner">
+      Generado el <span class="footer-stamp">{{ generated_at }}</span> ·
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring">Código fuente en GitHub</a> ·
+      <a href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml">Contribuye con una entrada</a>
+    </p>
   </footer>
 
   <script src="{{ static_prefix|default('static') }}/theme.js" defer></script>
