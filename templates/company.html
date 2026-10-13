@@ -56,9 +56,8 @@
           <div class="field-label">Última verificación</div>
           <div class="field-value">
             <time class="cell-date" datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time>
-            {% if stale %}<span class="field-stale-note sr-only">(Desactualizado)</span>{% endif %}
           </div>
-          {% if stale %}<span class="mini-stamp stale-marker" aria-hidden="true"><span class="mini-stamp-ink">DESACT.</span></span>{% endif %}
+          {% if stale %}<span class="mini-stamp stale-marker"><span class="mini-stamp-ink">DESACTUALIZADA</span></span>{% endif %}
         </div>
         <div class="ticket-stamp">
           <span class="stamp stamp-lg status-{{ company.status.value }}"><span class="stamp-ink">{{ status_labels[company.status.value] }}</span></span>

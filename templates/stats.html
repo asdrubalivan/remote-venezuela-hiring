@@ -39,22 +39,22 @@
 
 <div class="page page-stats">
   <div class="tray tray-stats">
-    <section class="ticket ticket-panel proportion" aria-labelledby="proportion-title">
-      <h2 class="panel-title" id="proportion-title">Distribución de {{ active_total }} empresa{% if active_total != 1 %}s{% endif %}</h2>
-      <div class="proportion-bar" role="img"
-           aria-label="{{ status_pct.accepts }}% acepta, {{ status_pct.rejects }}% no acepta, {{ status_pct.unknown }}% desconocido">
-        {% if status_counts.accepts %}<span class="proportion-seg seg-accepts" style="width: {{ status_pct.accepts }}%"></span>{% endif %}
-        {% if status_counts.rejects %}<span class="proportion-seg seg-rejects" style="width: {{ status_pct.rejects }}%"></span>{% endif %}
-        {% if status_counts.unknown %}<span class="proportion-seg seg-unknown" style="width: {{ status_pct.unknown }}%"></span>{% endif %}
-      </div>
-      <ul class="proportion-legend">
-        <li class="proportion-key"><span class="key-swatch seg-accepts" aria-hidden="true"></span> Probablemente acepta <b>{{ status_counts.accepts }}</b> <span class="key-pct">({{ status_pct.accepts }}%)</span></li>
-        <li class="proportion-key"><span class="key-swatch seg-rejects" aria-hidden="true"></span> No acepta <b>{{ status_counts.rejects }}</b> <span class="key-pct">({{ status_pct.rejects }}%)</span></li>
-        <li class="proportion-key"><span class="key-swatch seg-unknown" aria-hidden="true"></span> Desconocido <b>{{ status_counts.unknown }}</b> <span class="key-pct">({{ status_pct.unknown }}%)</span></li>
-      </ul>
-    </section>
+    <div class="stats-col">
+      <section class="ticket ticket-panel proportion" aria-labelledby="proportion-title">
+        <h2 class="panel-title" id="proportion-title">Distribución de {{ active_total }} empresa{% if active_total != 1 %}s{% endif %}</h2>
+        <div class="proportion-bar" role="img"
+             aria-label="{{ status_pct.accepts }}% acepta, {{ status_pct.rejects }}% no acepta, {{ status_pct.unknown }}% desconocido">
+          {% if status_counts.accepts %}<span class="proportion-seg seg-accepts" style="width: {{ status_pct.accepts }}%"></span>{% endif %}
+          {% if status_counts.rejects %}<span class="proportion-seg seg-rejects" style="width: {{ status_pct.rejects }}%"></span>{% endif %}
+          {% if status_counts.unknown %}<span class="proportion-seg seg-unknown" style="width: {{ status_pct.unknown }}%"></span>{% endif %}
+        </div>
+        <ul class="proportion-legend">
+          <li class="proportion-key"><span class="key-swatch seg-accepts" aria-hidden="true"></span> Probablemente acepta <b>{{ status_counts.accepts }}</b> <span class="key-pct">({{ status_pct.accepts }}%)</span></li>
+          <li class="proportion-key"><span class="key-swatch seg-rejects" aria-hidden="true"></span> No acepta <b>{{ status_counts.rejects }}</b> <span class="key-pct">({{ status_pct.rejects }}%)</span></li>
+          <li class="proportion-key"><span class="key-swatch seg-unknown" aria-hidden="true"></span> Desconocido <b>{{ status_counts.unknown }}</b> <span class="key-pct">({{ status_pct.unknown }}%)</span></li>
+        </ul>
+      </section>
 
-    <div class="chart-grid">
       <section class="ticket ticket-panel chart-card" aria-labelledby="chart-method">
         <h2 class="panel-title" id="chart-method">Por método de verificación</h2>
         <div class="bar-chart">
@@ -70,6 +70,21 @@
         </div>
       </section>
 
+      {% if stale_entries %}
+      <section class="ticket ticket-panel stale-list" aria-labelledby="stale-title">
+        <h2 class="panel-title" id="stale-title">
+          {{ stale_entries|length }} registro{% if stale_entries|length != 1 %}s{% endif %} necesita{% if stale_entries|length != 1 %}n{% endif %} actualización
+        </h2>
+        <ul class="stale-chips">
+          {% for entry in stale_entries %}
+          <li><a href="company/{{ entry.id }}.html" class="stale-chip">{{ entry.name }} <span class="stale-chip-date">— última revisión {{ format_date(entry.last_checked) }}</span></a></li>
+          {% endfor %}
+        </ul>
+      </section>
+      {% endif %}
+    </div>
+
+    <div class="stats-col">
       <section class="ticket ticket-panel chart-card" aria-labelledby="chart-platform">
         <h2 class="panel-title" id="chart-platform">Por plataforma de empleo</h2>
         <div class="bar-chart">
@@ -86,18 +101,5 @@
       </section>
     </div>
   </div>
-
-  {% if stale_entries %}
-  <section class="stale-list" aria-labelledby="stale-title">
-    <h2 class="stale-title" id="stale-title">
-      {{ stale_entries|length }} registro{% if stale_entries|length != 1 %}s{% endif %} necesita{% if stale_entries|length != 1 %}n{% endif %} actualización
-    </h2>
-    <ul class="stale-chips">
-      {% for entry in stale_entries %}
-      <li><a href="company/{{ entry.id }}.html" class="stale-chip">{{ entry.name }} <span class="stale-chip-date">— última revisión {{ format_date(entry.last_checked) }}</span></a></li>
-      {% endfor %}
-    </ul>
-  </section>
-  {% endif %}
 </div>
 {% endblock %}

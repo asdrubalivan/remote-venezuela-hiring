@@ -8,6 +8,14 @@
       <feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -14 9.6" result="poros" />
       <feComposite in="aspero" in2="poros" operator="in" />
     </filter>
+    {# La misma tinta, más fina, para los sellos a tamaño de cupón: menos poros y menos temblor para que la letra se lea. #}
+    <filter id="ink-fine" x="-6%" y="-12%" width="112%" height="124%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="ruido" />
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="0.3" xChannelSelector="R" yChannelSelector="G" result="aspero" />
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="11" result="grano" />
+      <feColorMatrix in="grano" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -14 11.3" result="poros" />
+      <feComposite in="aspero" in2="poros" operator="in" />
+    </filter>
     {# Bandera de Venezuela: amarillo, azul con el arco de 8 estrellas, rojo. #}
     <symbol id="i-flag" viewBox="0 0 30 20">
       <rect width="30" height="20" rx="2" fill="#CF142B" />

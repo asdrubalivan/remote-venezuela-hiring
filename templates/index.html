@@ -143,7 +143,6 @@
           data-last-checked="{{ company.last_checked.isoformat() }}"
         >
           <td class="col-name" role="cell">
-            <span class="cell-label" aria-hidden="true">Empresa</span>
             <a class="company-link" href="company/{{ company.id }}.html">{{ company.name }}</a>
             {% if company.archived %}<span class="mini-stamp mini-stamp-archived"><span class="mini-stamp-ink">ARCHIVADA</span></span>{% endif %}
             <a class="cell-domain" href="{{ website_with_utm(company.website_str()) }}" target="_blank" rel="noopener noreferrer nofollow">{{ company.website_str() | replace("https://", "") | replace("http://", "") | trim('/') }}<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
@@ -158,12 +157,12 @@
           </td>
           <td class="col-tags" role="cell">
             <span class="cell-label" aria-hidden="true">Etiquetas</span>
-            <span class="tag-list">{% for tag in company.tags[:3] %}<span class="tag-badge">{{ tag }}</span>{% endfor %}{% if company.tags|length > 3 %}<span class="tag-badge tag-more">+{{ company.tags|length - 3 }}</span>{% endif %}</span>
+            <span class="tag-list">{% for tag in company.tags[:3] %}<span class="tag-badge">{{ tag }}</span>{% endfor %}{% if company.tags|length > 3 %}<span class="tag-badge tag-more">+{{ company.tags|length - 3 }}</span>{% endif %}{% if company.tags|length > 1 %}<span class="tag-badge tag-more tag-more-compact">+{{ company.tags|length - 1 }}</span>{% endif %}</span>
           </td>
           <td class="col-date" role="cell">
             <span class="cell-label" aria-hidden="true">Últ. verificación</span>
             <time class="cell-date" datetime="{{ company.last_checked.isoformat() }}">{{ format_date(company.last_checked) }}</time>
-            {% if stale %}<span class="mini-stamp stale-marker"><span class="mini-stamp-ink">DESACT.</span></span>{% endif %}
+            {% if stale %}<span class="mini-stamp stale-marker"><span class="mini-stamp-ink">DESACTUALIZADA</span></span>{% endif %}
           </td>
           <td class="col-status" role="cell">
             <span class="cell-label" aria-hidden="true">Estado</span>
