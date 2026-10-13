@@ -1,0 +1,960 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-13T18:07:42+00:00",
+  "title": "Design System: Remote Venezuela Hiring",
+  "extensions": {
+    "colorMeta": {
+      "navy": {
+        "role": "primary",
+        "displayName": "Marino Cabina",
+        "canonical": "#0D1B3D",
+        "tonalRamp": [
+          "oklch(15% 0.068 264.8)",
+          "oklch(26% 0.068 264.8)",
+          "oklch(37% 0.068 264.8)",
+          "oklch(48% 0.068 264.8)",
+          "oklch(60% 0.068 264.8)",
+          "oklch(72% 0.068 264.8)",
+          "oklch(84% 0.068 264.8)",
+          "oklch(95% 0.068 264.8)"
+        ]
+      },
+      "wallet": {
+        "role": "primary",
+        "displayName": "Azul Tapa",
+        "canonical": "#1E4886",
+        "tonalRamp": [
+          "oklch(15% 0.114 258.3)",
+          "oklch(26% 0.114 258.3)",
+          "oklch(37% 0.114 258.3)",
+          "oklch(48% 0.114 258.3)",
+          "oklch(60% 0.114 258.3)",
+          "oklch(72% 0.114 258.3)",
+          "oklch(84% 0.114 258.3)",
+          "oklch(95% 0.114 258.3)"
+        ]
+      },
+      "tray": {
+        "role": "primary",
+        "displayName": "Azul Bandeja",
+        "canonical": "#163A6F",
+        "tonalRamp": [
+          "oklch(15% 0.101 258.3)",
+          "oklch(26% 0.101 258.3)",
+          "oklch(37% 0.101 258.3)",
+          "oklch(48% 0.101 258.3)",
+          "oklch(60% 0.101 258.3)",
+          "oklch(72% 0.101 258.3)",
+          "oklch(84% 0.101 258.3)",
+          "oklch(95% 0.101 258.3)"
+        ]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "Rojo Librea",
+        "canonical": "#D7262D",
+        "tonalRamp": [
+          "oklch(15% 0.210 25.6)",
+          "oklch(26% 0.210 25.6)",
+          "oklch(37% 0.210 25.6)",
+          "oklch(48% 0.210 25.6)",
+          "oklch(60% 0.210 25.6)",
+          "oklch(72% 0.210 25.6)",
+          "oklch(84% 0.210 25.6)",
+          "oklch(95% 0.210 25.6)"
+        ]
+      },
+      "red-hover": {
+        "role": "secondary",
+        "displayName": "Rojo Librea al pasar",
+        "canonical": "#B81D24",
+        "tonalRamp": [
+          "oklch(15% 0.188 25.6)",
+          "oklch(26% 0.188 25.6)",
+          "oklch(37% 0.188 25.6)",
+          "oklch(48% 0.188 25.6)",
+          "oklch(60% 0.188 25.6)",
+          "oklch(72% 0.188 25.6)",
+          "oklch(84% 0.188 25.6)",
+          "oklch(95% 0.188 25.6)"
+        ]
+      },
+      "yellow": {
+        "role": "secondary",
+        "displayName": "Amarillo Bandera",
+        "canonical": "#FFCC00",
+        "tonalRamp": [
+          "oklch(15% 0.177 90.4)",
+          "oklch(26% 0.177 90.4)",
+          "oklch(37% 0.177 90.4)",
+          "oklch(48% 0.177 90.4)",
+          "oklch(60% 0.177 90.4)",
+          "oklch(72% 0.177 90.4)",
+          "oklch(84% 0.177 90.4)",
+          "oklch(95% 0.177 90.4)"
+        ]
+      },
+      "on-yellow": {
+        "role": "secondary",
+        "displayName": "Tinta sobre Amarillo",
+        "canonical": "#0D1B3D",
+        "tonalRamp": [
+          "oklch(15% 0.068 264.8)",
+          "oklch(26% 0.068 264.8)",
+          "oklch(37% 0.068 264.8)",
+          "oklch(48% 0.068 264.8)",
+          "oklch(60% 0.068 264.8)",
+          "oklch(72% 0.068 264.8)",
+          "oklch(84% 0.068 264.8)",
+          "oklch(95% 0.068 264.8)"
+        ]
+      },
+      "blue-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta Azul de Sello",
+        "canonical": "#1C47A3",
+        "tonalRamp": [
+          "oklch(15% 0.157 262.8)",
+          "oklch(26% 0.157 262.8)",
+          "oklch(37% 0.157 262.8)",
+          "oklch(48% 0.157 262.8)",
+          "oklch(60% 0.157 262.8)",
+          "oklch(72% 0.157 262.8)",
+          "oklch(84% 0.157 262.8)",
+          "oklch(95% 0.157 262.8)"
+        ]
+      },
+      "red-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta Roja de Sello",
+        "canonical": "#B8141D",
+        "tonalRamp": [
+          "oklch(15% 0.193 26.3)",
+          "oklch(26% 0.193 26.3)",
+          "oklch(37% 0.193 26.3)",
+          "oklch(48% 0.193 26.3)",
+          "oklch(60% 0.193 26.3)",
+          "oklch(72% 0.193 26.3)",
+          "oklch(84% 0.193 26.3)",
+          "oklch(95% 0.193 26.3)"
+        ]
+      },
+      "carbon": {
+        "role": "tertiary",
+        "displayName": "Morado Carbón",
+        "canonical": "#4B2E83",
+        "tonalRamp": [
+          "oklch(15% 0.136 294.9)",
+          "oklch(26% 0.136 294.9)",
+          "oklch(37% 0.136 294.9)",
+          "oklch(48% 0.136 294.9)",
+          "oklch(60% 0.136 294.9)",
+          "oklch(72% 0.136 294.9)",
+          "oklch(84% 0.136 294.9)",
+          "oklch(95% 0.136 294.9)"
+        ]
+      },
+      "copy-accepts": {
+        "role": "tertiary",
+        "displayName": "Copia Amarilla",
+        "canonical": "#FFF2BF",
+        "tonalRamp": [
+          "oklch(15% 0.067 95.4)",
+          "oklch(26% 0.067 95.4)",
+          "oklch(37% 0.067 95.4)",
+          "oklch(48% 0.067 95.4)",
+          "oklch(60% 0.067 95.4)",
+          "oklch(72% 0.067 95.4)",
+          "oklch(84% 0.067 95.4)",
+          "oklch(95% 0.067 95.4)"
+        ]
+      },
+      "copy-rejects": {
+        "role": "tertiary",
+        "displayName": "Copia Rosada",
+        "canonical": "#FCE4E6",
+        "tonalRamp": [
+          "oklch(15% 0.026 11.9)",
+          "oklch(26% 0.026 11.9)",
+          "oklch(37% 0.026 11.9)",
+          "oklch(48% 0.026 11.9)",
+          "oklch(60% 0.026 11.9)",
+          "oklch(72% 0.026 11.9)",
+          "oklch(84% 0.026 11.9)",
+          "oklch(95% 0.026 11.9)"
+        ]
+      },
+      "copy-unknown": {
+        "role": "tertiary",
+        "displayName": "Copia Lila",
+        "canonical": "#EEE9F8",
+        "tonalRamp": [
+          "oklch(15% 0.021 301.1)",
+          "oklch(26% 0.021 301.1)",
+          "oklch(37% 0.021 301.1)",
+          "oklch(48% 0.021 301.1)",
+          "oklch(60% 0.021 301.1)",
+          "oklch(72% 0.021 301.1)",
+          "oklch(84% 0.021 301.1)",
+          "oklch(95% 0.021 301.1)"
+        ]
+      },
+      "stock": {
+        "role": "neutral",
+        "displayName": "Cartulina",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(37% 0.000 89.9)",
+          "oklch(48% 0.000 89.9)",
+          "oklch(60% 0.000 89.9)",
+          "oklch(72% 0.000 89.9)",
+          "oklch(84% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "stock-hover": {
+        "role": "neutral",
+        "displayName": "Cartulina al pasar",
+        "canonical": "#F5F7FC",
+        "tonalRamp": [
+          "oklch(15% 0.007 268.5)",
+          "oklch(26% 0.007 268.5)",
+          "oklch(37% 0.007 268.5)",
+          "oklch(48% 0.007 268.5)",
+          "oklch(60% 0.007 268.5)",
+          "oklch(72% 0.007 268.5)",
+          "oklch(84% 0.007 268.5)",
+          "oklch(95% 0.007 268.5)"
+        ]
+      },
+      "ground": {
+        "role": "neutral",
+        "displayName": "Cartulina Gris Azulada",
+        "canonical": "#E6EAF1",
+        "tonalRamp": [
+          "oklch(15% 0.010 261.8)",
+          "oklch(26% 0.010 261.8)",
+          "oklch(37% 0.010 261.8)",
+          "oklch(48% 0.010 261.8)",
+          "oklch(60% 0.010 261.8)",
+          "oklch(72% 0.010 261.8)",
+          "oklch(84% 0.010 261.8)",
+          "oklch(95% 0.010 261.8)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "#0D1B3D",
+        "tonalRamp": [
+          "oklch(15% 0.068 264.8)",
+          "oklch(26% 0.068 264.8)",
+          "oklch(37% 0.068 264.8)",
+          "oklch(48% 0.068 264.8)",
+          "oklch(60% 0.068 264.8)",
+          "oklch(72% 0.068 264.8)",
+          "oklch(84% 0.068 264.8)",
+          "oklch(95% 0.068 264.8)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Tinta Secundaria",
+        "canonical": "#44547F",
+        "tonalRamp": [
+          "oklch(15% 0.074 267.9)",
+          "oklch(26% 0.074 267.9)",
+          "oklch(37% 0.074 267.9)",
+          "oklch(48% 0.074 267.9)",
+          "oklch(60% 0.074 267.9)",
+          "oklch(72% 0.074 267.9)",
+          "oklch(84% 0.074 267.9)",
+          "oklch(95% 0.074 267.9)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Filete",
+        "canonical": "#CFD5E4",
+        "tonalRamp": [
+          "oklch(15% 0.022 268.4)",
+          "oklch(26% 0.022 268.4)",
+          "oklch(37% 0.022 268.4)",
+          "oklch(48% 0.022 268.4)",
+          "oklch(60% 0.022 268.4)",
+          "oklch(72% 0.022 268.4)",
+          "oklch(84% 0.022 268.4)",
+          "oklch(95% 0.022 268.4)"
+        ]
+      },
+      "perf": {
+        "role": "neutral",
+        "displayName": "Perforación",
+        "canonical": "#8C95B2",
+        "tonalRamp": [
+          "oklch(15% 0.044 271.6)",
+          "oklch(26% 0.044 271.6)",
+          "oklch(37% 0.044 271.6)",
+          "oklch(48% 0.044 271.6)",
+          "oklch(60% 0.044 271.6)",
+          "oklch(72% 0.044 271.6)",
+          "oklch(84% 0.044 271.6)",
+          "oklch(95% 0.044 271.6)"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Línea de Campo",
+        "canonical": "#6F7A99",
+        "tonalRamp": [
+          "oklch(15% 0.050 269.6)",
+          "oklch(26% 0.050 269.6)",
+          "oklch(37% 0.050 269.6)",
+          "oklch(48% 0.050 269.6)",
+          "oklch(60% 0.050 269.6)",
+          "oklch(72% 0.050 269.6)",
+          "oklch(84% 0.050 269.6)",
+          "oklch(95% 0.050 269.6)"
+        ]
+      },
+      "tag-bg": {
+        "role": "neutral",
+        "displayName": "Etiqueta",
+        "canonical": "#F3F5FA",
+        "tonalRamp": [
+          "oklch(15% 0.007 268.5)",
+          "oklch(26% 0.007 268.5)",
+          "oklch(37% 0.007 268.5)",
+          "oklch(48% 0.007 268.5)",
+          "oklch(60% 0.007 268.5)",
+          "oklch(72% 0.007 268.5)",
+          "oklch(84% 0.007 268.5)",
+          "oklch(95% 0.007 268.5)"
+        ]
+      },
+      "tab-bg": {
+        "role": "neutral",
+        "displayName": "Lengüeta",
+        "canonical": "#D3DAE7",
+        "tonalRamp": [
+          "oklch(15% 0.019 263.0)",
+          "oklch(26% 0.019 263.0)",
+          "oklch(37% 0.019 263.0)",
+          "oklch(48% 0.019 263.0)",
+          "oklch(60% 0.019 263.0)",
+          "oklch(72% 0.019 263.0)",
+          "oklch(84% 0.019 263.0)",
+          "oklch(95% 0.019 263.0)"
+        ]
+      },
+      "tab-bg-hover": {
+        "role": "neutral",
+        "displayName": "Lengüeta al pasar",
+        "canonical": "#C3CCDD",
+        "tonalRamp": [
+          "oklch(15% 0.026 263.3)",
+          "oklch(26% 0.026 263.3)",
+          "oklch(37% 0.026 263.3)",
+          "oklch(48% 0.026 263.3)",
+          "oklch(60% 0.026 263.3)",
+          "oklch(72% 0.026 263.3)",
+          "oklch(84% 0.026 263.3)",
+          "oklch(95% 0.026 263.3)"
+        ]
+      },
+      "on": {
+        "role": "neutral",
+        "displayName": "Sobre Azul",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "oklch(15% 0.000 89.9)",
+          "oklch(26% 0.000 89.9)",
+          "oklch(37% 0.000 89.9)",
+          "oklch(48% 0.000 89.9)",
+          "oklch(60% 0.000 89.9)",
+          "oklch(72% 0.000 89.9)",
+          "oklch(84% 0.000 89.9)",
+          "oklch(95% 0.000 89.9)"
+        ]
+      },
+      "on-2": {
+        "role": "neutral",
+        "displayName": "Sobre Azul Secundario",
+        "canonical": "#C9D5EE",
+        "tonalRamp": [
+          "oklch(15% 0.037 265.1)",
+          "oklch(26% 0.037 265.1)",
+          "oklch(37% 0.037 265.1)",
+          "oklch(48% 0.037 265.1)",
+          "oklch(60% 0.037 265.1)",
+          "oklch(72% 0.037 265.1)",
+          "oklch(84% 0.037 265.1)",
+          "oklch(95% 0.037 265.1)"
+        ]
+      },
+      "dark-navy": {
+        "role": "primary",
+        "displayName": "Marino Cabina (tema oscuro)",
+        "canonical": "#070C1C",
+        "tonalRamp": [
+          "oklch(15% 0.035 268.4)",
+          "oklch(26% 0.035 268.4)",
+          "oklch(37% 0.035 268.4)",
+          "oklch(48% 0.035 268.4)",
+          "oklch(60% 0.035 268.4)",
+          "oklch(72% 0.035 268.4)",
+          "oklch(84% 0.035 268.4)",
+          "oklch(95% 0.035 268.4)"
+        ],
+        "theme": "dark",
+        "replaces": "navy"
+      },
+      "dark-wallet": {
+        "role": "primary",
+        "displayName": "Azul Tapa (tema oscuro)",
+        "canonical": "#10224D",
+        "tonalRamp": [
+          "oklch(15% 0.083 264.4)",
+          "oklch(26% 0.083 264.4)",
+          "oklch(37% 0.083 264.4)",
+          "oklch(48% 0.083 264.4)",
+          "oklch(60% 0.083 264.4)",
+          "oklch(72% 0.083 264.4)",
+          "oklch(84% 0.083 264.4)",
+          "oklch(95% 0.083 264.4)"
+        ],
+        "theme": "dark",
+        "replaces": "wallet"
+      },
+      "dark-tray": {
+        "role": "primary",
+        "displayName": "Azul Bandeja (tema oscuro)",
+        "canonical": "#13295C",
+        "tonalRamp": [
+          "oklch(15% 0.096 263.9)",
+          "oklch(26% 0.096 263.9)",
+          "oklch(37% 0.096 263.9)",
+          "oklch(48% 0.096 263.9)",
+          "oklch(60% 0.096 263.9)",
+          "oklch(72% 0.096 263.9)",
+          "oklch(84% 0.096 263.9)",
+          "oklch(95% 0.096 263.9)"
+        ],
+        "theme": "dark",
+        "replaces": "tray"
+      },
+      "dark-ground": {
+        "role": "neutral",
+        "displayName": "Cartulina Gris Azulada (tema oscuro)",
+        "canonical": "#131417",
+        "tonalRamp": [
+          "oklch(15% 0.006 271.1)",
+          "oklch(26% 0.006 271.1)",
+          "oklch(37% 0.006 271.1)",
+          "oklch(48% 0.006 271.1)",
+          "oklch(60% 0.006 271.1)",
+          "oklch(72% 0.006 271.1)",
+          "oklch(84% 0.006 271.1)",
+          "oklch(95% 0.006 271.1)"
+        ],
+        "theme": "dark",
+        "replaces": "ground"
+      },
+      "dark-stock": {
+        "role": "neutral",
+        "displayName": "Cartulina (tema oscuro)",
+        "canonical": "#1F2127",
+        "tonalRamp": [
+          "oklch(15% 0.012 270.9)",
+          "oklch(26% 0.012 270.9)",
+          "oklch(37% 0.012 270.9)",
+          "oklch(48% 0.012 270.9)",
+          "oklch(60% 0.012 270.9)",
+          "oklch(72% 0.012 270.9)",
+          "oklch(84% 0.012 270.9)",
+          "oklch(95% 0.012 270.9)"
+        ],
+        "theme": "dark",
+        "replaces": "stock"
+      },
+      "dark-stock-hover": {
+        "role": "neutral",
+        "displayName": "Cartulina al pasar (tema oscuro)",
+        "canonical": "#262930",
+        "tonalRamp": [
+          "oklch(15% 0.014 267.1)",
+          "oklch(26% 0.014 267.1)",
+          "oklch(37% 0.014 267.1)",
+          "oklch(48% 0.014 267.1)",
+          "oklch(60% 0.014 267.1)",
+          "oklch(72% 0.014 267.1)",
+          "oklch(84% 0.014 267.1)",
+          "oklch(95% 0.014 267.1)"
+        ],
+        "theme": "dark",
+        "replaces": "stock-hover"
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Tinta (tema oscuro)",
+        "canonical": "#EEF0F4",
+        "tonalRamp": [
+          "oklch(15% 0.006 264.5)",
+          "oklch(26% 0.006 264.5)",
+          "oklch(37% 0.006 264.5)",
+          "oklch(48% 0.006 264.5)",
+          "oklch(60% 0.006 264.5)",
+          "oklch(72% 0.006 264.5)",
+          "oklch(84% 0.006 264.5)",
+          "oklch(95% 0.006 264.5)"
+        ],
+        "theme": "dark",
+        "replaces": "ink"
+      },
+      "dark-ink-2": {
+        "role": "neutral",
+        "displayName": "Tinta Secundaria (tema oscuro)",
+        "canonical": "#A9AFBD",
+        "tonalRamp": [
+          "oklch(15% 0.021 267.2)",
+          "oklch(26% 0.021 267.2)",
+          "oklch(37% 0.021 267.2)",
+          "oklch(48% 0.021 267.2)",
+          "oklch(60% 0.021 267.2)",
+          "oklch(72% 0.021 267.2)",
+          "oklch(84% 0.021 267.2)",
+          "oklch(95% 0.021 267.2)"
+        ],
+        "theme": "dark",
+        "replaces": "ink-2"
+      },
+      "dark-rule": {
+        "role": "neutral",
+        "displayName": "Filete (tema oscuro)",
+        "canonical": "#363A44",
+        "tonalRamp": [
+          "oklch(15% 0.018 268.2)",
+          "oklch(26% 0.018 268.2)",
+          "oklch(37% 0.018 268.2)",
+          "oklch(48% 0.018 268.2)",
+          "oklch(60% 0.018 268.2)",
+          "oklch(72% 0.018 268.2)",
+          "oklch(84% 0.018 268.2)",
+          "oklch(95% 0.018 268.2)"
+        ],
+        "theme": "dark",
+        "replaces": "rule"
+      },
+      "dark-blue-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta Azul de Sello (tema oscuro)",
+        "canonical": "#9DBBFF",
+        "tonalRamp": [
+          "oklch(15% 0.103 265.8)",
+          "oklch(26% 0.103 265.8)",
+          "oklch(37% 0.103 265.8)",
+          "oklch(48% 0.103 265.8)",
+          "oklch(60% 0.103 265.8)",
+          "oklch(72% 0.103 265.8)",
+          "oklch(84% 0.103 265.8)",
+          "oklch(95% 0.103 265.8)"
+        ],
+        "theme": "dark",
+        "replaces": "blue-ink"
+      },
+      "dark-red-ink": {
+        "role": "tertiary",
+        "displayName": "Tinta Roja de Sello (tema oscuro)",
+        "canonical": "#FF8A8A",
+        "tonalRamp": [
+          "oklch(15% 0.142 20.9)",
+          "oklch(26% 0.142 20.9)",
+          "oklch(37% 0.142 20.9)",
+          "oklch(48% 0.142 20.9)",
+          "oklch(60% 0.142 20.9)",
+          "oklch(72% 0.142 20.9)",
+          "oklch(84% 0.142 20.9)",
+          "oklch(95% 0.142 20.9)"
+        ],
+        "theme": "dark",
+        "replaces": "red-ink"
+      },
+      "dark-carbon": {
+        "role": "tertiary",
+        "displayName": "Morado Carbón (tema oscuro)",
+        "canonical": "#CDBEF7",
+        "tonalRamp": [
+          "oklch(15% 0.080 296.7)",
+          "oklch(26% 0.080 296.7)",
+          "oklch(37% 0.080 296.7)",
+          "oklch(48% 0.080 296.7)",
+          "oklch(60% 0.080 296.7)",
+          "oklch(72% 0.080 296.7)",
+          "oklch(84% 0.080 296.7)",
+          "oklch(95% 0.080 296.7)"
+        ],
+        "theme": "dark",
+        "replaces": "carbon"
+      },
+      "dark-copy-accepts": {
+        "role": "tertiary",
+        "displayName": "Copia Amarilla (tema oscuro)",
+        "canonical": "#E5CC63",
+        "tonalRamp": [
+          "oklch(15% 0.128 96.1)",
+          "oklch(26% 0.128 96.1)",
+          "oklch(37% 0.128 96.1)",
+          "oklch(48% 0.128 96.1)",
+          "oklch(60% 0.128 96.1)",
+          "oklch(72% 0.128 96.1)",
+          "oklch(84% 0.128 96.1)",
+          "oklch(95% 0.128 96.1)"
+        ],
+        "theme": "dark",
+        "replaces": "copy-accepts"
+      },
+      "dark-copy-rejects": {
+        "role": "tertiary",
+        "displayName": "Copia Rosada (tema oscuro)",
+        "canonical": "#E7C3C9",
+        "tonalRamp": [
+          "oklch(15% 0.042 6.7)",
+          "oklch(26% 0.042 6.7)",
+          "oklch(37% 0.042 6.7)",
+          "oklch(48% 0.042 6.7)",
+          "oklch(60% 0.042 6.7)",
+          "oklch(72% 0.042 6.7)",
+          "oklch(84% 0.042 6.7)",
+          "oklch(95% 0.042 6.7)"
+        ],
+        "theme": "dark",
+        "replaces": "copy-rejects"
+      },
+      "dark-copy-unknown": {
+        "role": "tertiary",
+        "displayName": "Copia Lila (tema oscuro)",
+        "canonical": "#CFC6E6",
+        "tonalRamp": [
+          "oklch(15% 0.045 298.3)",
+          "oklch(26% 0.045 298.3)",
+          "oklch(37% 0.045 298.3)",
+          "oklch(48% 0.045 298.3)",
+          "oklch(60% 0.045 298.3)",
+          "oklch(72% 0.045 298.3)",
+          "oklch(84% 0.045 298.3)",
+          "oklch(95% 0.045 298.3)"
+        ],
+        "theme": "dark",
+        "replaces": "copy-unknown"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Título de la tapa (portada y Estadísticas), en mayúsculas.",
+        "textTransform": "uppercase"
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Nombre de la empresa en su ficha, en mayúsculas.",
+        "textTransform": "uppercase"
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Nombre de la empresa en el cupón; 22px ≤880px, 20px en compacta."
+      },
+      "title-panel": {
+        "displayName": "Title de panel",
+        "purpose": "Títulos de paneles de Estadísticas, en mayúsculas.",
+        "textTransform": "uppercase"
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Entrada de la tapa, máx. 54ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prosa y notas (máx. 72ch)."
+      },
+      "value": {
+        "displayName": "Value",
+        "purpose": "Valores de campo del cupón."
+      },
+      "fine-print": {
+        "displayName": "Letra pequeña",
+        "purpose": "Aviso legal en la tapa."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Rótulos de campo, papeleta y menú, en mayúsculas.",
+        "textTransform": "uppercase"
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Botones, navegación, lengüetas, encabezados ordenables, en mayúsculas.",
+        "textTransform": "uppercase"
+      },
+      "stamp": {
+        "displayName": "Sello",
+        "purpose": "Texto del sello de Status, en mayúsculas, con filtro de tinta SVG.",
+        "textTransform": "uppercase"
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Fechas del talón y cifras, en morado carbón."
+      },
+      "numeral-lg": {
+        "displayName": "Numeral grande",
+        "purpose": "Valores de la papeleta de resumen."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tray-inset",
+        "value": "inset 0 14px 18px -14px rgba(2, 8, 24, 0.55)",
+        "purpose": "Borde superior interior de la bandeja."
+      },
+      {
+        "name": "menu",
+        "value": "0 14px 34px rgba(4, 10, 28, 0.38), 0 2px 6px rgba(4, 10, 28, 0.2)",
+        "purpose": "Menú de ajustes flotante; única sombra exterior."
+      },
+      {
+        "name": "tab-active-rule",
+        "value": "inset 0 3px 0 var(--red)",
+        "purpose": "Filete rojo superior de la lengüeta activa."
+      },
+      {
+        "name": "stamp-double-rule",
+        "value": "inset 0 0 0 2px var(--stub-bg), inset 0 0 0 3px currentColor",
+        "purpose": "Doble filete de los sellos acepta y no acepta."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid var(--navy); outline-offset: 2px; box-shadow: 0 0 0 2px var(--yellow)",
+        "purpose": "Foco global; sobre azul se invierte (contorno amarillo, halo navy)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Curva del estampado."
+      },
+      {
+        "name": "stamp",
+        "value": "300ms, escala 1.25→1, rotación −7°→0, blur 1.5px→0, escalonado 40ms, máx. 8 sellos",
+        "purpose": "Gesto firma al cambiar lengüeta, filtro o búsqueda (220ms de pausa al escribir). Nunca al ordenar ni con prefers-reduced-motion."
+      },
+      {
+        "name": "stamp-mini",
+        "value": "260ms, +170ms tras el sello",
+        "purpose": "Sello DESACTUALIZADA."
+      },
+      {
+        "name": "state",
+        "value": "0.15s ease-out",
+        "purpose": "Transiciones de color, fondo y borde en controles."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "desk-narrow",
+        "value": "1180px"
+      },
+      {
+        "name": "tablet",
+        "value": "880px"
+      },
+      {
+        "name": "mobile",
+        "value": "760px"
+      },
+      {
+        "name": "phone-narrow",
+        "value": "400px"
+      },
+      {
+        "name": "phone-min",
+        "value": "360px"
+      }
+    ],
+    "filters": [
+      {
+        "name": "ink",
+        "value": "SVG #ink: feTurbulence 0.85 + feDisplacementMap scale 1.3 + poros (alpha -14, 9.6)",
+        "purpose": "Solo el sello grande de la ficha."
+      },
+      {
+        "name": "ink-fine",
+        "value": "SVG #ink-fine: displacement scale 0.3, poros (alpha -14, 11.3)",
+        "purpose": "Sellos a tamaño de cupón y sellos pequeños, para legibilidad."
+      }
+    ],
+    "textures": [
+      {
+        "name": "ground-dots",
+        "value": "radial-gradient(var(--ground-dot) 1px, transparent 1.6px) / 7px 7px",
+        "purpose": "Trama de la cartulina de página."
+      },
+      {
+        "name": "wallet-dots",
+        "value": "radial-gradient(var(--wallet-dot) 1px, transparent 1.6px) / 7px 7px",
+        "purpose": "Trama de la tapa."
+      },
+      {
+        "name": "perforation",
+        "value": "radial-gradient(circle, var(--perf) 1.15px, transparent 1.65px) center top / 6px 7px repeat-y",
+        "purpose": "Troquel entre cuerpo y talón."
+      },
+      {
+        "name": "void-overprint",
+        "value": "repeating-linear-gradient(-55deg, var(--void) 0 1.5px, transparent 1.5px 8px)",
+        "purpose": "Anulación roja del talón de las no aceptantes."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón rojo (contribuir)",
+      "kind": "button",
+      "refersTo": "button-red",
+      "description": "Acción primaria; reservada a contribuir en GitHub.",
+      "html": "<a class=\"ds-btn ds-btn-red\" href=\"#\">Agregar empresa</a>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border:1px solid transparent;border-radius:4px;font:600 15px/1 var(--display,'Barlow Condensed','Arial Narrow',sans-serif);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out,border-color .15s ease-out}.ds-btn-red{background:var(--red,#D7262D);color:#fff}.ds-btn-red:hover{background:var(--red-hover,#B81D24)}.ds-btn:focus-visible{outline:2px solid var(--navy,#0D1B3D);outline-offset:2px;box-shadow:0 0 0 2px var(--yellow,#FFCC00)}"
+    },
+    {
+      "name": "Botón de línea (Filtros)",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "Botón secundario con borde de tinta; se invierte al pasar o al abrir.",
+      "html": "<button class=\"ds-btn ds-btn-line\" aria-expanded=\"false\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><path d=\"M3 6h10M17 6h4M3 12h3M10 12h11M3 18h12M19 18h2\"/><circle cx=\"15\" cy=\"6\" r=\"2\"/><circle cx=\"8\" cy=\"12\" r=\"2\"/><circle cx=\"17\" cy=\"18\" r=\"2\"/></svg>Filtros<span class=\"ds-count\">2</span></button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 20px;border:1px solid transparent;border-radius:4px;font:600 15px/1 var(--display,'Barlow Condensed','Arial Narrow',sans-serif);letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}.ds-btn-line{background:transparent;color:var(--ink,#0D1B3D);border-color:var(--ink,#0D1B3D)}.ds-btn-line:hover,.ds-btn-line[aria-expanded=true]{background:var(--ink,#0D1B3D);color:var(--ground,#E6EAF1)}.ds-count{min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:var(--red,#D7262D);color:#fff;font:700 13px/22px var(--num,'Courier Prime',monospace);letter-spacing:0;text-align:center}.ds-btn:focus-visible{outline:2px solid var(--navy,#0D1B3D);outline-offset:2px;box-shadow:0 0 0 2px var(--yellow,#FFCC00)}"
+    },
+    {
+      "name": "Campo de búsqueda",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Búsqueda de empresas con lupa a la izquierda.",
+      "html": "<label class=\"ds-search\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20.5 20.5-4.35-4.35\"/></svg><input type=\"search\" placeholder=\"Buscar empresas, etiquetas...\"></label>",
+      "css": ".ds-search{position:relative;display:block;max-width:420px}.ds-search svg{position:absolute;top:50%;left:14px;transform:translateY(-50%);color:var(--ink-2,#44547F);pointer-events:none}.ds-search input{width:100%;height:48px;padding:0 16px 0 44px;border:1px solid var(--field-line,#6F7A99);border-radius:4px;background:var(--stock,#fff);color:var(--ink,#0D1B3D);font:500 16px/1 var(--text,Barlow,system-ui,sans-serif);appearance:none;transition:border-color .15s ease-out}.ds-search input::placeholder{color:var(--ink-2,#44547F)}.ds-search input:hover{border-color:var(--ink,#0D1B3D)}.ds-search input:focus-visible{outline:2px solid var(--navy,#0D1B3D);outline-offset:2px;box-shadow:0 0 0 2px var(--yellow,#FFCC00)}"
+    },
+    {
+      "name": "Lengüetas de Status",
+      "kind": "nav",
+      "refersTo": "status-tab",
+      "description": "Pestañas que salen de la bandeja azul; la activa lleva filete rojo y contador amarillo.",
+      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab is-active\">Todas <span class=\"ds-tab-n\">101</span></button><button class=\"ds-tab\">Acepta <span class=\"ds-tab-n\">92</span></button><button class=\"ds-tab\">No acepta <span class=\"ds-tab-n\">6</span></button></div><div class=\"ds-tray\"></div>",
+      "css": ".ds-tabs{display:flex;gap:4px}.ds-tab{display:inline-flex;align-items:center;gap:10px;height:50px;padding:0 18px 0 20px;border:0;border-radius:8px 8px 0 0;background:var(--tab-bg,#D3DAE7);color:var(--ink-2,#44547F);font:600 17px/1 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background-color .15s ease-out,color .15s ease-out}.ds-tab:hover{background:var(--tab-bg-hover,#C3CCDD);color:var(--ink,#0D1B3D)}.ds-tab.is-active{background:var(--tray,#163A6F);color:#fff;box-shadow:inset 0 3px 0 var(--red,#D7262D)}.ds-tab:focus-visible{outline:2px solid var(--navy,#0D1B3D);outline-offset:2px;box-shadow:0 0 0 2px var(--yellow,#FFCC00)}.ds-tab-n{min-width:2.2em;padding:4px 6px 3px;border-radius:3px;background:rgba(13,27,61,.08);font:700 15px/1 var(--num,'Courier Prime',monospace);text-align:center}.ds-tab.is-active .ds-tab-n{background:var(--yellow,#FFCC00);color:var(--on-yellow,#0D1B3D)}.ds-tray{height:24px;border-radius:0 8px 8px 8px;background:var(--tray,#163A6F)}"
+    },
+    {
+      "name": "Filtro activo (etiqueta de equipaje)",
+      "kind": "chip",
+      "refersTo": "filter-chip",
+      "description": "Filtro aplicado que se arranca con un clic.",
+      "html": "<button class=\"ds-chip\">Plataforma: Greenhouse<span class=\"ds-chip-x\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg></span></button>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 8px 0 14px;border:1px solid var(--field-line,#6F7A99);border-radius:3px 18px 18px 3px;background:var(--stock,#fff);color:var(--ink,#0D1B3D);font:500 14px/1 var(--text,Barlow,sans-serif);cursor:pointer;transition:border-color .15s ease-out,background-color .15s ease-out}.ds-chip:hover{border-color:var(--red,#D7262D);background:var(--stock-hover,#F5F7FC)}.ds-chip-x{width:22px;height:22px;display:grid;place-items:center;border-radius:50%;background:var(--tag-bg,#F3F5FA);color:var(--ink-2,#44547F)}.ds-chip:hover .ds-chip-x{background:var(--red,#D7262D);color:#fff}.ds-chip:focus-visible{outline:2px solid var(--navy,#0D1B3D);outline-offset:2px;box-shadow:0 0 0 2px var(--yellow,#FFCC00)}"
+    },
+    {
+      "name": "Cupón con talón y sello",
+      "kind": "card",
+      "refersTo": "coupon-body",
+      "description": "El registro de una Empresa: cuerpo, troquel con muescas y talón al carbón con el sello del Status.",
+      "html": "<div class=\"ds-tray2\"><div class=\"ds-coupon\"><div class=\"ds-body\"><a class=\"ds-name\" href=\"#\">A.Team</a><div class=\"ds-dom\">a.team</div><div class=\"ds-tags\"><span class=\"ds-tag\">fullstack</span><span class=\"ds-tag ds-more\">+1</span></div></div><div class=\"ds-stub\"><span class=\"ds-date\">5 ago 2026</span><span class=\"ds-stamp\">Probablemente acepta Venezuela</span></div></div></div>",
+      "css": ".ds-tray2{padding:16px;border-radius:8px;background:var(--tray,#163A6F);box-shadow:inset 0 14px 18px -14px rgba(2,8,24,.55)}.ds-coupon{--stub:300px;position:relative;display:grid;grid-template-columns:minmax(0,1fr) var(--stub);min-height:86px;border-radius:6px;background:var(--stock,#fff);color:var(--ink,#0D1B3D);-webkit-mask:radial-gradient(circle 9px at calc(100% - var(--stub)) 0,#0000 96%,#000),radial-gradient(circle 9px at calc(100% - var(--stub)) 100%,#0000 96%,#000);-webkit-mask-composite:source-in;mask:radial-gradient(circle 9px at calc(100% - var(--stub)) 0,#0000 96%,#000),radial-gradient(circle 9px at calc(100% - var(--stub)) 100%,#0000 96%,#000);mask-composite:intersect}.ds-coupon::before{content:'';position:absolute;top:4px;bottom:0;right:calc(var(--stub) - 3px);width:6px;background:radial-gradient(circle,var(--perf,#8C95B2) 1.15px,transparent 1.65px) center top/6px 7px repeat-y}.ds-coupon:hover .ds-body{background:var(--stock-hover,#F5F7FC)}.ds-body{padding:15px 16px 14px 22px}.ds-name{color:inherit;font:700 25px/1.05 var(--display,'Barlow Condensed',sans-serif);text-decoration:none}.ds-name:hover{text-decoration:underline;text-decoration-color:var(--red,#D7262D);text-decoration-thickness:2px;text-underline-offset:4px}.ds-dom{margin-top:7px;color:var(--ink-2,#44547F);font:500 14px/1.25 var(--text,Barlow,sans-serif)}.ds-tags{display:flex;gap:5px;margin-top:10px}.ds-tag{padding:3px 7px;border:1px solid var(--rule,#CFD5E4);border-radius:3px;background:var(--tag-bg,#F3F5FA);color:var(--ink-2,#44547F);font:500 12.5px/1.25 var(--text,Barlow,sans-serif)}.ds-more{border-style:dashed;background:transparent;color:var(--carbon,#4B2E83);font:700 12.5px/1.25 var(--num,'Courier Prime',monospace)}.ds-stub{display:grid;align-content:space-between;justify-items:start;gap:10px;padding:15px 20px 14px 22px;background:var(--copy-accepts,#FFF2BF)}.ds-date{color:var(--carbon,#4B2E83);font:700 18px/1.2 var(--num,'Courier Prime',monospace);font-variant-numeric:tabular-nums}.ds-stamp{justify-self:center;max-width:12.6em;padding:6px 11px 5px;border:2px solid currentColor;border-radius:4px;box-shadow:inset 0 0 0 2px var(--copy-accepts,#FFF2BF),inset 0 0 0 3px currentColor;color:var(--blue-ink,#1C47A3);font:700 15px/1.08 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.08em;text-align:center;text-transform:uppercase;transform:rotate(-3deg)}"
+    },
+    {
+      "name": "Sellos de Status",
+      "kind": "custom",
+      "refersTo": "stamp-accepts",
+      "description": "Los tres sellos sobre sus copias al carbón: acepta (azul, doble filete), no acepta (rojo, 3px, anulado), desconocido (carbón, discontinuo).",
+      "html": "<div class=\"ds-stubs\"><div class=\"ds-s ds-a\"><span>Probablemente acepta</span></div><div class=\"ds-s ds-r\"><span>No acepta</span></div><div class=\"ds-s ds-u\"><span>Desconocido</span></div></div>",
+      "css": ".ds-stubs{display:flex;gap:10px;flex-wrap:wrap}.ds-s{--paper:#fff;display:grid;place-items:center;width:200px;height:86px;border-radius:6px;background:var(--paper)}.ds-s span{display:block;max-width:11em;padding:6px 11px 5px;border:2px solid currentColor;border-radius:4px;box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3px currentColor;font:700 15px/1.08 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.08em;text-align:center;text-transform:uppercase;transform:rotate(-3deg)}.ds-a{--paper:var(--copy-accepts,#FFF2BF);color:var(--blue-ink,#1C47A3)}.ds-r{--paper:var(--copy-rejects,#FCE4E6);color:var(--red-ink,#B8141D);background:repeating-linear-gradient(-55deg,rgba(184,20,29,.085) 0 1.5px,transparent 1.5px 8px),var(--paper)}.ds-r span{padding:7px 12px 6px;border-width:3px;font-size:16px;font-weight:800;letter-spacing:.1em}.ds-u{--paper:var(--copy-unknown,#EEE9F8);color:var(--carbon,#4B2E83)}.ds-u span{border-style:dashed;box-shadow:none}"
+    },
+    {
+      "name": "Papeleta de resumen",
+      "kind": "custom",
+      "refersTo": "slip",
+      "description": "Papeleta amarilla con muescas laterales y perforación entre campos; cifras a máquina.",
+      "html": "<dl class=\"ds-slip\"><div class=\"ds-f\"><dt>empresas</dt><dd>101</dd></div><div class=\"ds-f\"><dt>probablemente aceptan</dt><dd>92</dd></div><div class=\"ds-f\"><dt>actualizado</dt><dd class=\"ds-d\">13 oct 2026</dd></div></dl>",
+      "css": ".ds-slip{display:inline-grid;grid-template-columns:repeat(3,auto);margin:0;padding:0 10px;border-radius:6px;background:var(--yellow,#FFCC00);color:var(--carbon,#4B2E83);-webkit-mask:radial-gradient(circle 9px at 0 50%,#0000 96%,#000),radial-gradient(circle 9px at 100% 50%,#0000 96%,#000);-webkit-mask-composite:source-in;mask:radial-gradient(circle 9px at 0 50%,#0000 96%,#000),radial-gradient(circle 9px at 100% 50%,#0000 96%,#000);mask-composite:intersect}.ds-f{display:flex;flex-direction:column;gap:6px;padding:14px 20px 13px}.ds-f+.ds-f{background:radial-gradient(circle,currentColor 1px,transparent 1.5px) left 0 top 3px/4px 6px repeat-y}.ds-f dt{color:var(--on-yellow,#0D1B3D);font:600 11.5px/1.15 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.13em;text-transform:uppercase}.ds-f dd{margin:0;font:700 28px/1 var(--num,'Courier Prime',monospace);letter-spacing:-.02em;white-space:nowrap}.ds-f .ds-d{font-size:22px;padding-top:3px}"
+    },
+    {
+      "name": "Cabecera de boleto",
+      "kind": "nav",
+      "refersTo": "navbar",
+      "description": "Cabecera marino con filete de librea rojo y la sección actual subrayada en amarillo.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-brand\"><b>Remote Venezuela</b><small>Hiring</small></span><nav><a href=\"#\" aria-current=\"page\">Empresas</a><a href=\"#\">Estadísticas</a></nav><a class=\"ds-gh\" href=\"#\">GitHub</a></header>",
+      "css": ".ds-nav{position:relative;display:flex;align-items:center;gap:40px;min-height:64px;padding:0 24px;margin-bottom:10px;background:var(--navy,#0D1B3D);color:#fff;border-bottom:4px solid var(--red,#D7262D)}.ds-nav::after{content:'';position:absolute;left:0;right:0;bottom:-10px;height:2px;background:var(--red,#D7262D)}.ds-brand{display:grid;gap:4px;line-height:1}.ds-brand b{font:700 19px/1 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.06em;text-transform:uppercase}.ds-brand small{font:600 12px/1 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.42em;text-transform:uppercase;color:var(--on-2,#C9D5EE)}.ds-nav nav{display:flex;align-self:stretch;gap:4px}.ds-nav nav a{position:relative;display:flex;align-items:center;padding:0 14px;color:var(--on-2,#C9D5EE);font:600 16px/1 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:color .15s ease-out}.ds-nav nav a:hover,.ds-nav nav a[aria-current=page]{color:#fff}.ds-nav nav a[aria-current=page]::after{content:'';position:absolute;left:14px;right:14px;bottom:0;height:3px;background:var(--yellow,#FFCC00)}.ds-gh{margin-left:auto;display:inline-flex;align-items:center;height:44px;padding:0 16px;border:1px solid rgba(255,255,255,.5);border-radius:4px;color:#fff;font:600 15px/1 var(--display,'Barlow Condensed',sans-serif);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:background-color .15s ease-out,color .15s ease-out}.ds-gh:hover{background:#fff;color:#0D1B3D}.ds-nav a:focus-visible{outline:2px solid var(--yellow,#FFCC00);outline-offset:2px;box-shadow:0 0 0 2px var(--navy,#0D1B3D)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Talonario de la Era Jet",
+    "overview": "Cada Empresa es un cupón de pasaje aéreo: cuerpo de cartulina blanca, troquel perforado con muescas, talón en copia al carbón. El Status se estampa como un sello en el talón, y quien llega desde el teléfono reconoce el objeto, recorre los cupones, encuentra el sello y sabe si puede seguir. El sistema rechaza las filas planas e indistintas de la tabla SaaS: la información es la misma, pero cada registro es una pieza de papel con un sello que se lee de un vistazo.\n\nEl mundo tiene dos materiales y una regla de color. El azul de aerolínea vive solo en la cabecera marino (con su filete de librea rojo), la tapa y la bandeja donde se apilan los cupones; el resto de la página es cartulina gris azulada clara con una trama de puntos. El amarillo de la bandera es el único resalte: la papeleta de resumen, el anillo de foco, los contadores activos. La tipografía se reparte en tres voces: grotesca condensada en mayúsculas para titular, rotular y estampar; grotesca de lectura para valores y prosa; máquina de escribir en morado carbón para toda cifra.\n\nLa densidad es de directorio operativo: cupones de 86px en la densidad cómoda, 64px en la compacta, con el talón de ancho fijo para que fecha y sello caigan siempre en la misma columna. El movimiento es uno solo y es la firma: el sello se estampa una vez al cambiar lo que se ve.",
+    "keyCharacteristics": [
+      "Cupón = cuerpo | troquel | talón; el talón es papel de color según Status, en ambos temas.",
+      "Sello con tinta irregular (filtros SVG `#ink` / `#ink-fine`) y rotación leve por cupón.",
+      "Azul solo en cabecera, tapa y bandeja; cartulina clara (o grafito neutro de noche) en todo lo demás.",
+      "Amarillo bandera como único color de resalte.",
+      "Cifras en Courier Prime morado carbón, tabulares.",
+      "Rotulación en Barlow Condensed mayúsculas con tracking amplio."
+    ],
+    "rules": [
+      {
+        "name": "La Regla del Azul de Cabina",
+        "body": "El azul (navy, wallet, tray) solo cubre cabecera, tapa, bandeja y pie. El suelo de la página es cartulina clara, y de noche grafito neutro; nunca azul.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de la Copia al Carbón",
+        "body": "El color del talón es el Status: amarillo acepta, rosado no acepta, lila desconocido. El talón es papel en ambos temas y lleva siempre las tintas del tema claro.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla del Amarillo de Bandera",
+        "body": "El amarillo es el único resalte y solo marca resumen, foco, contadores activos y la sección actual. No es fondo de sección ni color de texto.",
+        "section": "colors"
+      },
+      {
+        "name": "La Regla de la Máquina de Escribir",
+        "body": "Toda cifra (fecha, conteo, porcentaje, \"+N\", generado el) va en Courier Prime con `tabular-nums`, casi siempre en morado carbón. Ninguna cifra en Barlow.",
+        "section": "typography"
+      },
+      {
+        "name": "La Regla de la Rotulación",
+        "body": "Barlow Condensed se usa en mayúsculas con tracking positivo para títulos, rótulos, controles y sellos. La prosa y los valores nunca van en condensada.",
+        "section": "typography"
+      },
+      {
+        "name": "La Regla del Papel sobre Bandeja",
+        "body": "Los cupones, paneles y tickets no llevan sombra exterior. Se separan por color, por las muescas y por el troquel.",
+        "section": "elevation"
+      },
+      {
+        "name": "La Regla del Troquel",
+        "body": "Toda superficie que represente un cupón separa sus partes con perforación y muescas, nunca con un filete liso.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** representar cada Empresa como un cupón: cuerpo de cartulina, troquel con muescas de 9px y talón de ancho fijo en copia al carbón según su Status.",
+      "**Do** mantener el talón como papel de color en el tema oscuro, con las tintas del tema claro dentro.",
+      "**Do** poner toda cifra en Courier Prime 700 tabular en morado carbón.",
+      "**Do** usar el amarillo bandera solo para resumen, foco, contadores activos y la sección actual.",
+      "**Do** usar `#ink-fine` en cualquier sello por debajo del tamaño de la ficha y reservar `#ink` para el sello grande.",
+      "**Do** estampar solo al cambiar lo que se ve, una vez, con un máximo de 8 sellos escalonados 40ms, y dejar el sello visible por defecto.",
+      "**Do** mantener objetivos táctiles de 44px como mínimo y controles de 48px."
+    ],
+    "donts": [
+      "**Don't** volver a filas planas e indistintas de tabla SaaS: el registro es un cupón con sello.",
+      "**Don't** extender el azul al suelo de la página ni teñir de azul el tema oscuro fuera de cabecera, tapa y bandeja.",
+      "**Don't** ocultar las no aceptantes: se anulan con la sobreimpresión roja del talón, no desaparecen.",
+      "**Don't** abreviar el texto de los sellos (DESACTUALIZADA, ARCHIVADA van completos).",
+      "**Don't** animar sellos al ordenar ni con `prefers-reduced-motion`.",
+      "**Don't** dar sombra exterior a cupones, tickets o paneles; la sombra es solo para lo que flota.",
+      "**Don't** poner prosa ni valores en Barlow Condensed, ni cifras en Barlow."
+    ]
+  }
+}
