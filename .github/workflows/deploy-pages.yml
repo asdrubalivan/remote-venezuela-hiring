@@ -1,12 +1,16 @@
 # Build the static site and deploy it to GitHub Pages.
 #
-# Runs after a merge to main. The validate workflow gates merges, so by the
-# time this fires the data is already known to be valid.
+# Runs after a merge to main and once a week. The validate workflow gates
+# merges, so by the time this fires the data is already known to be valid. The
+# weekly run keeps date-derived content ("desactualizada", "actualizado") fresh;
+# it skips the README step because main only accepts changes through PRs.
 name: deploy-pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "17 6 * * 1"
   workflow_dispatch:
 
 # Allow only one concurrent deployment. Skip queued runs but never cancel an
@@ -66,9 +70,11 @@ jobs:
         run: python -m remote_venezuela_hiring.build_site
 
       - name: Update README table
+        if: github.event_name != 'schedule'
         run: python -m remote_venezuela_hiring.update_readme
 
       - name: Commit updated README
+        if: github.event_name != 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -77,9 +83,6 @@ jobs:
             git commit -m "chore: update companies table in README [skip ci]" &&
             git push
           )
-
-      - name: Add CNAME for custom domain
-        run: echo "contrataenve.com" > site/CNAME
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

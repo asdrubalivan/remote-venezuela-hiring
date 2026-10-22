@@ -13,6 +13,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
+from . import seo
 from .load_data import DATA_DIR, load_all_companies
 from .models import Company, CompanyStatus, today_utc
 
@@ -311,6 +312,47 @@ def _write_companies_json(output_dir: Path, companies: list[Company]) -> None:
     )
 
 
+ROOT_STATIC_FILES: tuple[str, ...] = ("favicon.ico", "apple-touch-icon.png")
+
+
+def _page_seo(
+    *,
+    title: str,
+    description: str,
+    canonical: str | None,
+    noindex: bool = False,
+    jsonld: list[dict[str, object]] | None = None,
+) -> dict[str, object]:
+    """Per-page SEO metadata consumed by ``base.html``."""
+    base = seo.site_url()
+    return {
+        "title": title,
+        "description": description,
+        "canonical": canonical,
+        "noindex": noindex,
+        "site_name": seo.SITE_NAME,
+        "og_image": f"{base}{seo.OG_IMAGE_PATH}",
+        "og_image_alt": seo.OG_IMAGE_ALT,
+        "jsonld": jsonld or [],
+    }
+
+
+def _last_modified(companies: list[Company]) -> date:
+    """Most recent ``last_checked`` among active companies (a stable ``lastmod``)."""
+    dates = [c.last_checked for c in companies if not c.archived]
+    return max(dates) if dates else today_utc()
+
+
+def _sitemap_entries(companies: list[Company], base: str) -> list[tuple[str, date]]:
+    """Every indexable page: all but archived companies (noindex) and the 404."""
+    lastmod = _last_modified(companies)
+    entries = [(f"{base}/", lastmod), (f"{base}/stats.html", lastmod)]
+    entries.extend(
+        (f"{base}/company/{c.id}.html", c.last_checked) for c in companies if not c.archived
+    )
+    return entries
+
+
 def build(
     output_dir: Path = DEFAULT_OUTPUT_DIR,
     data_dir: Path = DATA_DIR,
@@ -321,6 +363,10 @@ def build(
     companies = load_all_companies(data_dir)
     summary = _status_summary(companies)
     generated_at = datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
+    base = seo.site_url()
+    active = [c for c in companies if not c.archived]
+    accepts_total = sum(1 for c in active if c.status == CompanyStatus.accepts)
+    last_modified = _last_modified(companies)
 
     _compile_frontend()
     env = _make_env(templates_dir)
@@ -339,6 +385,16 @@ def build(
             home_url="./",
             stats_url="./stats.html",
             static_prefix="static",
+            seo=_page_seo(
+                title=seo.INDEX_TITLE,
+                description=seo.index_description(len(active), accepts_total),
+                canonical=f"{base}/",
+                jsonld=[
+                    seo.website_json_ld(base),
+                    seo.dataset_json_ld(base, len(companies), last_modified),
+                ],
+            ),
+            companies_json_url=f"{base}/companies.json",
             **_index_context(companies),
         ),
         encoding="utf-8",
@@ -349,9 +405,16 @@ def build(
         env.get_template("stats.html").render(
             companies=companies,
             generated_at=generated_at,
-            home_url="./index.html",
+            home_url="./",
             stats_url="./stats.html",
             static_prefix="static",
+            seo=_page_seo(
+                title=seo.STATS_TITLE,
+                description=seo.stats_description(
+                    len(active), _percent(accepts_total, len(active))
+                ),
+                canonical=f"{base}/stats.html",
+            ),
             **_stats_context(companies),
         ),
         encoding="utf-8",
@@ -360,23 +423,68 @@ def build(
     company_dir = output_dir / "company"
     company_dir.mkdir()
     template_company = env.get_template("company.html")
+    duplicates = seo.duplicate_names(companies)
     for company in companies:
+        name = seo.display_name(company, duplicates)
+        method_label = VERIFICATION_LABELS[company.verification_method.value]
+        platform_label = PLATFORM_LABELS[
+            company.hiring_platform.value if company.hiring_platform else "unknown"
+        ]
+        checked = _format_date(company.last_checked)
         (company_dir / f"{company.id}.html").write_text(
             template_company.render(
                 company=company,
                 generated_at=generated_at,
-                home_url="../index.html",
+                home_url="../",
                 stats_url="../stats.html",
                 static_prefix="../static",
+                seo=_page_seo(
+                    title=seo.company_title(name),
+                    description=seo.company_description(
+                        name, company.status.value, method_label, checked, company.notes
+                    ),
+                    canonical=f"{base}/company/{company.id}.html",
+                    noindex=company.archived,
+                ),
+                summary_text=seo.company_summary(
+                    name, company.status.value, method_label, platform_label, checked
+                ),
+                related=seo.related_companies(company, companies),
             ),
             encoding="utf-8",
         )
 
+    # GitHub Pages serves 404.html from any path depth, so it must use absolute URLs.
+    (output_dir / "404.html").write_text(
+        env.get_template("404.html").render(
+            generated_at=generated_at,
+            home_url="/",
+            stats_url="/stats.html",
+            static_prefix="/static",
+            seo=_page_seo(
+                title=f"{seo.NOT_FOUND_TITLE} | {seo.SITE_NAME}",
+                description="La página que buscas no existe en el directorio.",
+                canonical=None,
+                noindex=True,
+            ),
+        ),
+        encoding="utf-8",
+    )
+
     if static_dir.exists():
-        shutil.copytree(static_dir, output_dir / "static")
+        shutil.copytree(static_dir, output_dir / "static", ignore=shutil.ignore_patterns("*.map"))
+        for filename in ROOT_STATIC_FILES:
+            source = static_dir / filename
+            if source.is_file():
+                shutil.copy2(source, output_dir / filename)
 
     _write_agents_txt(output_dir)
     _write_companies_json(output_dir, companies)
+    (output_dir / "robots.txt").write_text(seo.robots_txt(base), encoding="utf-8")
+    (output_dir / "sitemap.xml").write_text(
+        seo.sitemap_xml(_sitemap_entries(companies, base)), encoding="utf-8"
+    )
+    (output_dir / "CNAME").write_text(base.removeprefix("https://") + "\n", encoding="utf-8")
 
     return index_path
 

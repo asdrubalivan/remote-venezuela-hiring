@@ -830,7 +830,8 @@ ul { padding: 0; list-style: none; }
   align-items: center;
   width: fit-content;
   max-width: 100%;
-  margin-top: 7px;
+  margin-top: 3px;
+  padding-block: 4px; /* ≥24px de alto: objetivo táctil (WCAG 2.5.8) */
   color: var(--ink-2);
   font: 500 14px/1.25 var(--text);
   text-decoration: none;
@@ -1246,7 +1247,7 @@ ul { padding: 0; list-style: none; }
 [data-density="compact"] .coupon { min-height: 0; contain-intrinsic-size: auto 64px; }
 [data-density="compact"] .coupon td { padding-top: 10px; padding-bottom: 10px; }
 [data-density="compact"] .company-link { font-size: 20px; }
-[data-density="compact"] .cell-domain { margin-top: 3px; font-size: 13px; }
+[data-density="compact"] .cell-domain { margin-top: 0; font-size: 13px; }
 /* en compacta cada cupón muestra su primera etiqueta entera y un "+N" con todas las demás */
 .tag-more-compact { display: none; }
 [data-density="compact"] .coupon .tag-list { flex-wrap: nowrap; }
@@ -1365,7 +1366,7 @@ ul { padding: 0; list-style: none; }
   .coupon td { padding: 12px 14px; }
   .coupon .col-name { padding: 14px 14px 10px 16px; }
   .company-link { font-size: 22px; }
-  .cell-domain { font-size: 13.5px; margin-top: 5px; }
+  .cell-domain { font-size: 13.5px; margin-top: 1px; }
   .coupon .col-method,
   .coupon .col-platform { padding-top: 10px; padding-bottom: 8px; }
   .coupon .col-method { padding-left: 16px; background: linear-gradient(var(--rule), var(--rule)) left 16px top 0 / calc(100% - 16px) 1px no-repeat; }
@@ -1524,3 +1525,41 @@ ul { padding: 0; list-style: none; }
   .coupon.is-stamping .stale-marker { animation: none; }
   *, *::before, *::after { transition: none !important; }
 }
+
+/* ── SEO: migas, resumen, similares y guía ─────────────────────────────── */
+.breadcrumb { margin-top: 20px; }
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--ink-2);
+  font: 500 14px/1.4 var(--text);
+}
+.breadcrumb li + li::before { content: "›"; margin-right: 6px; color: var(--perf); }
+.breadcrumb a { color: var(--ink-2); text-underline-offset: 3px; }
+.breadcrumb a:hover { color: var(--red-ink); }
+
+.company-summary,
+.related,
+.guide { max-width: 90ch; margin-top: 32px; color: var(--ink); font: 400 16px/1.6 var(--text); }
+.section-title {
+  margin: 0 0 10px;
+  font: 800 clamp(1.5rem, 1.2rem + 1vw, 2rem)/1 var(--display);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.company-summary p,
+.guide p { margin: 0 0 12px; }
+.related-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.related-list a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+.related-list a:hover { color: var(--red-ink); }
+.related-status { margin-left: 8px; color: var(--ink-2); font-size: 14px; }
+.guide { margin-top: 48px; }
+.guide-list { display: grid; gap: 12px; margin: 0 0 16px; }
+.guide-list dt { font-weight: 700; }
+.guide-list dd { margin: 2px 0 0; color: var(--ink-2); }
+.guide a { color: var(--ink); text-underline-offset: 3px; }
+.guide a:hover { color: var(--red-ink); }

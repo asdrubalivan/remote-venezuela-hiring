@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 {% set current_page = "index" %}
 
+{% block head_extra %}
+  <link rel="alternate" type="application/json" href="{{ companies_json_url }}" title="Datos de las empresas (JSON)" />
+{% endblock %}
+
 {% block content %}
 <header class="cover">
   <div class="cover-inner">
-    <h1 class="hero-title">Compatibilidad de Contratación Remota en <span class="nowrap"><svg class="flag flag-title" aria-hidden="true" focusable="false"><use href="#i-flag" /></svg> Venezuela</span></h1>
+    <h1 class="hero-title">Empresas que contratan remoto desde <span class="nowrap"><svg class="flag flag-title" aria-hidden="true" focusable="false"><use href="#i-flag" /></svg> Venezuela</span></h1>
     <p class="hero-lede">
       Base de datos pública, mantenida por la comunidad, de empresas que pueden
-      aceptar candidatos remotos desde Venezuela.
+      aceptar, o rechazan, a candidatos venezolanos en trabajos remotos.
     </p>
     <dl class="slip" aria-label="Resumen">
       <div class="slip-field">
@@ -26,6 +30,7 @@
     <p class="terms" role="note">
       No es asesoramiento legal ni una declaración oficial de ninguna empresa.
       La compatibilidad puede cambiar — siempre verifica directamente.
+      <a href="#como-leer">Cómo leer los estados</a>
       <a href="https://github.com/asdrubalivan/remote-venezuela-hiring" target="_blank" rel="noopener noreferrer">Contribuir en GitHub<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
     </p>
   </div>
@@ -181,6 +186,35 @@
       <div class="empty-stub" aria-hidden="true"><span class="empty-mark"></span></div>
     </div>
   </div>
+
+  <section class="guide" id="como-leer" aria-labelledby="guide-title">
+    <h2 class="section-title" id="guide-title">Cómo leer el directorio</h2>
+    <p>
+      Cada fila resume lo que la comunidad ha averiguado sobre si una empresa acepta
+      candidatos con residencia en Venezuela. No es una declaración oficial de la empresa.
+    </p>
+    <dl class="guide-list">
+      <div>
+        <dt>{{ status_labels['accepts'] }}</dt>
+        <dd>Hay indicios de que la empresa contrata personas en Venezuela, por ejemplo una oferta pública sin exclusión del país o la confirmación de un reclutador.</dd>
+      </div>
+      <div>
+        <dt>{{ status_labels['rejects'] }}</dt>
+        <dd>La comunidad reporta que la empresa no contrata desde Venezuela, por ejemplo tras una respuesta directa o un formulario que excluye al país.</dd>
+      </div>
+      <div>
+        <dt>{{ status_labels['unknown'] }}</dt>
+        <dd>Aún no hay información suficiente para afirmar una cosa u otra.</dd>
+      </div>
+    </dl>
+    <p>
+      El método de verificación indica cómo se comprobó cada caso: oferta pública, reclutador,
+      formulario de solicitud o reporte comunitario. Una entrada se marca como desactualizada
+      cuando pasan más de 180 días desde su última verificación. Los datos completos están en
+      <a href="{{ companies_json_url }}">formato JSON</a>; si ves información incorrecta, puedes
+      reportarla en GitHub.
+    </p>
+  </section>
 
   <div class="page-footer-links">
     <a class="btn btn-red" href="https://github.com/asdrubalivan/remote-venezuela-hiring/issues/new?template=add-company.yml" target="_blank" rel="noopener noreferrer">Agregar empresa vía GitHub Issues<svg class="ico ico-ext" aria-hidden="true" focusable="false"><use href="#i-ext" /></svg></a>
