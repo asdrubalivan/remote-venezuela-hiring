@@ -116,6 +116,15 @@ def test_freshness_sentence(age: int, *, stale: bool, expected: str) -> None:
     assert expected in agent_files.freshness_sentence(age, stale=stale)
 
 
+def test_index_markdown_has_no_truncated_summary_or_bare_trailing_url() -> None:
+    md = agent_files.index_markdown(
+        [_company()], base=BASE, labels=LABELS, last_modified=date(2026, 1, 2)
+    )
+    assert "…" not in md
+    assert f"[llms.txt]({BASE}/llms.txt)" in md
+    assert f"{BASE}/llms.txt." not in md
+
+
 def test_markdown_link_text_cannot_break_the_link() -> None:
     md = agent_files.index_markdown(
         [_company(name="Bad [name]")], base=BASE, labels=LABELS, last_modified=date(2026, 1, 2)
@@ -217,4 +226,5 @@ def test_html_pages_link_their_markdown_version_and_llms_txt(site: Path) -> None
 
 def test_company_page_states_how_fresh_the_verification_is(site: Path) -> None:
     html = (site / "company" / "alpha.html").read_text(encoding="utf-8")
-    assert "desactualizada" in html.lower() or "Verificada hace" in html
+    # The fixture's 2026-01-02 verification is long past the stale threshold.
+    assert "Esta entrada está desactualizada: se verificó por última vez hace" in html

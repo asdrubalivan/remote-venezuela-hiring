@@ -164,11 +164,13 @@ def index_markdown(
     lines = [
         f"# {seo.INDEX_TITLE.capitalize()}",
         "",
-        f"> {seo.index_description(total, len(groups[CompanyStatus.accepts]))}",
+        f"> {SITE_SUMMARY} Contiene {total} empresas activas; "
+        f"{len(groups[CompanyStatus.accepts])} probablemente aceptan candidatos desde Venezuela.",
         "",
         f"Datos actualizados hasta el {last_modified.isoformat()}. "
-        f"Versión HTML: {base}/ · Dataset completo (JSON): {base}/companies.json · "
-        f"Guía para agentes: {base}/llms.txt.",
+        f"Versión HTML: [{seo.SITE_ALTERNATE_NAME}]({base}/) · "
+        f"Dataset completo: [companies.json]({base}/companies.json) · "
+        f"Guía para agentes: [llms.txt]({base}/llms.txt)",
         "",
         f"{DISCLAIMER} {LICENSE_LINE}",
     ]
