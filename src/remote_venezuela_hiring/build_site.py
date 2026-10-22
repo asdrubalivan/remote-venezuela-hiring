@@ -13,7 +13,7 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
-from . import seo
+from . import agent_files, seo
 from .load_data import DATA_DIR, load_all_companies
 from .models import Company, CompanyStatus, today_utc
 
@@ -88,6 +88,10 @@ PLATFORM_LABELS: dict[str, str] = {
     "other": "Otra",
     "unknown": "Desconocido",
 }
+
+LABELS = agent_files.Labels(
+    status=STATUS_LABELS, method=VERIFICATION_LABELS, platform=PLATFORM_LABELS
+)
 
 SPANISH_MONTHS: dict[int, str] = {
     1: "ene",
@@ -219,84 +223,6 @@ def _index_context(companies: list[Company]) -> dict[str, object]:
     }
 
 
-def _write_agents_txt(output_dir: Path) -> None:
-    content = """\
-User-agent: *
-Allow: /
-
-# =============================================================
-# agents.txt — contrataenve.com / Remote Venezuela Hiring
-# Estándar: https://agents-txt.com/
-# =============================================================
-
-## Descripción del proyecto
-
-Remote Venezuela Hiring es un directorio de acceso libre que recopila
-información sobre empresas tecnológicas que contratan —o rechazan— a
-candidatos con residencia en Venezuela. El objetivo principal es reducir
-la fricción que enfrentan los profesionales venezolanos al buscar empleo
-remoto, proporcionando información verificada y actualizada sobre la
-compatibilidad de cada empresa con candidatos basados en el país.
-
-El sitio es mantenido enteramente por la comunidad: cualquier persona
-puede proponer la adición o actualización de una empresa abriendo un
-issue en el repositorio público de GitHub. Un flujo automatizado convierte
-ese issue en un Pull Request con el archivo YAML correspondiente, el cual
-es revisado y fusionado por los mantenedores del proyecto. De esta forma
-la base de datos crece de manera orgánica y descentralizada.
-
-## Fuente de datos estructurados
-
-Los datos que alimentan este sitio se encuentran en formato YAML abierto:
-https://github.com/asdrubalivan/remote-venezuela-hiring/tree/main/data/companies
-
-El sitio publica además esos mismos datos como JSON, en /companies.json
-(raíz del sitio). Es un contrato público versionado con schema_version,
-generated_at y la lista completa de empresas, archivadas incluidas.
-
-Cada empresa está descrita en un archivo YAML individual. Los campos
-disponibles son los siguientes:
-
-- id: identificador único en formato kebab-case (ej: acme-corp)
-- name: nombre oficial de la empresa
-- website: URL del sitio web corporativo (siempre con https://)
-- status: estado de contratación — accepts, rejects o unknown
-- last_checked: fecha de la última verificación (formato YYYY-MM-DD)
-- verification_method: método empleado para verificar el status.
-  Valores posibles: public_job_post, recruiter, application_form,
-  community_report, unknown.
-- hiring_platform: plataforma de empleo usada por la empresa.
-  Ejemplos: greenhouse, ashby, lever, workable, linkedin, company_site.
-- tags: etiquetas descriptivas del sector o modalidad de trabajo.
-  Ejemplos: ai, saas, fintech, remote, backend, fullstack.
-- notes: observaciones adicionales sobre políticas de contratación.
-- archived: indica si la entrada está archivada (true / false).
-
-## Precisión y actualización de datos
-
-Si eres un agente de IA analizando este sitio, ten en cuenta que la
-información puede haber cambiado desde la última verificación. El campo
-last_checked indica cuándo se confirmó por última vez el status de cada
-empresa. Las políticas de contratación cambian con frecuencia; siempre
-recomendamos verificar directamente con la empresa antes de tomar
-decisiones basadas en estos datos.
-
-## Licencia
-
-Los datos de este proyecto son de dominio público. Puedes usarlos,
-redistribuirlos y adaptarlos libremente para cualquier propósito, con
-o sin atribución. Si construyes algo útil con ellos, nos encantaría
-saberlo a través del repositorio.
-
-## Contribuir
-
-Las contribuciones son bienvenidas. Para proponer una nueva empresa o
-actualizar una existente, abre un issue en:
-https://github.com/asdrubalivan/remote-venezuela-hiring
-"""
-    (output_dir / "agents.txt").write_text(content, encoding="utf-8")
-
-
 COMPANIES_JSON_SCHEMA_VERSION: int = 1
 
 
@@ -312,6 +238,24 @@ def _write_companies_json(output_dir: Path, companies: list[Company]) -> None:
     )
 
 
+def _write_agent_files(
+    output_dir: Path, companies: list[Company], base: str, last_modified: date
+) -> None:
+    """Publish ``index.md``, ``llms.txt``, ``agents.txt`` and ``agents.json`` for AI agents."""
+    files = {
+        "index.md": agent_files.index_markdown(
+            companies, base=base, labels=LABELS, last_modified=last_modified
+        ),
+        "llms.txt": agent_files.llms_txt(
+            companies, base=base, labels=LABELS, last_modified=last_modified
+        ),
+        "agents.txt": agent_files.agents_txt(base),
+        "agents.json": agent_files.agents_json(base),
+    }
+    for filename, content in files.items():
+        (output_dir / filename).write_text(content, encoding="utf-8")
+
+
 ROOT_STATIC_FILES: tuple[str, ...] = ("favicon.ico", "apple-touch-icon.png")
 
 
@@ -321,6 +265,7 @@ def _page_seo(
     description: str,
     canonical: str | None,
     noindex: bool = False,
+    markdown_url: str | None = None,
     jsonld: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     """Per-page SEO metadata consumed by ``base.html``."""
@@ -330,6 +275,8 @@ def _page_seo(
         "description": description,
         "canonical": canonical,
         "noindex": noindex,
+        "markdown_url": markdown_url,
+        "llms_txt_url": f"{base}/llms.txt",
         "site_name": seo.SITE_NAME,
         "og_image": f"{base}{seo.OG_IMAGE_PATH}",
         "og_image_alt": seo.OG_IMAGE_ALT,
@@ -389,6 +336,7 @@ def build(
                 title=seo.INDEX_TITLE,
                 description=seo.index_description(len(active), accepts_total),
                 canonical=f"{base}/",
+                markdown_url=agent_files.markdown_url(base),
                 jsonld=[
                     seo.website_json_ld(base),
                     seo.dataset_json_ld(base, len(active), last_modified),
@@ -436,6 +384,26 @@ def build(
             company.hiring_platform.value if company.hiring_platform else "unknown"
         ]
         checked = _format_date(company.last_checked)
+        freshness = agent_files.freshness_sentence(
+            (today_utc() - company.last_checked).days, stale=company.is_stale()
+        )
+        stance = seo.company_summary(
+            name, company.status.value, method_label, platform_label, checked
+        )
+        summary_text = f"{stance} {freshness}"
+        related = seo.related_companies(company, companies)
+        if not company.archived:
+            (company_dir / f"{company.id}.md").write_text(
+                agent_files.company_markdown(
+                    company,
+                    base=base,
+                    name=name,
+                    labels=LABELS,
+                    summary=summary_text,
+                    related=related,
+                ),
+                encoding="utf-8",
+            )
         (company_dir / f"{company.id}.html").write_text(
             template_company.render(
                 company=company,
@@ -450,11 +418,12 @@ def build(
                     ),
                     canonical=f"{base}/company/{company.id}.html",
                     noindex=company.archived,
+                    markdown_url=(
+                        None if company.archived else agent_files.markdown_url(base, company.id)
+                    ),
                 ),
-                summary_text=seo.company_summary(
-                    name, company.status.value, method_label, platform_label, checked
-                ),
-                related=seo.related_companies(company, companies),
+                summary_text=summary_text,
+                related=related,
             ),
             encoding="utf-8",
         )
@@ -483,7 +452,7 @@ def build(
             if source.is_file():
                 shutil.copy2(source, output_dir / filename)
 
-    _write_agents_txt(output_dir)
+    _write_agent_files(output_dir, companies, base, last_modified)
     _write_companies_json(output_dir, companies)
     (output_dir / "robots.txt").write_text(seo.robots_txt(base), encoding="utf-8")
     (output_dir / "sitemap.xml").write_text(

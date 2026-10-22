@@ -195,6 +195,19 @@ claude mcp add chrome-devtools -- npx -y chrome-devtools-mcp@latest \
   --categoryExperimentalWebmcp=true --chromeArg=--enable-features=WebMCP
 ```
 
+### Archivos para modelos de lenguaje y agentes
+
+Además de WebMCP, el build publica en la raíz del sitio:
+
+| Archivo | Para qué sirve |
+|---------|----------------|
+| `llms.txt` | Índice para LLMs ([llmstxt.org](https://llmstxt.org)): resumen, estados y enlaces a cada empresa en Markdown |
+| `index.md` y `company/<id>.md` | Versión en Markdown de la portada y de cada ficha (las archivadas no se publican). Cada página HTML la enlaza con `rel="alternate" type="text/markdown"` |
+| `agents.txt` y `agents.json` | Capacidades para agentes según [agents-txt.com](https://agents-txt.com): solo comentarios y la directiva `WebMCP:` |
+| `robots.txt` | Permite explícitamente a `GPTBot`, `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-SearchBot` y `Claude-User` |
+
+Cada ficha indica cuántos días hace que se verificó y se marca como desactualizada pasados 180 días. Todo se genera en `build_site.py` y `agent_files.py`; el workflow semanal de deploy mantiene la frescura al día.
+
 ---
 
 ## Cómo agregar una empresa a través de GitHub Issues
@@ -257,3 +270,9 @@ El sitio se despliega automáticamente en GitHub Pages en cada push a `main` med
 ## Contribuir
 
 Consulta [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Licencia
+
+El código y los datos (`data/companies/` y `companies.json`) se publican bajo la licencia [MIT](LICENSE). Al contribuir aceptas que tu aporte se publique bajo esa misma licencia.

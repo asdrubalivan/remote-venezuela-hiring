@@ -12,6 +12,10 @@
   <link rel="canonical" href="{{ seo.canonical }}" />
   <meta property="og:url" content="{{ seo.canonical }}" />
   {% endif %}
+  {% if seo.markdown_url %}
+  <link rel="alternate" type="text/markdown" href="{{ seo.markdown_url }}" />
+  {% endif %}
+  <link rel="describedby" type="text/plain" href="{{ seo.llms_txt_url }}" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="{{ seo.site_name }}" />
   <meta property="og:locale" content="es_VE" />

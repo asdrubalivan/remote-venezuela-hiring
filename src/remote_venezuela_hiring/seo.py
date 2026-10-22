@@ -28,6 +28,13 @@ OG_IMAGE_ALT: Final[str] = (
     "Remote Venezuela Hiring: directorio de empresas que contratan remoto desde Venezuela"
 )
 
+# robots.txt tokens documented by each vendor (OpenAI: developers.openai.com/api/docs/bots,
+# Anthropic: support.claude.com "Does Anthropic crawl data from the web").
+AI_BOTS: Final[tuple[tuple[str, tuple[str, ...]], ...]] = (
+    ("OpenAI", ("GPTBot", "OAI-SearchBot", "ChatGPT-User")),
+    ("Anthropic", ("ClaudeBot", "Claude-SearchBot", "Claude-User")),
+)
+
 TITLE_MAX: Final[int] = 60
 DESCRIPTION_MAX: Final[int] = 160
 
@@ -213,6 +220,7 @@ def dataset_json_ld(base: str, total: int, date_modified: date) -> dict[str, obj
         "url": f"{base}/",
         "inLanguage": "es",
         "isAccessibleForFree": True,
+        "license": "https://opensource.org/licenses/MIT",
         "dateModified": date_modified.isoformat(),
         "creator": {"@type": "Organization", "name": SITE_NAME, "url": GITHUB_URL},
         "distribution": [
@@ -226,7 +234,20 @@ def dataset_json_ld(base: str, total: int, date_modified: date) -> dict[str, obj
 
 
 def robots_txt(base: str) -> str:
-    return f"User-agent: *\nAllow: /\n\nSitemap: {base}/sitemap.xml\n"
+    """Allow every crawler, naming the AI ones so the intent is explicit.
+
+    Training bots (GPTBot, ClaudeBot), search bots (OAI-SearchBot, Claude-SearchBot)
+    and user-initiated fetchers (ChatGPT-User, Claude-User) are all welcome: the
+    data is MIT-licensed and meant to be cited.
+    """
+    lines = ["# Crawlers de IA: permitidos de forma explícita (datos bajo licencia MIT)", ""]
+    for vendor, bots in AI_BOTS:
+        lines.append(f"# {vendor}")
+        lines.extend(f"User-agent: {bot}" for bot in bots)
+        lines.extend(["Allow: /", ""])
+    lines.extend(["# Resto de crawlers", "User-agent: *", "Allow: /", ""])
+    lines.append(f"Sitemap: {base}/sitemap.xml")
+    return "\n".join(lines) + "\n"
 
 
 def sitemap_xml(entries: Iterable[tuple[str, date]]) -> str:
