@@ -148,10 +148,10 @@ def test_robots_txt_declares_sitemap_and_blocks_nothing() -> None:
     assert "Disallow" not in text
 
 
-def test_dataset_json_ld_has_no_license_claim() -> None:
+def test_dataset_json_ld_declares_mit_license() -> None:
     data = seo.dataset_json_ld("https://x.example", 3, date(2026, 1, 2))
     assert data["@type"] == "Dataset"
-    assert "license" not in data
+    assert data["license"] == "https://opensource.org/licenses/MIT"
     assert len(str(data["description"])) > 50
 
 

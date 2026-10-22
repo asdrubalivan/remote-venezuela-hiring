@@ -13,6 +13,8 @@ KEBAB_CASE_RE: Final[re.Pattern[str]] = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
 NOTES_MAX_LENGTH: Final[int] = 500
 
+STALE_AFTER_DAYS: Final[int] = 180
+
 DISALLOWED_NOTES_TERMS: Final[tuple[str, ...]] = (
     "scam",
     "toxic",
@@ -142,7 +144,7 @@ class Company(BaseModel):
             raise ValueError(msg)
         return self
 
-    def is_stale(self, *, max_age_days: int = 180) -> bool:
+    def is_stale(self, *, max_age_days: int = STALE_AFTER_DAYS) -> bool:
         """Return ``True`` when the entry has not been re-checked recently."""
         return (today_utc() - self.last_checked).days > max_age_days
 

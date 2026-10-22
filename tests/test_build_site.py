@@ -132,9 +132,9 @@ def test_agents_txt_generated(output_dir: Path) -> None:
     agents = output_dir / "agents.txt"
     assert agents.is_file()
     content = agents.read_text(encoding="utf-8")
-    assert "User-agent: *" in content
-    assert "Allow: /" in content
-    assert "data/companies" in content
+    assert content.startswith("# agents.txt\n# Standard: https://agents-txt.com\n")
+    assert "WebMCP: https://contrataenve.com/" in content
+    assert "User-agent" not in content
 
 
 def test_website_with_utm_plain_url() -> None:
