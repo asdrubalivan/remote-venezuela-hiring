@@ -98,6 +98,16 @@ def _by_status(companies: Iterable[Company]) -> dict[CompanyStatus, list[Company
     return groups
 
 
+def _site_blurb(groups: Mapping[CompanyStatus, Sequence[Company]]) -> str:
+    """Blockquote summary shared by ``llms.txt`` and ``index.md``."""
+    total = sum(len(group) for group in groups.values())
+    accepts = len(groups[CompanyStatus.accepts])
+    return (
+        f"> {SITE_SUMMARY} Contiene {total} empresas activas; "
+        f"{accepts} probablemente aceptan candidatos desde Venezuela."
+    )
+
+
 def _entry_line(base: str, company: Company, name: str, labels: Labels) -> str:
     notes = [labels.platform_of(company), f"verificada {company.last_checked.isoformat()}"]
     if company.is_stale():
@@ -160,17 +170,17 @@ def index_markdown(
     """Markdown version of the home page (``index.md``): every active company by status."""
     groups = _by_status(companies)
     duplicates = seo.duplicate_names(companies)
-    total = sum(len(group) for group in groups.values())
     lines = [
         f"# {seo.INDEX_TITLE.capitalize()}",
         "",
-        f"> {SITE_SUMMARY} Contiene {total} empresas activas; "
-        f"{len(groups[CompanyStatus.accepts])} probablemente aceptan candidatos desde Venezuela.",
+        _site_blurb(groups),
         "",
-        f"Datos actualizados hasta el {last_modified.isoformat()}. "
-        f"Versión HTML: [{seo.SITE_ALTERNATE_NAME}]({base}/) · "
-        f"Dataset completo: [companies.json]({base}/companies.json) · "
-        f"Guía para agentes: [llms.txt]({base}/llms.txt)",
+        (
+            f"Datos actualizados hasta el {last_modified.isoformat()}. "
+            f"Versión HTML: [{seo.SITE_ALTERNATE_NAME}]({base}/) · "
+            f"Dataset completo: [companies.json]({base}/companies.json) · "
+            f"Guía para agentes: [llms.txt]({base}/llms.txt)"
+        ),
         "",
         f"{DISCLAIMER} {LICENSE_LINE}",
     ]
@@ -190,17 +200,17 @@ def llms_txt(
     """The ``llms.txt`` index (format from https://llmstxt.org)."""
     groups = _by_status(companies)
     duplicates = seo.duplicate_names(companies)
-    total = sum(len(group) for group in groups.values())
     lines = [
         f"# {seo.SITE_NAME}",
         "",
-        f"> {SITE_SUMMARY} Contiene {total} empresas activas; "
-        f"{len(groups[CompanyStatus.accepts])} probablemente aceptan candidatos desde Venezuela.",
+        _site_blurb(groups),
         "",
-        f"Cada empresa tiene un estado (`accepts`, `rejects` o `unknown`), un método de "
-        f"verificación y la fecha de la última verificación; las entradas con más de "
-        f"{STALE_AFTER_DAYS} días sin verificar se marcan como desactualizadas. "
-        f"Datos actualizados hasta el {last_modified.isoformat()}. {DISCLAIMER} {LICENSE_LINE}",
+        (
+            "Cada empresa tiene un estado (`accepts`, `rejects` o `unknown`), un método de "
+            "verificación y la fecha de la última verificación; las entradas con más de "
+            f"{STALE_AFTER_DAYS} días sin verificar se marcan como desactualizadas. "
+            f"Datos actualizados hasta el {last_modified.isoformat()}. {DISCLAIMER} {LICENSE_LINE}"
+        ),
         "",
         "## Datos",
         "",
