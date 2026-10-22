@@ -19,7 +19,7 @@ def visible_row_count(page: Page) -> int:
 
 def test_index_loads_with_expected_companies(page: Page, base_url: str) -> None:
     page.goto(base_url)
-    expect(page.locator(".hero-title")).to_contain_text("Compatibilidad")
+    expect(page.locator(".hero-title")).to_contain_text("Empresas que contratan")
     tab_count = int(page.locator(".status-tab[data-status='all'] .status-tab-count").inner_text())
     assert tab_count > 0
     assert visible_row_count(page) == tab_count

@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 {% set current_page = "company" %}
-{% block title %}{{ company.name }} — Remote Venezuela Hiring{% endblock %}
 
 {% block content %}
 {% set stale = company.is_stale() %}
 <div class="page page-company">
-  <a href="{{ home_url|default('../index.html') }}" class="back-link">
+  <nav class="breadcrumb" aria-label="Ruta de navegación">
+    <ol>
+      <li><a href="{{ home_url }}">Empresas</a></li>
+      <li aria-current="page">{{ company.name }}</li>
+    </ol>
+  </nav>
+
+  <a href="{{ home_url }}" class="back-link">
     <svg class="ico" aria-hidden="true" focusable="false"><use href="#i-back" /></svg>
     Volver a todas las empresas
   </a>
@@ -65,6 +71,22 @@
       </div>
     </article>
   </div>
+
+  <section class="company-summary" aria-labelledby="summary-title">
+    <h2 id="summary-title" class="section-title">¿{{ company.name }} contrata desde Venezuela?</h2>
+    <p>{{ summary_text }}</p>
+  </section>
+
+  {% if related %}
+  <section class="related" aria-labelledby="related-title">
+    <h2 id="related-title" class="section-title">Empresas similares</h2>
+    <ul class="related-list">
+      {% for other in related %}
+      <li><a href="{{ other.id }}.html">{{ other.name }}</a> <span class="related-status">{{ status_labels[other.status.value] }}</span></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
 
   <p class="terms terms-page" role="note">
     No es asesoramiento legal ni una declaración oficial de la empresa. Esta información es aportada por la comunidad y puede no estar actualizada. Siempre verifica directamente con la empresa.

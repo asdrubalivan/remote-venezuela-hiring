@@ -27,4 +27,4 @@ def test_nav_links_round_trip(page: Page, base_url: str) -> None:
     page.click(".nav-link:has-text('Estadísticas')")
     expect(page).to_have_url(f"{base_url}/stats.html")
     page.click(".nav-link:has-text('Empresas')")
-    expect(page).to_have_url(f"{base_url}/index.html")
+    expect(page).to_have_url(f"{base_url}/")

@@ -120,3 +120,11 @@ ruff check src tests
 # Local preview
 cd site && python -m http.server 8080
 ```
+
+## SEO
+
+- La lógica vive en `src/remote_venezuela_hiring/seo.py` (títulos, descripciones, sitemap, robots, JSON-LD, empresas similares). El origen canónico es `https://contrataenve.com`; para pruebas se puede sobrescribir con `RVH_SITE_URL` (debe empezar por `https://` y no terminar en `/`).
+- El build genera `robots.txt`, `sitemap.xml` (todas las páginas indexables; las empresas archivadas son `noindex` y quedan fuera), `404.html` (rutas absolutas, porque GitHub Pages lo sirve desde cualquier profundidad) y `CNAME`.
+- `static/og.png`, `static/apple-touch-icon.png` y `static/favicon.ico` se regeneran con `.venv/bin/python scripts/generate-seo-assets.py`. `favicon.ico` y `apple-touch-icon.png` se copian también a la raíz del sitio.
+- Cada página de empresa usa un título y una descripción neutrales según su estado; nunca afirmar de más ("no contrata") sobre una empresa con nombre propio.
+- `deploy-pages.yml` corre también cada lunes (cron) para refrescar "desactualizada" y las fechas. GitHub desactiva los workflows programados tras 60 días sin actividad en el repositorio; ejecutar `workflow_dispatch` reinicia el contador.
