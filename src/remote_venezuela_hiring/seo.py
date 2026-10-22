@@ -82,8 +82,14 @@ def display_name(company: Company, duplicates: set[str]) -> str:
     return company.name
 
 
-def company_title(name: str) -> str:
-    """Neutral question-style title, ``<= TITLE_MAX`` characters."""
+def company_title(name: str, qualifier: str | None = None) -> str:
+    """Neutral question-style title, ``<= TITLE_MAX`` characters.
+
+    *qualifier* (the company id) is appended to the name when the plain title
+    would collide with another company's.
+    """
+    if qualifier:
+        name = f"{truncate(name, 24)} ({qualifier})"
     suffix = ": ¿contrata desde Venezuela?"
     branded = f"{name}{suffix} | {SITE_NAME}"
     if len(branded) <= TITLE_MAX:
@@ -109,7 +115,8 @@ def company_summary(
         )
     elif status == "rejects":
         stance = (
-            f"La comunidad reporta que {name} no acepta candidatos con residencia en Venezuela."
+            f"Según un reporte de la comunidad, {name} no aceptaría candidatos con "
+            "residencia en Venezuela."
         )
     else:
         stance = (

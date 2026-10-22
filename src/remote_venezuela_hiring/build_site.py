@@ -391,7 +391,7 @@ def build(
                 canonical=f"{base}/",
                 jsonld=[
                     seo.website_json_ld(base),
-                    seo.dataset_json_ld(base, len(companies), last_modified),
+                    seo.dataset_json_ld(base, len(active), last_modified),
                 ],
             ),
             companies_json_url=f"{base}/companies.json",
@@ -424,8 +424,13 @@ def build(
     company_dir.mkdir()
     template_company = env.get_template("company.html")
     duplicates = seo.duplicate_names(companies)
+    used_titles: set[str] = set()
     for company in companies:
         name = seo.display_name(company, duplicates)
+        title = seo.company_title(company.name)
+        if company.name.casefold() in duplicates or title in used_titles:
+            title = seo.company_title(company.name, qualifier=company.id)
+        used_titles.add(title)
         method_label = VERIFICATION_LABELS[company.verification_method.value]
         platform_label = PLATFORM_LABELS[
             company.hiring_platform.value if company.hiring_platform else "unknown"
@@ -439,7 +444,7 @@ def build(
                 stats_url="../stats.html",
                 static_prefix="../static",
                 seo=_page_seo(
-                    title=seo.company_title(name),
+                    title=title,
                     description=seo.company_description(
                         name, company.status.value, method_label, checked, company.notes
                     ),

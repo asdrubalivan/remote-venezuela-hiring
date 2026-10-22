@@ -72,6 +72,12 @@ def test_company_title_never_exceeds_limit(name: str) -> None:
     assert "¿contrata desde Venezuela?" in title
 
 
+def test_company_title_with_qualifier_keeps_id_and_limit() -> None:
+    title = seo.company_title("Zeta Tecnologías Globales de Consultoría Uno", qualifier="long-one")
+    assert "(long-one)" in title
+    assert len(title) <= seo.TITLE_MAX
+
+
 def test_company_title_keeps_brand_when_it_fits() -> None:
     assert seo.company_title("Acme").endswith(f"| {seo.SITE_NAME}")
 

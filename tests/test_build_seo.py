@@ -181,7 +181,7 @@ def test_json_ld_is_valid_and_scoped(site: Path) -> None:
     assert "potentialAction" not in website
     dataset = next(b for b in blocks if b["@type"] == "Dataset")
     assert dataset["distribution"][0]["contentUrl"] == f"{BASE}/companies.json"
-    assert _parse(site / "company" / "a-team.html").jsonld == []
+    assert _parse(next((site / "company").glob("*.html"))).jsonld == []
 
 
 def test_index_has_guide_after_table_and_json_alternate(site: Path) -> None:
@@ -255,3 +255,29 @@ def test_empty_data_dir_still_builds_sitemap(tmp_path: Path) -> None:
     build(output_dir=out, data_dir=data_dir)
     root = ET.parse(out / "sitemap.xml").getroot()  # noqa: S314
     assert len(root.findall("s:url", NS)) == 2
+
+
+def test_long_names_that_collide_after_truncation_get_unique_titles(tmp_path: Path) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    long_name = "Zeta Tecnologías Globales de Consultoría"
+    _write_company(data_dir, "long-one", long_name + " Uno")
+    _write_company(data_dir, "long-two", long_name + " Dos")
+    out = tmp_path / "site"
+    build(output_dir=out, data_dir=data_dir)
+    titles = [_parse(p).title.strip() for p in (out / "company").glob("*.html")]
+    assert len(set(titles)) == 2
+    assert all(len(t) <= TITLE_MAX for t in titles)
+
+
+def test_dataset_counts_only_active_companies(tmp_path: Path) -> None:
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    _write_company(data_dir, "live", "Live")
+    _write_company(data_dir, "gone", "Gone", "archived: true\n")
+    out = tmp_path / "site"
+    build(output_dir=out, data_dir=data_dir)
+    dataset = next(
+        b for b in map(json.loads, _parse(out / "index.html").jsonld) if b["@type"] == "Dataset"
+    )
+    assert "1 empresas" in dataset["description"]
