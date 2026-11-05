@@ -276,3 +276,9 @@ Consulta [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Licencia
 
 El código y los datos (`data/companies/` y `companies.json`) se publican bajo la licencia [MIT](LICENSE). Al contribuir aceptas que tu aporte se publique bajo esa misma licencia.
+
+---
+
+## Mantenimiento
+
+Mantenido por [Asdrúbal Suárez](https://asdrubalivan.com).
