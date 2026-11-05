@@ -279,6 +279,6 @@ El código y los datos (`data/companies/` y `companies.json`) se publican bajo l
 
 ---
 
-## Mantenimiento
+## Autor
 
-Mantenido por [Asdrúbal Suárez](https://asdrubalivan.com).
+Creado por [Asdrúbal Suárez](https://asdrubalivan.com).
